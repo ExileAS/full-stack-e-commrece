@@ -1,0 +1,491 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.product-card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  background-color: azure;
+  margin: 9px;
+}
+
+.product-card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.container {
+  padding: 2px 16px;
+}
+
+.product-name {
+  text-decoration: none;
+  color: blue;
+}
+
+.product-name:hover {
+  text-decoration: underline blue;
+}
+
+input[type="text"] {
+  color: black;
+  border: 3px solid #555;
+  border-bottom: 2px solid;
+  padding: 4px;
+}
+
+input[type="number"] {
+  background-color: rgba(173, 216, 230, 0);
+  color: black;
+  border: 3px solid #555;
+  border-bottom: 2px solid;
+  padding: 4px;
+}
+
+.discreption {
+  color: black;
+  background-color: aliceblue;
+  padding: 8px;
+  box-sizing: content-box;
+}
+
+.add-button {
+  border-radius: 12px;
+  border-color: lightblue;
+  background-color: blue;
+  margin: 12px;
+  margin-left: 20px;
+  position: relative;
+  display: inline-block;
+  padding: 6px;
+  font-size: large;
+}
+
+.add-button:hover {
+  cursor: pointer;
+  box-shadow: #555;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+nav {
+  display: flex;
+  padding: 0;
+}
+
+nav section {
+  width: 100%;
+}
+
+nav section h1,
+nav section {
+  color: white;
+}
+
+nav a,
+nav a:active {
+  font-weight: 700;
+  padding: 0.25rem 1.5rem;
+  border-radius: 4px;
+  color: white !important;
+  text-decoration: none;
+  padding-top: 8px;
+}
+
+nav a:first-of-type {
+  margin-left: -1.5rem;
+  text-decoration: none;
+  padding-top: 6px;
+}
+
+nav a:hover {
+  color: white;
+  background: rgba(0, 0, 255, 0.842);
+}
+
+.navContent {
+  display: flex;
+  justify-content: space-between;
+  background-color: rgb(0, 102, 255);
+  text-decoration: none;
+  padding-top: 8px;
+}
+
+.navLinks {
+  display: flex;
+  padding: 17.5px;
+  text-decoration: none;
+  padding-top: 8px;
+}
+
+.navLinks a {
+  margin-left: 5px;
+  padding: 4px;
+  font-size: large;
+  padding-top: 7px;
+}
+
+.navLinks a .badge {
+  margin-left: 5px;
+  position: relative;
+  top: -3px;
+  padding: 10px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.25em 0.4em;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+  color: #212529;
+  background-color: #f8f9fa;
+}
+
+.navLinks :first-child {
+  margin-left: 0;
+}
+
+.user-products {
+  color: rgb(0, 68, 255);
+}
+
+.page-title {
+  text-align: center;
+  background-color: #481499;
+  text-decoration: none;
+  margin: 0px;
+  padding: 2px;
+  padding-top: 5.5px;
+  padding-bottom: 10px;
+}
+
+.page-title:hover {
+  background-color: #481499;
+  color: blue !important;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.add-button-main {
+  border-radius: 12px;
+  border-color: lightblue;
+  background-color: rgb(0, 255, 149);
+  margin: 12px;
+  margin-left: 9px;
+  position: relative;
+  display: inline-block;
+  font-size: larger;
+  padding: 10px;
+  color: black;
+}
+
+.add-button-main:hover {
+  cursor: pointer;
+  box-shadow: #555;
+  color: blue;
+}
+
+.add-to-cart {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAH0AAAB9CAMAAAC4XpwXAAAAb1BMVEX///8kHiAAAACysbEJAAC+vb6joqIeFxkgGRunp6cOAAXy8vL29vZOS0s/PD2dm5wuKywXDhHJycnp6ek0MTK4uLjb29thYGB2dXWKiYpaWFltbGzU1NRnZGV+fX3h4eFEQ0SUk5MjIiIQDg8dGxvTajG6AAAEpElEQVRoge1aa5eqIBQdyBQflc+atKaH/v/feDlHQTBnZiXU3A/sT7FwsfFwHptjHx8ODg4ODg4ODg4ODg7/HfKUShySN5MXZUYk6PHN7DkdyUlQv5k9BHY2gO7ezN5wwwfpgK83k3+kjB/3u0kFioC/+uav2POIkOztBhfwPW748K/YD9zp6P6v2OlfOl3Moz3YGiywXxngxo+9NXC6FTWBB8l9tZg82QbEENlpOfuVGZKz+2LyPk+TTJoSy2U0mhb2xnRLK0/zVGOW6Xbca9vPavCiCjYTHUe32jLCSjmqwMuys3z6qyXEM6npUJ8Vr11R3Y02AWHbUbGsqZbabjBcG7AXnmY82Ew0vk2C7LEc73S6A3fZzCTT4frpRQwvfPms+Zb9CxJrLnfOy2u3NdJyn/qCTNNHU3Zwi06+7B62ejAh//C1o4zBza7ydSbsSc2HZSGG4CTezYj9pNl6sv6EfbK3r0g12yIknJ2lcgi2ZdK2E/bJufBJ4smdLgOsEcg1wK88+T4T9r1mpyLlG90YXiCOkGBkFOkxNWGHeByzC57Zpxl57ztSiGM+8eWknm30XARS3ljBgzmDzSrsceSe1NbDIPRLyLS+GJ4zSIxiVGfGTscBt5FALRxjHfGwynhaDZKTUJtp/Pv6P8OgxLOrKTmG7UJYkPIVVYs4WldW8I4POjki6hmh4c2l/B4SzGY9AOpW4A+Dqq/vwygE8noY5KCK6HJVJXFnSrYDASHTTaJF3EnTAm1nR8pDtqMi24VqTOvZBnOBqCoxvZtJeYEjXMYqhSISFDo7bkw8NxFFy7FWBc1FzZ86O2QiedK7yEjKj9iDowmVgJcjIbV0drwyihOCYmgg5Uck4NmpWBYqbjDLDmnJEy4ITYvOONMBtHvwXbmW6uwQG+XwuwATXW2QY5TJM6yVCNDYi07RFmtd/JogVz0Ndetphv2UKU+hB1bThRahaBVPw2aI0BdqtsEejYjFs6mUH5Fc+VrpbQfwQWK3jY+DG6/vpOwndp+wx/M4EWytOF0v6knUoy/iwwDruzoRjBOBmZQf4dO5+vlbeTXVdAKnJeyKFjXEmXrPAa/uNooMIl8/B1DepLWRaRdhZy/gF+BmlT15zvY7UHxWahwg3jzfqbPndeGCmLNn+OfzDaNmjQMVRfmc5Snd2nT4IvSfQZi/+8vf65GsV9Xl29miWq0tldUZ7Gs80vu8Uq5639i8KL+GXja4czNzqg3eKeEC7z9OmmNNZbucPtbu4xiTVm4RE8QBwzdrZzNJ/7m3xRs26wz7ZDPAoknP1Q36JQ9td9D8jB6rBp+y/6kbhLwHR3qBC8VEsEIvm3Tgb9BsUBqWlhCXsg16fOxGKc05aKamtk1fpJ2wtybpe+RjR7jhNrp/nxOWIb7KTn3z+O7Y1av7XcJ1znrOwTvxJu4/eExtC+eCXdL4EL3kLw553zYkqByiacBDg4N49I4h9wpBB29F7phxHiM6ZkzOtvULClycin+vsJkvTTkVPc3Muscjipq2EOo0mGv+5iVavaWbl5ADQxPwIhbOGzZZ8RKYNbbuTw4ODg4ODg4ODg4ODj/iH3xIRBCkRs1xAAAAAElFTkSuQmCC");
+  background-repeat: no-repeat;
+  background-position: top;
+  border-radius: 12px;
+  border-color: lightblue;
+  background-color: crimson;
+  margin: 12px;
+  margin-left: 9px;
+  position: relative;
+  display: inline-block;
+  font-size: larger;
+  padding: 14px;
+  color: rgb(0, 119, 255);
+}
+
+.add-to-cart:hover {
+  cursor: pointer;
+  box-shadow: #555;
+}
+
+.shopping-cart {
+  width: 50px;
+  max-height: 50%;
+}
+
+.img {
+  width: 60px;
+  height: 60px;
+  margin-left: 16px;
+}
+
+.img:hover {
+  cursor: pointer;
+}
+
+.cart-title {
+  color: blueviolet;
+  text-align: center;
+}
+
+.main-page-title {
+  position: relative;
+  text-align: center;
+  font-family: "Times New Roman", Times, serif;
+  font-size: xx-large;
+  color: rgb(76, 0, 255);
+  font-style: inherit;
+}
+
+.user {
+  text-decoration: none;
+  margin-left: 12px;
+  font-size: larger;
+}
+
+.users {
+  margin-left: 12px;
+}
+
+.user:hover {
+  text-decoration: underline;
+  color: crimson;
+}
+
+.add-product-form {
+  margin: auto;
+  align-items: center;
+  text-align: center;
+}
+
+.name,
+.price,
+.discreption {
+  font-family: inherit;
+  font-size: 100%;
+  width: 150px;
+  padding: 0;
+  margin: 2px;
+  margin-bottom: 0;
+  box-sizing: border-box;
+}
+
+.option {
+  font-size: medium;
+}
+
+.add-more-button {
+  padding: 2px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  color: rgb(37, 220, 20);
+  font-size: x-large;
+  margin: 4px;
+}
+
+.add-more-button:hover {
+  cursor: pointer;
+}
+
+.decrement-button {
+  padding-left: 5px;
+  padding-right: 5px;
+  color: rgb(220, 20, 20);
+  font-size: x-large;
+  margin: 4px;
+}
+
+.decrement-button:hover {
+  cursor: pointer;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.25em 0.4em;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+  color: rgb(90, 20, 220);
+  background-color: #f8f9fa;
+}
+
+.clear-button {
+  padding-left: 5px;
+  padding-right: 5px;
+  color: rgb(220, 20, 20);
+  font-size: x-large;
+  margin: 15px;
+  margin-left: 43%;
+}
+
+.clear-button:hover {
+  cursor: pointer;
+}
+
+.place-order {
+  padding-left: 5px;
+  padding-right: 5px;
+  color: rgb(20, 147, 220);
+  font-size: x-large;
+  margin: 20px;
+  margin-left: 12px;
+}
+
+.cancel-order {
+  padding-left: 5px;
+  padding-right: 5px;
+  color: rgb(220, 20, 20);
+  font-size: large;
+  margin: 15px;
+  margin-left: 10px;
+}
+
+.nothing-ordered {
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  font-style: italic;
+  text-align: center;
+  color: rgb(145, 255, 0);
+}
+
+.landing-title {
+  text-align: center;
+  color: rgb(0, 247, 255);
+  height: 100%;
+}
+
+.landing-page {
+  background: url("https://img.freepik.com/free-vector/hand-painted-watercolor-pastel-sky-background_23-2148902771.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+  padding: 390px;
+  width: auto;
+}
+
+body,
+html {
+  height: 100%;
+}
+
+.search-bar {
+  text-align: center;
+  padding: 0;
+  color: #481499;
+}
+
+.search-box {
+  padding-top: 2px;
+  padding-bottom: 0;
+  font-size: x-large;
+  color: #481499;
+}
+
+.all-products {
+  color: #481499;
+}
+
+.select-user {
+  width: 160px;
+  height: 25px;
+}
+
+.select-user:hover {
+  cursor: pointer;
+}
+
+.confirm-title {
+  font-size: larger;
+  color: rgb(0, 255, 191);
+}
+
+.adress,
+.number,
+.email {
+  margin: 3px;
+  font-family: inherit;
+  font-size: 100%;
+  width: 150px;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.order-info {
+  color: rgb(165, 42, 83);
+  font-size: large;
+  font-style: italic;
+}
+
+.error {
+  color: crimson;
+  font-style: italic;
+  font-size: large;
+}
+
+.ordered-content {
+  margin-left: 6px;
+  color: darkgreen;
+}
+
+.category-name {
+  font-size: xx-large;
+  color: rgba(0, 255, 0, 0.452);
+}
+
+.signup {
+  border-radius: 12px;
+  border-color: lightblue;
+  background-color: rgb(0, 255, 149);
+  margin: 8px;
+  margin-left: 9px;
+  position: relative;
+  display: inline-block;
+  font-size: large;
+  padding: 10px;
+  color: black;
+}
+
+.login {
+  border-radius: 12px;
+  border-color: lightblue;
+  background-color: rgb(0, 255, 149);
+  margin: 8px;
+  margin-left: 9px;
+  position: relative;
+  display: inline-block;
+  font-size: large;
+  padding: 10px;
+  color: black;
+}
+
+.login,
+.signup:hover {
+  cursor: pointer;
+}
+
+.welcome {
+  color: rgb(92, 0, 100);
+  font-family: "Times New Roman", Times, serif;
+  margin: 8px;
+}
