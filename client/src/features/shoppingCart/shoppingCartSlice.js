@@ -69,6 +69,10 @@ const shoppingCartSlice = createSlice({
       state.cart = [];
       return state;
     },
+    clearOrdered(state, action) {
+      state.ordered = [];
+      return state;
+    },
     productsOrdered(state, action) {
       state.ordered = [...state.ordered, ...state.cart];
       state.customerInfo = action.payload;
@@ -99,6 +103,7 @@ export const {
   incrementInCart,
   decrementInCart,
   clearShoppingCart,
+  clearOrdered,
   productsOrdered,
   decrementInOrdered,
   removeOrder,

@@ -34,6 +34,22 @@ export const ProductDetails = () => {
     }, 2800);
   };
 
+  const handleAddToCart = async (product) => {
+    try {
+      const res = await fetch("/api/requireAuth", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (res.ok) {
+        dispatch(addToShoppingCart(product));
+      } else {
+        navigate("/login");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div>
       <section className="product-card">
@@ -61,7 +77,7 @@ export const ProductDetails = () => {
             {!added ? (
               <button
                 className="add-to-cart"
-                onClick={() => dispatch(addToShoppingCart(product))}
+                onClick={() => handleAddToCart(product)}
               >
                 Add to Cart
               </button>

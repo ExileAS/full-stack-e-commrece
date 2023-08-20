@@ -26,4 +26,25 @@ const checkUser = (req, res, next) => {
   }
 };
 
-module.exports = { checkUser };
+const requireAuth = (req, res, next) => {
+  const token = req.cookies.jwt;
+
+  if (token) {
+    jwt.verify(
+      token,
+      "extremely secret secret of all secrets 777",
+      async (err, decodedToken) => {
+        if (err) {
+          res.status(400).json({});
+        } else {
+          res.status(200).json({ user: decodedToken.id });
+          next();
+        }
+      }
+    );
+  } else {
+    res.status(400).json({});
+  }
+};
+
+module.exports = { checkUser, requireAuth };

@@ -48,7 +48,7 @@ const Login = () => {
           className="name"
           onChange={(e) => setEmail(e.target.value)}
         />
-        <p>{emailErr}</p>
+        <p className="error">{emailErr}</p>
         <br />
         <label htmlFor="password">Password</label>
         <br />
@@ -58,7 +58,7 @@ const Login = () => {
           className="name"
           onChange={(e) => setPassword(e.target.value)}
         />
-        <p>{passwordErr}</p>
+        <p className="error">{passwordErr}</p>
         <br />
         <button className="add-button" onClick={handleLogin}>
           Login

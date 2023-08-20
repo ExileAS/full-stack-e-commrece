@@ -2,6 +2,10 @@ import { Link } from "react-router-dom";
 import imgSrc from "../components/6011.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../features/userRegister/userSlice";
+import {
+  clearOrdered,
+  clearShoppingCart,
+} from "../features/shoppingCart/shoppingCartSlice";
 
 const Navbar = () => {
   const logged = useSelector((state) => state.user.loggedIn);
@@ -14,6 +18,8 @@ const Navbar = () => {
       headers: { "Content-Type": "application/json" },
     });
     dispatch(logout());
+    dispatch(clearShoppingCart());
+    dispatch(clearOrdered());
   };
 
   return (
