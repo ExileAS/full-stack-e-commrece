@@ -1,9 +1,16 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { productSelected, selectAllProducts } from "./productsSlice";
+import {
+  countNewOnhand,
+  productSelected,
+  selectAllProducts,
+} from "./productsSlice";
 import TimeAgo from "./TimeAgo";
 import SearchBar from "../search/SearchBar";
-import { selectAllInCart } from "../shoppingCart/shoppingCartSlice";
+import {
+  selectAllInCart,
+  selectAllOrdered,
+} from "../shoppingCart/shoppingCartSlice";
 import { fetchProducts } from "./productsSlice";
 import { useEffect } from "react";
 import { Spinner } from "../../components/Spinner";
@@ -14,7 +21,12 @@ export const ProductExcerpt = ({ product, count, selected }) => {
   const productInCart = useSelector(selectAllInCart).find(
     (product) => productId === product.id
   );
-  const available = productInCart === undefined || productInCart.onhand > 0;
+  const productInMain = useSelector(selectAllProducts).find(
+    (product) => productId === product.id
+  );
+  const availableInMain = productInMain.onhand > 0;
+  const available =
+    productInCart === undefined || productInCart.onhand > 0 || availableInMain;
   return (
     available && (
       <section className="product-card" key={product.id}>
@@ -55,12 +67,16 @@ export const ProductExcerpt = ({ product, count, selected }) => {
 export const ProductsList = () => {
   const dispatch = useDispatch();
   const status = useSelector((state) => state.products.status);
+  const ordered = useSelector(selectAllOrdered);
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchProducts());
+      if (ordered) {
+        dispatch(countNewOnhand(ordered));
+      }
     }
     //return () => console.log('unmounted or dependency array changed');
-  }, [dispatch, status]);
+  }, [dispatch, status, ordered]);
 
   const products = useSelector(selectAllProducts);
   const error = useSelector((state) => state.error);
@@ -71,6 +87,7 @@ export const ProductsList = () => {
     content = products.map((product) => (
       <ProductExcerpt product={product} key={product.id} selected={false} />
     ));
+
   if (status === "failed") content = <div>{error}</div>;
 
   return (

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login } from "./userSlice";
+import { Link } from "react-router-dom";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -28,6 +29,7 @@ const SignUp = () => {
       if (data.user) {
         dispatch(login(data.user));
         navigate("/products");
+        window.location.reload(true);
       }
     } catch (err) {
       console.log(err);
@@ -60,6 +62,10 @@ const SignUp = () => {
         <button className="add-button" onClick={handleSignup}>
           Signup
         </button>
+        <p>
+          or
+          <Link to="/login">Login</Link>
+        </p>
       </form>
     </div>
   );

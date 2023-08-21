@@ -2,7 +2,7 @@
   "name": "redux-essentials-example",
   "version": "1.0.0",
   "private": true,
-  "proxy" : "http://localhost:3007",
+  "proxy": "http://localhost:3007",
   "dependencies": {
     "@mswjs/data": "^0.8.4",
     "@reduxjs/toolkit": "^1.6.1",
@@ -22,6 +22,7 @@
     "react-router-dom": "^6.12.1",
     "react-scripts": "^5.0.1",
     "redux": "^4.2.1",
+    "redux-persist": "^6.0.0",
     "seedrandom": "^3.0.5",
     "txtgen": "^2.2.4"
   },

@@ -1,8 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import imgSrc from "../components/6011.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../features/userRegister/userSlice";
 import {
+  clearCustomerInfo,
   clearOrdered,
   clearShoppingCart,
 } from "../features/shoppingCart/shoppingCartSlice";
@@ -11,15 +12,19 @@ const Navbar = () => {
   const logged = useSelector((state) => state.user.loggedIn);
   const user = useSelector((state) => state.user.userEmail);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     await fetch("/api/logout", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
+    dispatch(clearOrdered());
     dispatch(logout());
     dispatch(clearShoppingCart());
-    dispatch(clearOrdered());
+    dispatch(clearCustomerInfo());
+    navigate("/products");
+    window.location.reload(true);
   };
 
   return (
@@ -33,7 +38,7 @@ const Navbar = () => {
         <div className="navContent">
           <div className="navLinks">
             <Link to="/products">products</Link>
-            <Link to="/users">Users</Link>
+            <Link to="/users">sellers</Link>
             <Link to="/shoppingCart">
               <img src={imgSrc} alt="" className="img" />
             </Link>

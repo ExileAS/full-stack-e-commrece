@@ -1,5 +1,4 @@
-import { createAsyncThunk, createSlice, nanoid } from "@reduxjs/toolkit";
-import axios from "axios";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   cart: [],
@@ -12,22 +11,43 @@ export const postOrdered = createAsyncThunk(
   "shoppingCart/postOrdered",
   async (_, { getState }) => {
     const state = getState();
-    axios
-      .post(
-        "/api/post-ordered",
-        {
-          confirmId: state.shoppingCart.confirmId,
+    try {
+      const res = await fetch("/api/post-ordered", {
+        // list: state.shoppingCart.ordered,
+        // customerInfo: state.shoppingCart.customerInfo,
+        method: "POST",
+        body: JSON.stringify({
           list: state.shoppingCart.ordered,
           customerInfo: state.shoppingCart.customerInfo,
-        },
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        }
-      )
-      .then((result) => console.log(result))
-      .catch((err) => console.log(err));
+        }),
+        headers: { "Content-Type": "application/json" },
+      });
+      console.log(res);
+      const data = await res.json();
+      if (data.confirmId) {
+        return data.confirmId;
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+);
+
+export const retrieveOrderedList = createAsyncThunk(
+  "shoppingCart/retrieveOrderedList",
+  async (userEmail) => {
+    try {
+      const res = await fetch("/api/retrieveOrdered", {
+        method: "POST",
+        body: JSON.stringify({ userEmail }),
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await res.json();
+      console.log(data);
+      return data;
+    } catch (err) {
+      console.log(err);
+    }
   }
 );
 
@@ -38,7 +58,7 @@ const shoppingCartSlice = createSlice({
     addToShoppingCart(state, action) {
       const { id } = action.payload;
       const product = state.cart.find((product) => product.id === id);
-      if (!product) {
+      if (action.payload.onhand !== 0 && !product) {
         action.payload = {
           ...action.payload,
           count: 1,
@@ -74,8 +94,24 @@ const shoppingCartSlice = createSlice({
       return state;
     },
     productsOrdered(state, action) {
+      if (state.ordered.length > 0) {
+        action.payload.ordered.forEach((product) => {
+          let exists = false;
+          state.ordered.forEach((ordered) => {
+            if (ordered.id === product.id) {
+              ordered.count += product.count;
+              exists = true;
+            }
+          });
+          !exists && state.ordered.push(product);
+        });
+        state.customerInfo = action.payload.userInfo;
+        state.cart = [];
+        return state;
+      }
+
       state.ordered = [...state.ordered, ...state.cart];
-      state.customerInfo = action.payload;
+      state.customerInfo = action.payload.userInfo;
       state.cart = [];
     },
     removeOrder(state, action) {
@@ -91,9 +127,27 @@ const shoppingCartSlice = createSlice({
       }
       product.count--;
     },
-    setOrderId(state, action) {
-      state.confirmId = nanoid();
+    clearCustomerInfo(state, action) {
+      state.customerInfo = [];
+      return state;
     },
+    createOrderedList(state, action) {
+      state.ordered = action.payload;
+      return state;
+    },
+  },
+  extraReducers(builder) {
+    builder
+      .addCase(postOrdered.fulfilled, (state, action) => {
+        console.log(action.payload);
+        state.confirmId = action.payload;
+        return state;
+      })
+      .addCase(retrieveOrderedList.fulfilled, (state, action) => {
+        console.log(action.payload);
+        state.ordered = action.payload.ordered;
+        return state;
+      });
   },
 });
 
@@ -107,7 +161,8 @@ export const {
   productsOrdered,
   decrementInOrdered,
   removeOrder,
-  setOrderId,
+  clearCustomerInfo,
+  createOrderedList,
 } = shoppingCartSlice.actions;
 export const selectAllInCart = (state) => state.shoppingCart.cart;
 export const getTotalCost = (state) =>
@@ -121,6 +176,7 @@ export const checkAdded = (state, id) =>
     : true;
 export const selectAllOrdered = (state) => state.shoppingCart.ordered;
 export const getTotalCostOrdered = (state) =>
+  state.shoppingCart.ordered &&
   state.shoppingCart.ordered.reduce(
     (acc, item) => acc + item.price * item.count,
     0

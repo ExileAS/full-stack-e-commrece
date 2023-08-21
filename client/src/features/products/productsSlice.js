@@ -95,6 +95,15 @@ const productsSlice = createSlice({
       state = state.products.filter((product) => product.id !== id);
       return state;
     },
+    countNewOnhand(state, action) {
+      state.products.forEach((product) => {
+        action.payload.forEach((ordered) => {
+          product.id === ordered.id &&
+            product.onhand - ordered.count >= 0 &&
+            (product.onhand -= ordered.count);
+        });
+      });
+    },
   },
   extraReducers(builder) {
     builder
@@ -113,8 +122,13 @@ const productsSlice = createSlice({
   },
 });
 
-export const { productAdded, deleteProduct, productSelected, removeProduct } =
-  productsSlice.actions;
+export const {
+  productAdded,
+  deleteProduct,
+  productSelected,
+  removeProduct,
+  countNewOnhand,
+} = productsSlice.actions;
 
 export default productsSlice.reducer;
 

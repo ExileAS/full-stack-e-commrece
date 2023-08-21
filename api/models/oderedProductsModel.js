@@ -5,6 +5,7 @@ const OrderedProductSchema = new Schema(
   {
     confirmId: {
       type: String,
+      unique: true,
     },
     list: {
       type: Array,

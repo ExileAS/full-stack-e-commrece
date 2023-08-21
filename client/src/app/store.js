@@ -3,12 +3,35 @@ import productsReducer from "../features/products/productsSlice";
 import sellersReducer from "../features/sellers/sellersSlice";
 import shoppingCartReducer from "../features/shoppingCart/shoppingCartSlice";
 import userReducer from "../features/userRegister/userSlice";
+import storage from "redux-persist/lib/storage";
+import { persistReducer, persistStore } from "redux-persist";
+import thunk from "redux-thunk";
 
-export default configureStore({
+const cartPersistConfig = {
+  key: "shoppingCart",
+  storage,
+};
+
+const userPersistConfig = {
+  key: "users",
+  storage,
+};
+
+const persistedReducerCart = persistReducer(
+  cartPersistConfig,
+  shoppingCartReducer
+);
+
+const persistedReducerUser = persistReducer(userPersistConfig, userReducer);
+
+const store = configureStore({
   reducer: {
     products: productsReducer,
     sellers: sellersReducer,
-    shoppingCart: shoppingCartReducer,
-    user: userReducer,
+    shoppingCart: persistedReducerCart,
+    user: persistedReducerUser,
   },
+  middleware: [thunk],
 });
+export default store;
+export const persistor = persistStore(store);

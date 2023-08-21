@@ -2,10 +2,8 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   decrementInOrdered,
   getTotalCostOrdered,
-  postOrdered,
   removeOrder,
   selectAllOrdered,
-  setOrderId,
 } from "./shoppingCartSlice";
 import { ProductExcerpt } from "../products/ProductList";
 import { useEffect, useState } from "react";
@@ -15,6 +13,7 @@ const OrderedProductsList = () => {
   const products = useSelector(selectAllOrdered);
   const totalCost = useSelector(getTotalCostOrdered);
   const customerInfo = useSelector((state) => state.shoppingCart.customerInfo);
+  const confirmId = useSelector((state) => state.shoppingCart.confirmId);
   const [costAfterDiscount, setCostAfterDiscount] = useState(totalCost);
   const [shippingFee, setShippingFee] = useState(12);
   const [discountRatio, setDiscountRatio] = useState(0);
@@ -34,34 +33,27 @@ const OrderedProductsList = () => {
     }
   }, [totalCost]);
 
-  useEffect(() => {
-    if (customerInfo.firstName) {
-      dispatch(setOrderId());
-      dispatch(postOrdered());
-    }
-  }, [dispatch, customerInfo, products]);
-
-  const confirmId = useSelector((state) => state.shoppingCart.confirmId);
-
-  const content = products.map((product) => (
-    <div key={product.id}>
-      <ProductExcerpt
-        product={product}
-        key={product.id}
-        count={product.count}
-        selected={true}
-      />
-      <button onClick={() => dispatch(decrementInOrdered(product.id))}>
-        -
-      </button>
-      <button
-        className="cancel-order"
-        onClick={() => dispatch(removeOrder(product.id))}
-      >
-        Cancel Order
-      </button>
-    </div>
-  ));
+  const content =
+    products &&
+    products.map((product) => (
+      <div key={product.id}>
+        <ProductExcerpt
+          product={product}
+          key={product.id}
+          count={product.count}
+          selected={true}
+        />
+        <button onClick={() => dispatch(decrementInOrdered(product.id))}>
+          -
+        </button>
+        <button
+          className="cancel-order"
+          onClick={() => dispatch(removeOrder(product.id))}
+        >
+          Cancel Order
+        </button>
+      </div>
+    ));
 
   return (
     <div className="ordered-content">

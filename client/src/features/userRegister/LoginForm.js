@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { login } from "./userSlice";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { retrieveOrderedList } from "../shoppingCart/shoppingCartSlice";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -29,7 +31,9 @@ const Login = () => {
         }
         if (data.user) {
           dispatch(login(data.user));
+          await dispatch(retrieveOrderedList(data.user)).unwrap();
           navigate("/products");
+          window.location.reload(true);
         }
       } catch (err) {
         console.log(err);
@@ -63,6 +67,9 @@ const Login = () => {
         <button className="add-button" onClick={handleLogin}>
           Login
         </button>
+        <p>
+          or <Link to="/signup">Signup</Link>
+        </p>
       </form>
     </div>
   );
