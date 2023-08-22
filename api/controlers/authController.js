@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 
 const createToken = (id) => {
   return jwt.sign({ id }, "extremely secret secret of all secrets 777", {
-    expiresIn: 60 * 30,
+    expiresIn: 60 * 60 * 2,
   });
 };
 
@@ -37,7 +37,7 @@ module.exports.signup_post = async (req, res) => {
     const user = await userModel.create({ email, password });
     const token = createToken(user._id);
     res.cookie("jwt", token, {
-      maxAge: 1000 * 60 * 30,
+      maxAge: 1000 * 60 * 60 * 2,
       httpOnly: true,
     });
     res.status(201).json({ user: user.email });
@@ -53,7 +53,7 @@ module.exports.login_post = async (req, res) => {
     const user = await userModel.login(email, password);
     const token = createToken(user._id);
     res.cookie("jwt", token, {
-      maxAge: 1000 * 60 * 30,
+      maxAge: 1000 * 60 * 60 * 2,
       httpOnly: true,
     });
     res.status(200).json({ user: user.email });

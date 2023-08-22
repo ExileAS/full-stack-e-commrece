@@ -13,8 +13,6 @@ export const postOrdered = createAsyncThunk(
     const state = getState();
     try {
       const res = await fetch("/api/post-ordered", {
-        // list: state.shoppingCart.ordered,
-        // customerInfo: state.shoppingCart.customerInfo,
         method: "POST",
         body: JSON.stringify({
           list: state.shoppingCart.ordered,
@@ -146,6 +144,7 @@ const shoppingCartSlice = createSlice({
       .addCase(retrieveOrderedList.fulfilled, (state, action) => {
         console.log(action.payload);
         state.ordered = action.payload.ordered;
+        state.customerInfo = action.payload.customerInfo;
         return state;
       });
   },

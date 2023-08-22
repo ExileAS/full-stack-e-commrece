@@ -41,14 +41,15 @@ module.exports.ordered_post = async (req, res) => {
 
 module.exports.retreive_ordered_post = async (req, res) => {
   const { userEmail } = req.body;
-  //console.log(userEmail);
   try {
     const allOrdered = await OrderedProducts.find();
     const orderedByUser = allOrdered.find(
       ({ customerInfo }) => customerInfo.userEmail === userEmail
     );
-    console.log(orderedByUser);
-    res.status(200).json({ ordered: orderedByUser.list });
+    res.status(200).json({
+      ordered: orderedByUser.list,
+      customerInfo: orderedByUser.customerInfo,
+    });
   } catch (err) {
     console.log(err);
     res.status(400).json({});
