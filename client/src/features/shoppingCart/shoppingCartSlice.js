@@ -95,6 +95,7 @@ const shoppingCartSlice = createSlice({
         action.payload = {
           ...action.payload,
           count: 1,
+          selected: false,
         };
         action.payload.onhand--;
         state.cart.push(action.payload);

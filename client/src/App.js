@@ -13,6 +13,7 @@ import OrderedProductsList from "./features/shoppingCart/OrderedProductList";
 import LandingPage from "./features/landingPage/LandingPage";
 import SignUp from "./features/userRegister/SignupForm";
 import Login from "./features/userRegister/LoginForm";
+import SelectedList from "./features/products/SelectedList";
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
           />
           <Route exact path="/signup" element={<SignUp />} />
           <Route exact path="/login" element={<Login />} />
+          <Route exact path="/products/selected" element={<SelectedList />} />
         </Routes>
       </div>
     </Router>

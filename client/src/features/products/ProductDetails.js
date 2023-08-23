@@ -1,5 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
-import { productSelected, selectProductById } from "./productsSlice";
+import {
+  productSelected,
+  productUnSelected,
+  selectProductById,
+} from "./productsSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import TimeAgo from "./TimeAgo";
 import {
@@ -9,8 +13,9 @@ import {
 } from "../shoppingCart/shoppingCartSlice";
 import { useEffect, useState } from "react";
 
-export const ProductDetails = () => {
-  const { productId } = useParams();
+export const ProductDetails = ({ productProp }) => {
+  let { productId } = useParams();
+  productId = productId || productProp.id;
   const product = useSelector((state) => selectProductById(state, productId));
   const added = useSelector((state) => checkAdded(state, productId));
   const dispatch = useDispatch();
@@ -77,7 +82,10 @@ export const ProductDetails = () => {
             {!added ? (
               <button
                 className="add-to-cart"
-                onClick={() => handleAddToCart(product)}
+                onClick={() => {
+                  handleAddToCart(product);
+                  dispatch(productUnSelected({ productId: product.id }));
+                }}
               >
                 Add to Cart
               </button>

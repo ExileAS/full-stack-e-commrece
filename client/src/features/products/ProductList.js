@@ -1,8 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
+  checkSelected,
   countNewOnhand,
   productSelected,
+  productUnSelected,
   selectAllProducts,
 } from "./productsSlice";
 import TimeAgo from "./TimeAgo";
@@ -12,12 +14,14 @@ import {
   selectAllOrdered,
 } from "../shoppingCart/shoppingCartSlice";
 import { fetchProducts } from "./productsSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Spinner } from "../../components/Spinner";
 
-export const ProductExcerpt = ({ product, count, selected }) => {
+export const ProductExcerpt = ({ product, count }) => {
   const dispatch = useDispatch();
   const productId = product.id;
+  const selected = useSelector((state) => checkSelected(state, productId));
+  const [select, setSelect] = useState(selected);
   const productInCart = useSelector(selectAllInCart).find(
     (product) => productId === product.id
   );
@@ -41,21 +45,30 @@ export const ProductExcerpt = ({ product, count, selected }) => {
         <span>added by {product.seller ? product.seller : "unknown"}</span>
         <TimeAgo timestamp={product.date} />
         <br />{" "}
-        {!selected && (
-          <Link to={"/products/" + product.id}>
-            <button
-              className="add-button"
-              onClick={() =>
-                dispatch(productSelected({ productId: product.id }))
-              }
-            >
-              Select
-            </button>
-          </Link>
+        {!select ? (
+          <button
+            className="add-button"
+            onClick={() => {
+              dispatch(productSelected({ productId: product.id }));
+              setSelect(true);
+            }}
+          >
+            Select
+          </button>
+        ) : (
+          <button
+            className="add-button"
+            onClick={() => {
+              dispatch(productUnSelected({ productId: product.id }));
+              setSelect(false);
+            }}
+          >
+            Remove
+          </button>
         )}
         <br />
         {!productInCart ? (
-          !selected && <b>on hand quantity: {product.onhand}</b>
+          <b>on hand quantity: {product.onhand}</b>
         ) : (
           <b>on hand quantity: {productInCart.onhand}</b>
         )}
@@ -86,7 +99,7 @@ export const ProductsList = () => {
   if (status === "loading") content = <Spinner text="Loading..." />;
   if (status === "success")
     content = products.map((product) => (
-      <ProductExcerpt product={product} key={product.id} selected={false} />
+      <ProductExcerpt product={product} key={product.id} />
     ));
 
   if (status === "failed") content = <div>{error}</div>;

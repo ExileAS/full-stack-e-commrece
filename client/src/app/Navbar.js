@@ -7,10 +7,12 @@ import {
   clearOrdered,
   clearShoppingCart,
 } from "../features/shoppingCart/shoppingCartSlice";
+import { getAllSelected } from "../features/products/productsSlice";
 
 const Navbar = () => {
   const logged = useSelector((state) => state.user.loggedIn);
   const user = useSelector((state) => state.user.userEmail);
+  const selected = useSelector(getAllSelected);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -42,6 +44,9 @@ const Navbar = () => {
             <Link to="/shoppingCart">
               <img src={imgSrc} alt="" className="img" />
             </Link>
+            {selected.length > 0 && (
+              <Link to={"/products/selected"}>Selected</Link>
+            )}
             <Link to={"/products/ordered"}>Ordered</Link>
             {!logged ? (
               <>

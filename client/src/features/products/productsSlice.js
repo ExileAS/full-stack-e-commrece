@@ -32,6 +32,15 @@ const productsSlice = createSlice({
         product.selected = true;
       }
     },
+    productUnSelected(state, action) {
+      const { productId } = action.payload;
+      const product = state.products.find(
+        (product) => product.id === productId
+      );
+      if (product) {
+        product.selected = false;
+      }
+    },
     removeProduct(state, action) {
       const { id } = action.payload;
       state = state.products.filter((product) => product.id !== id);
@@ -68,15 +77,24 @@ export const {
   productAdded,
   deleteProduct,
   productSelected,
+  productUnSelected,
   removeProduct,
   countNewOnhand,
 } = productsSlice.actions;
 
 export default productsSlice.reducer;
 
+export const checkSelected = (state, id) =>
+  state.products.products.find((product) => product.id === id).selected;
+
+export const getAllSelected = (state) =>
+  state.products.products.filter((product) => product.selected);
+
 export const selectAllProducts = (state) => state.products.products;
+
 export const selectProductById = (state, id) =>
   state.products.products.find((product) => product.id === id);
+
 export const selectProductsByUser = (state, user) =>
   state.products.products.filter((product) => product.seller === user.name);
 
