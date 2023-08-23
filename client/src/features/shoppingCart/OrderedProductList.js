@@ -1,13 +1,15 @@
 import { useDispatch, useSelector } from "react-redux";
 import {
+  clearOrdered,
   decrementInOrdered,
   getTotalCostOrdered,
   removeOrder,
   selectAllOrdered,
+  clearInDB,
 } from "./shoppingCartSlice";
 import { ProductExcerpt } from "../products/ProductList";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const OrderedProductsList = () => {
   const products = useSelector(selectAllOrdered);
@@ -18,6 +20,7 @@ const OrderedProductsList = () => {
   const [shippingFee, setShippingFee] = useState(12);
   const [discountRatio, setDiscountRatio] = useState(0);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (totalCost > 0) {
@@ -31,7 +34,7 @@ const OrderedProductsList = () => {
       setShippingFee(0);
       setCostAfterDiscount(totalCost - discount);
     }
-  }, [totalCost]);
+  }, [totalCost, products]);
 
   const content =
     products &&
@@ -80,6 +83,17 @@ const OrderedProductsList = () => {
             ordered by {customerInfo.firstName} {customerInfo.lastName}.
             shipping to <Link to="/confirm-order">{customerInfo.adress}</Link>
           </h3>
+          <button
+            className="cancel-shipment"
+            onClick={() => {
+              dispatch(clearOrdered());
+              dispatch(clearInDB(confirmId));
+              navigate("/products");
+              window.location.reload(true);
+            }}
+          >
+            <h3 className="cancel-text">Cancel Shipment</h3>
+          </button>
         </div>
       )}
     </div>

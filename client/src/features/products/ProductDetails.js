@@ -43,7 +43,7 @@ export const ProductDetails = () => {
       if (res.ok) {
         dispatch(addToShoppingCart(product));
       } else {
-        navigate("/login");
+        navigate("/signup");
       }
     } catch (err) {
       console.log(err);

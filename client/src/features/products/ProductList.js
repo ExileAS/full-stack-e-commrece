@@ -68,6 +68,7 @@ export const ProductsList = () => {
   const dispatch = useDispatch();
   const status = useSelector((state) => state.products.status);
   const ordered = useSelector(selectAllOrdered);
+  const logged = useSelector((state) => state.user.loggedIn);
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchProducts());
@@ -93,7 +94,7 @@ export const ProductsList = () => {
   return (
     <div className="container">
       <Link to="/products/addProduct">
-        <button className="add-button-main">Add Product</button>
+        {!logged && <button className="add-button-main">Add Product</button>}
       </Link>
       <h3 className="main-page-title">Products List</h3>
       <SearchBar data={products} />

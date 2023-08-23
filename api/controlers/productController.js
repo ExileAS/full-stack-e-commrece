@@ -24,7 +24,7 @@ module.exports.product_post = (req, res) => {
 
 module.exports.ordered_post = async (req, res) => {
   const { list, customerInfo } = req.body;
-  const uuid = crypto.randomUUID({ disableEntropyCache: true });
+  const uuid = crypto.randomUUID();
 
   const confirmId = uuid;
 
@@ -53,5 +53,48 @@ module.exports.retreive_ordered_post = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(400).json({});
+  }
+};
+
+module.exports.update_order_patch = async (req, res, next) => {
+  const { confirmId, list, customerInfo } = req.body;
+  const updates = { list, customerInfo };
+  try {
+    const allOrdered = await OrderedProducts.find();
+    const orderedByUser = allOrdered.find(
+      (order) => order.confirmId === confirmId
+    );
+
+    if (orderedByUser) {
+      const res = await OrderedProducts.updateOne(
+        { confirmId: confirmId },
+        { $set: updates }
+      );
+      console.log(res);
+    } else {
+      next();
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+module.exports.order_delete = async (req, res) => {
+  const { confirmId } = req.body;
+
+  try {
+    const allOrdered = await OrderedProducts.find();
+    const orderedByUser = allOrdered.find(
+      (order) => order.confirmId === confirmId
+    );
+
+    if (orderedByUser) {
+      const res = await OrderedProducts.deleteOne({ confirmId: confirmId });
+      console.log(res);
+    } else {
+      next();
+    }
+  } catch (err) {
+    console.log(err);
   }
 };

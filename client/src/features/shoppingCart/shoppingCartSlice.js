@@ -49,6 +49,41 @@ export const retrieveOrderedList = createAsyncThunk(
   }
 );
 
+export const updateOrder = createAsyncThunk(
+  "shoppingCart/updateOrder",
+  (_, { getState }) => {
+    const state = getState();
+    try {
+      fetch("/api/updateOrder", {
+        method: "PATCH",
+        body: JSON.stringify({
+          customerInfo: state.shoppingCart.customerInfo,
+          list: state.shoppingCart.ordered,
+          confirmId: state.shoppingCart.confirmId,
+        }),
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+);
+
+export const clearInDB = createAsyncThunk(
+  "shoppingCart/clearInDB",
+  (confirmId) => {
+    try {
+      fetch("/api/deleteOrder", {
+        method: "DELETE",
+        body: JSON.stringify({ confirmId }),
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+);
+
 const shoppingCartSlice = createSlice({
   initialState,
   name: "shoppingCart",
@@ -93,7 +128,7 @@ const shoppingCartSlice = createSlice({
     },
     productsOrdered(state, action) {
       if (state.ordered.length > 0) {
-        action.payload.ordered.forEach((product) => {
+        action.payload.orderedInCart.forEach((product) => {
           let exists = false;
           state.ordered.forEach((ordered) => {
             if (ordered.id === product.id) {
@@ -142,7 +177,6 @@ const shoppingCartSlice = createSlice({
         return state;
       })
       .addCase(retrieveOrderedList.fulfilled, (state, action) => {
-        console.log(action.payload);
         state.ordered = action.payload.ordered;
         state.customerInfo = action.payload.customerInfo;
         return state;

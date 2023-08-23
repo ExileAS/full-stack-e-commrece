@@ -5,12 +5,15 @@ import {
   postOrdered,
   productsOrdered,
   selectAllInCart,
+  selectAllOrdered,
+  updateOrder,
 } from "./shoppingCartSlice";
 import { countNewOnhand } from "../products/productsSlice";
 
 const ConfirmOrderForm = () => {
   const info = useSelector((state) => state.shoppingCart.customerInfo);
-  const ordered = useSelector(selectAllInCart);
+  const orderedInCart = useSelector(selectAllInCart);
+  const currentOrdered = useSelector(selectAllOrdered);
   const infoAvailable = JSON.stringify(info) !== JSON.stringify({});
   const { firstName, lastName, adress, phoneNumber } = infoAvailable && info;
   const userEmail = useSelector((state) => state.user.userEmail);
@@ -56,10 +59,17 @@ const ConfirmOrderForm = () => {
   const handleSubmitInfo = async () => {
     if (canSumbit) {
       dispatch(
-        productsOrdered({ userInfo: { ...formState, userEmail }, ordered })
+        productsOrdered({
+          userInfo: { ...formState, userEmail },
+          orderedInCart,
+        })
       );
-      await dispatch(postOrdered()).unwrap();
-      dispatch(countNewOnhand(ordered));
+      if (currentOrdered.length === 0) {
+        await dispatch(postOrdered()).unwrap();
+      } else {
+        dispatch(updateOrder());
+      }
+      dispatch(countNewOnhand(orderedInCart));
       navigate("/products/ordered");
     }
   };

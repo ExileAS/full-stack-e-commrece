@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login } from "./userSlice";
 import { Link } from "react-router-dom";
+import { clearCustomerInfo } from "../shoppingCart/shoppingCartSlice";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -13,6 +14,7 @@ const SignUp = () => {
   const dispatch = useDispatch();
 
   const handleSignup = async () => {
+    dispatch(clearCustomerInfo());
     setEmailError("");
     setPasswordErr("");
     try {

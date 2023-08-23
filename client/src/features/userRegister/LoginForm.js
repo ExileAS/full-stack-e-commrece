@@ -3,7 +3,10 @@ import { useDispatch } from "react-redux";
 import { login } from "./userSlice";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { retrieveOrderedList } from "../shoppingCart/shoppingCartSlice";
+import {
+  clearCustomerInfo,
+  retrieveOrderedList,
+} from "../shoppingCart/shoppingCartSlice";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -14,6 +17,7 @@ const Login = () => {
   const dispatch = useDispatch();
 
   const handleLogin = async () => {
+    dispatch(clearCustomerInfo());
     setEmailError("");
     setPasswordErr("");
     if (email.length > 0 && password.length > 0) {

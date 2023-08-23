@@ -489,3 +489,15 @@ html {
   font-family: "Times New Roman", Times, serif;
   margin: 8px;
 }
+
+.cost {
+  font-size: larger;
+}
+
+.cancel-shipment :hover {
+  cursor: pointer;
+}
+
+.cancel-text {
+  color: crimson;
+}
