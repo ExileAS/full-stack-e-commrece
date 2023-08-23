@@ -24,6 +24,9 @@ const productSchema = new Schema(
     type: {
       type: String,
     },
+    date: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

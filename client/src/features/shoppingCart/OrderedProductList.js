@@ -6,6 +6,7 @@ import {
   removeOrder,
   selectAllOrdered,
   clearInDB,
+  updateOrder,
 } from "./shoppingCartSlice";
 import { ProductExcerpt } from "../products/ProductList";
 import { useEffect, useState } from "react";
@@ -46,12 +47,20 @@ const OrderedProductsList = () => {
           count={product.count}
           selected={true}
         />
-        <button onClick={() => dispatch(decrementInOrdered(product.id))}>
+        <button
+          onClick={() => {
+            dispatch(decrementInOrdered(product.id));
+            dispatch(updateOrder());
+          }}
+        >
           -
         </button>
         <button
           className="cancel-order"
-          onClick={() => dispatch(removeOrder(product.id))}
+          onClick={() => {
+            dispatch(removeOrder(product.id));
+            dispatch(updateOrder());
+          }}
         >
           Cancel Order
         </button>

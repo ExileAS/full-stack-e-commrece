@@ -13,9 +13,11 @@ module.exports.product_get = (req, res) => {
   }
 };
 
-module.exports.product_post = (req, res) => {
+module.exports.product_post = async (req, res) => {
+  const productDetails = req.body;
   try {
-    const product = new Product(req.body);
+    const date = new Date().toISOString();
+    const product = await Product.create({ ...productDetails, date });
     product.save();
   } catch (err) {
     res.status(400).json({ error: err.message });

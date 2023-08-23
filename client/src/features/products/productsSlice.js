@@ -1,66 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-const initialProducts = [
-  {
-    name: "laptop",
-    price: 20000,
-    id: "1",
-    description:
-      "dell g3 3500, Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ab vel, amet, earum rerum eum suscipit sequi omnis laudantium tenetur beatae quaerat cumque accusamus debitis vero culpa odio ducimus nam autem?",
-    date: new Date().toISOString(),
-    count: 0,
-    onhand: 3,
-    type: "PC",
-  },
-  {
-    name: "Iphone",
-    price: 25000,
-    id: "2",
-    description:
-      "Iphone 10 pro X max Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ab vel, amet, earum rerum eum suscipit sequi omnis laudantium tenetur beatae quaerat cu",
-    date: new Date().toISOString(),
-    count: 0,
-    onhand: 2,
-    type: "phone",
-  },
-  {
-    name: "camera",
-    price: 7000,
-    id: "3",
-    description:
-      "good camera, Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ab vel, amet, earum rerum eum suscipit sequi omnis laudantium tenetur beatae ",
-    date: new Date().toISOString(),
-    count: 0,
-    onhand: 4,
-    type: "camera",
-  },
-  {
-    name: "t-shirt",
-    price: 100,
-    id: "4",
-    description:
-      "good shirt, Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ab vel, amet, earum rerum eum suscipit sequi omnis laudantium tenetur beatae ",
-    date: new Date().toISOString(),
-    count: 0,
-    onhand: 12,
-    type: "t-shirt",
-  },
-  {
-    name: "vaccum cleaner",
-    price: 100,
-    id: "5",
-    description:
-      "nice vaccum cleaner, Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ab vel, amet, earum rerum eum suscipit sequi omnis laudantium tenetur beatae ",
-    date: new Date().toISOString(),
-    count: 0,
-    onhand: 12,
-    type: "vaccum cleaner",
-  },
-];
-
 const initialState = {
-  products: initialProducts,
+  products: [],
   status: "idle",
   error: null,
 };
