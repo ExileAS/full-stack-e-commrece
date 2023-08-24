@@ -5,6 +5,7 @@ const initialState = {
   ordered: [],
   confirmId: null,
   customerInfo: {},
+  orderInfo: "undelivered",
 };
 
 export const postOrdered = createAsyncThunk(
@@ -41,8 +42,9 @@ export const retrieveOrderedList = createAsyncThunk(
         headers: { "Content-Type": "application/json" },
       });
       const data = await res.json();
-      console.log(data);
-      return data;
+      if (!data.error) return data;
+      console.log(data.error);
+      return data.error;
     } catch (err) {
       console.log(err);
     }
@@ -178,9 +180,17 @@ const shoppingCartSlice = createSlice({
         return state;
       })
       .addCase(retrieveOrderedList.fulfilled, (state, action) => {
-        state.ordered = action.payload.ordered;
-        state.customerInfo = action.payload.customerInfo;
+        state.ordered = action.payload.ordered ? action.payload.ordered : [];
+        state.customerInfo = action.payload.customerInfo
+          ? action.payload.customerInfo
+          : {};
+        state.orderInfo = action.payload.orderInfo
+          ? action.payload.orderInfo
+          : "undelivered";
         return state;
+      })
+      .addCase(retrieveOrderedList.rejected, (state, action) => {
+        console.log("rejected");
       });
   },
 });

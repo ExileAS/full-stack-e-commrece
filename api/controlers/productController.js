@@ -34,6 +34,7 @@ module.exports.ordered_post = async (req, res) => {
     confirmId,
     list,
     customerInfo,
+    delivered: false,
   });
   productsOrdered
     .save()
@@ -48,13 +49,23 @@ module.exports.retreive_ordered_post = async (req, res) => {
     const orderedByUser = allOrdered.find(
       ({ customerInfo }) => customerInfo.userEmail === userEmail
     );
-    res.status(200).json({
-      ordered: orderedByUser.list,
-      customerInfo: orderedByUser.customerInfo,
-    });
+    if (orderedByUser) {
+      if (orderedByUser.delivered === false) {
+        res.status(200).json({
+          ordered: orderedByUser.list,
+          customerInfo: orderedByUser.customerInfo,
+        });
+      } else {
+        res.status(200).json({ orderInfo: "delivered" });
+      }
+    } else {
+      res.status(400).json({ error: "nothing ordered" });
+    }
   } catch (err) {
     console.log(err);
-    res.status(400).json({});
+    res.status(400).json({
+      error: "error finding order",
+    });
   }
 };
 

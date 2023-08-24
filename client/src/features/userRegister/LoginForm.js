@@ -37,7 +37,6 @@ const Login = () => {
           dispatch(login(data.user));
           await dispatch(retrieveOrderedList(data.user)).unwrap();
           navigate("/products");
-          window.location.reload(true);
         }
       } catch (err) {
         console.log(err);

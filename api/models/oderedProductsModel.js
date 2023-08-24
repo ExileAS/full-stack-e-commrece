@@ -13,6 +13,9 @@ const OrderedProductSchema = new Schema(
     customerInfo: {
       type: Object,
     },
+    delivered: {
+      type: Boolean,
+    },
   },
   { timestamps: true }
 );
