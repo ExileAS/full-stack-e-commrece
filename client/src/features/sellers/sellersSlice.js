@@ -18,6 +18,8 @@ export default sellersSlice.reducer;
 export const selectAllSellers = (state) => state.sellers;
 export const selectSellerById = (state, id) =>
   state.sellers.find((seller) => seller.id === id);
+export const getIdByName = (state, name) =>
+  state.sellers.find((seller) => seller.name === name)?.id;
 
 export const generateId = (state) => {
   const sellers = state.sellers;

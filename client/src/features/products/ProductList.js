@@ -14,12 +14,15 @@ import {
   selectAllOrdered,
 } from "../shoppingCart/shoppingCartSlice";
 import { fetchProducts } from "./productsSlice";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Spinner } from "../../components/Spinner";
+import { getIdByName } from "../sellers/sellersSlice";
 
-export const ProductExcerpt = ({ product, count }) => {
+export const ProductExcerpt = React.memo(({ product, count, orderedList }) => {
+  const logged = useSelector((state) => state.user.userEmail);
   const dispatch = useDispatch();
   const productId = product.id;
+  const sellerId = useSelector((state) => getIdByName(state, product.seller));
   const selected = useSelector((state) => checkSelected(state, productId));
   const [select, setSelect] = useState(selected);
   const productInCart = useSelector(selectAllInCart).find(
@@ -42,40 +45,61 @@ export const ProductExcerpt = ({ product, count }) => {
         <p>description: {product.description.substring(0, 40)}</p>
         <b>Price: {product.price}</b>
         <br />
-        <span>added by {product.seller ? product.seller : "unknown"}</span>
+        <span>
+          added by{" "}
+          {product.seller ? (
+            <Link to={"/users/" + sellerId}>{product.seller}</Link>
+          ) : (
+            "unknown"
+          )}
+        </span>
         <TimeAgo timestamp={product.date} />
         <br />{" "}
-        {!select ? (
-          <button
-            className="add-button"
-            onClick={() => {
-              dispatch(productSelected({ productId: product.id }));
-              setSelect(true);
-            }}
-          >
-            Select
-          </button>
-        ) : (
-          <button
-            className="add-button"
-            onClick={() => {
-              dispatch(productUnSelected({ productId: product.id }));
-              setSelect(false);
-            }}
-          >
-            Remove
-          </button>
+        {logged && !productInCart && !orderedList && (
+          <div>
+            {!select ? (
+              <button
+                className="add-button"
+                onClick={() => {
+                  dispatch(productSelected({ productId: product.id }));
+                  setSelect(true);
+                }}
+              >
+                Select
+              </button>
+            ) : (
+              <button
+                className="add-button"
+                onClick={() => {
+                  dispatch(productUnSelected({ productId: product.id }));
+                  setSelect(false);
+                }}
+              >
+                Remove
+              </button>
+            )}
+          </div>
         )}
         <br />
-        {!productInCart ? (
-          <b>on hand quantity: {product.onhand}</b>
-        ) : (
-          <b>on hand quantity: {productInCart.onhand}</b>
+        {!orderedList && (
+          <div>
+            {!productInCart ? (
+              <b>on hand quantity: {product.onhand}</b>
+            ) : (
+              <div>
+                <b>on hand quantity: {productInCart.onhand}</b>
+                <h3>
+                  you added this to your{" "}
+                  <Link to={"/shoppingCart"}>shopping cart</Link>
+                </h3>
+              </div>
+            )}
+          </div>
         )}
       </section>
     )
   );
-};
+});
 
 export const ProductsList = () => {
   const dispatch = useDispatch();
@@ -83,13 +107,13 @@ export const ProductsList = () => {
   const ordered = useSelector(selectAllOrdered);
   const logged = useSelector((state) => state.user.loggedIn);
   useEffect(() => {
-    if (status === "idle") {
-      dispatch(fetchProducts());
+    async function fetchAll() {
+      await dispatch(fetchProducts()).unwrap();
       if (ordered) {
         dispatch(countNewOnhand(ordered));
       }
     }
-    //return () => console.log('unmounted or dependency array changed');
+    if (status === "idle") fetchAll();
   }, [dispatch, status, ordered]);
 
   const products = useSelector(selectAllProducts);

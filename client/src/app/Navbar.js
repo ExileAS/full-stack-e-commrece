@@ -45,7 +45,9 @@ const Navbar = () => {
               <img src={imgSrc} alt="" className="img" />
             </Link>
             {selected.length > 0 && (
-              <Link to={"/products/selected"}>Selected</Link>
+              <Link to={"/products/selected"} className="Selected-Nav">
+                Selected
+              </Link>
             )}
             <Link to={"/products/ordered"}>Ordered</Link>
             {!logged ? (

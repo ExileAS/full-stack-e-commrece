@@ -43,9 +43,8 @@ const OrderedProductsList = () => {
       <div key={product.id}>
         <ProductExcerpt
           product={product}
-          key={product.id}
           count={product.count}
-          selected={true}
+          orderedList={true}
         />
         <button
           onClick={() => {

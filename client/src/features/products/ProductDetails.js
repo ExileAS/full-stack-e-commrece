@@ -11,13 +11,15 @@ import {
   checkAdded,
   incrementInCart,
 } from "../shoppingCart/shoppingCartSlice";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-export const ProductDetails = ({ productProp }) => {
+export const ProductDetails = React.memo(({ productProp }) => {
   let { productId } = useParams();
   productId = productId || productProp.id;
   const product = useSelector((state) => selectProductById(state, productId));
   const added = useSelector((state) => checkAdded(state, productId));
+  const logged = useSelector((state) => state.user.loggedIn);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const productsInCart = useSelector((state) => state.shoppingCart.cart);
@@ -47,6 +49,7 @@ export const ProductDetails = ({ productProp }) => {
       });
       if (res.ok) {
         dispatch(addToShoppingCart(product));
+        dispatch(productUnSelected({ productId: product.id }));
       } else {
         navigate("/signup");
       }
@@ -64,59 +67,66 @@ export const ProductDetails = ({ productProp }) => {
         <b>Price: {product.price}</b>
         <p>{product.description}</p>
         <br />
-        <span>added by {product.seller ? product.seller : "unknown"}</span>
+        <span> added by {product.seller ? product.seller : "unknown"}</span>
         <br />
         <TimeAgo timestamp={product.date} />
         <br />
-        {product.selected ? (
+        {logged ? (
           <div>
-            <b>ID: {productId}</b>
-            <br />
-            <button
-              className="add-button-main"
-              onClick={() => navigate("/moreProducts/" + productId)}
-            >
-              See Similar Products
-            </button>
-            <br />{" "}
-            {!added ? (
-              <button
-                className="add-to-cart"
-                onClick={() => {
-                  handleAddToCart(product);
-                  dispatch(productUnSelected({ productId: product.id }));
-                }}
-              >
-                Add to Cart
-              </button>
-            ) : (
-              <>
+            {product.selected ? (
+              <div>
                 <button
-                  className="add-more-button"
-                  onClick={() => {
-                    count === product.onhand
-                      ? toggleExceededError()
-                      : dispatch(incrementInCart(product));
-                  }}
+                  className="add-button-main"
+                  onClick={() => navigate("/moreProducts/" + productId)}
                 >
-                  &#43;
+                  See Similar Products
                 </button>
                 <br />
-                {amountExceeded && (
-                  <div className="error">on hand quantity exceeded!</div>
-                )}
-              </>
+                <div>
+                  {!added ? (
+                    <button
+                      className="add-to-cart"
+                      onClick={() => handleAddToCart(product)}
+                    >
+                      Add to Cart
+                    </button>
+                  ) : (
+                    <>
+                      <button
+                        className="add-more-button"
+                        onClick={() => {
+                          count === product.onhand
+                            ? toggleExceededError()
+                            : dispatch(incrementInCart(product));
+                        }}
+                      >
+                        &#43;
+                      </button>
+                      <br />
+                      {amountExceeded && (
+                        <div className="error">on hand quantity exceeded!</div>
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <button
+                className="add-button"
+                onClick={() => dispatch(productSelected({ productId }))}
+              >
+                Select
+              </button>
             )}
           </div>
         ) : (
-          <button
-            className="add-button"
-            onClick={() => dispatch(productSelected({ productId }))}
-          >
-            Select
-          </button>
+          <div>
+            <h3>
+              <Link to={"/signup"}>signup</Link> to select
+            </h3>
+          </div>
         )}
       </section>
     </div>
   );
-};
+});

@@ -64,13 +64,13 @@ const ConfirmOrderForm = () => {
           orderedInCart,
         })
       );
+      navigate("/products/ordered");
       if (currentOrdered.length === 0) {
-        await dispatch(postOrdered()).unwrap();
+        dispatch(postOrdered());
       } else {
         dispatch(updateOrder());
       }
       dispatch(countNewOnhand(orderedInCart));
-      navigate("/products/ordered");
     }
   };
 

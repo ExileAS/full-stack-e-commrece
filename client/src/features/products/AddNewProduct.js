@@ -33,10 +33,10 @@ export const AddNewProduct = () => {
     </option>
   ));
 
-  const handleProductAdded = () => {
+  const handleProductAdded = async () => {
     if (canAdd) {
-      axios
-        .post(
+      try {
+        await axios.post(
           "/api",
           {
             name: productName,
@@ -52,9 +52,12 @@ export const AddNewProduct = () => {
               "Content-Type": "application/x-www-form-urlencoded",
             },
           }
-        )
-        .then(navigate("/products"))
-        .catch((err) => console.log(err));
+        );
+      } catch (err) {
+        console.log(err);
+      }
+      navigate("/products");
+      window.location.reload(true);
     }
   };
 

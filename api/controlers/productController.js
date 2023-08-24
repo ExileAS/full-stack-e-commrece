@@ -6,8 +6,7 @@ module.exports.product_get = (req, res) => {
   try {
     Product.find()
       .sort({ createdAt: -1 })
-      .then((result) => res.status(200).json({ result }))
-      .catch((err) => console.log(err));
+      .then((result) => res.status(200).json({ result }));
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -18,7 +17,8 @@ module.exports.product_post = async (req, res) => {
   try {
     const date = new Date().toISOString();
     const product = await Product.create({ ...productDetails, date });
-    product.save();
+    await product.save();
+    res.redirect("/");
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
