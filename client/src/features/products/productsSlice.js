@@ -79,13 +79,12 @@ export const {
   productSelected,
   productUnSelected,
   removeProduct,
-  countNewOnhand,
 } = productsSlice.actions;
 
 export default productsSlice.reducer;
 
 export const checkSelected = (state, id) =>
-  state.products.products.find((product) => product.id === id).selected;
+  state.products.products.find((product) => product.id === id)?.selected;
 
 export const getAllSelected = (state) =>
   state.products.products.filter((product) => product.selected);

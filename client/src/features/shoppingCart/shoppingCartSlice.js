@@ -8,6 +8,18 @@ const initialState = {
   orderInfo: "undelivered",
 };
 
+export const checkUserCart = createAsyncThunk(
+  "shoppingCart/checkUser",
+  async () => {
+    const res = await fetch("/api/auth", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+    const data = await res.json();
+    return data;
+  }
+);
+
 export const postOrdered = createAsyncThunk(
   "shoppingCart/postOrdered",
   async (_, { getState }) => {
@@ -189,8 +201,12 @@ const shoppingCartSlice = createSlice({
           : "undelivered";
         return state;
       })
-      .addCase(retrieveOrderedList.rejected, (state, action) => {
-        console.log("rejected");
+      .addCase(checkUserCart.rejected, (state, action) => {
+        state.ordered = [];
+        state.cart = [];
+        state.confirmId = null;
+        state.customerInfo = {};
+        return state;
       });
   },
 });

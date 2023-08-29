@@ -505,3 +505,7 @@ html {
 .Selected-Nav {
   color: rgba(220, 20, 60, 0.712) !important;
 }
+
+.seller-link {
+  text-decoration: none;
+}

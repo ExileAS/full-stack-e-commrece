@@ -9,12 +9,14 @@ import {
   updateOrder,
 } from "./shoppingCartSlice";
 import { ProductExcerpt } from "../products/ProductList";
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { fetchProducts } from "../products/productsSlice";
 
 const OrderedProductsList = () => {
   const products = useSelector(selectAllOrdered);
   const totalCost = useSelector(getTotalCostOrdered);
+  const status = useSelector((state) => state.products.status);
   const customerInfo = useSelector((state) => state.shoppingCart.customerInfo);
   const confirmId = useSelector((state) => state.shoppingCart.confirmId);
   const [costAfterDiscount, setCostAfterDiscount] = useState(totalCost);
@@ -37,8 +39,15 @@ const OrderedProductsList = () => {
     }
   }, [totalCost, products]);
 
+  useLayoutEffect(() => {
+    if (status !== "success") {
+      dispatch(fetchProducts());
+    }
+  }, [status, dispatch]);
+
   const content =
     products &&
+    status === "success" &&
     products.map((product) => (
       <div key={product.id}>
         <ProductExcerpt
@@ -93,9 +102,9 @@ const OrderedProductsList = () => {
           </h3>
           <button
             className="cancel-shipment"
-            onClick={() => {
+            onClick={async () => {
               dispatch(clearOrdered());
-              dispatch(clearInDB(confirmId));
+              await dispatch(clearInDB(confirmId)).unwrap();
               navigate("/products");
               window.location.reload(true);
             }}

@@ -33,8 +33,11 @@ export const AddNewProduct = () => {
     </option>
   ));
 
+  const [status, setStatus] = useState("idle");
+
   const handleProductAdded = async () => {
     if (canAdd) {
+      setStatus("pending");
       try {
         await axios.post(
           "/api",
@@ -53,6 +56,7 @@ export const AddNewProduct = () => {
             },
           }
         );
+        setStatus("success");
       } catch (err) {
         console.log(err);
       }
@@ -108,7 +112,12 @@ export const AddNewProduct = () => {
       <label>type:</label>
       <input type="text" value={type} onChange={handleChangeType} />
       <br />
-      <button className="add-button" type="button" onClick={handleProductAdded}>
+      <button
+        className="add-button"
+        type="button"
+        onClick={handleProductAdded}
+        disabled={status !== "idle"}
+      >
         Add Product
       </button>
     </form>

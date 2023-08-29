@@ -2,6 +2,32 @@ const Product = require("../models/productModel");
 const OrderedProducts = require("../models/oderedProductsModel");
 const crypto = require("crypto");
 
+const handleAddDeleteMain = (updates) => {
+  for (let id in updates) {
+    async function update() {
+      const result = await Product.findOneAndUpdate(
+        { id: id },
+        { onhand: updates[id] }
+      );
+      //console.log(result);
+    }
+    update();
+  }
+};
+
+const handlePatchMain = (updates) => {
+  for (let id in updates) {
+    async function update() {
+      const result = await Product.findOneAndUpdate(
+        { id: id },
+        { $inc: { onhand: updates[id] } }
+      );
+      console.log(result);
+    }
+    update();
+  }
+};
+
 module.exports.product_get = (req, res) => {
   try {
     Product.find()
@@ -26,9 +52,14 @@ module.exports.product_post = async (req, res) => {
 
 module.exports.ordered_post = async (req, res) => {
   const { list, customerInfo } = req.body;
-  const uuid = crypto.randomUUID();
+  const updates = {};
+  list.forEach(({ id, onhand }) => {
+    updates[id] = onhand;
+  });
+  handleAddDeleteMain(updates);
 
-  const confirmId = uuid;
+  const randomId = crypto.randomBytes(16).toString("hex");
+  const confirmId = randomId;
 
   const productsOrdered = await OrderedProducts.create({
     confirmId,
@@ -59,7 +90,7 @@ module.exports.retreive_ordered_post = async (req, res) => {
         res.status(200).json({ orderInfo: "delivered" });
       }
     } else {
-      res.status(400).json({ error: "nothing ordered" });
+      res.status(404);
     }
   } catch (err) {
     console.log(err);
@@ -71,7 +102,8 @@ module.exports.retreive_ordered_post = async (req, res) => {
 
 module.exports.update_order_patch = async (req, res, next) => {
   const { confirmId, list, customerInfo } = req.body;
-  const updates = { list, customerInfo };
+  const orderUpdates = { list, customerInfo };
+  const updates = {};
   try {
     const allOrdered = await OrderedProducts.find();
     const orderedByUser = allOrdered.find(
@@ -79,13 +111,20 @@ module.exports.update_order_patch = async (req, res, next) => {
     );
 
     if (orderedByUser) {
+      orderedByUser.list.forEach(({ id, count }) => {
+        updates[id] = count;
+      });
+      list.forEach(({ id, count }) => {
+        updates[id] = updates[id] ? updates[id] - count : -count;
+      });
+      handlePatchMain(updates);
+
       const res = await OrderedProducts.updateOne(
         { confirmId: confirmId },
-        { $set: updates }
+        { $set: orderUpdates }
       );
-      console.log(res);
     } else {
-      next();
+      console.log("no order found");
     }
   } catch (err) {
     console.log(err);
@@ -94,6 +133,7 @@ module.exports.update_order_patch = async (req, res, next) => {
 
 module.exports.order_delete = async (req, res) => {
   const { confirmId } = req.body;
+  const updates = {};
 
   try {
     const allOrdered = await OrderedProducts.find();
@@ -102,10 +142,13 @@ module.exports.order_delete = async (req, res) => {
     );
 
     if (orderedByUser) {
+      orderedByUser.list.forEach(({ id, onhand, count }) => {
+        updates[id] = onhand + count;
+      });
+      handleAddDeleteMain(updates);
       const res = await OrderedProducts.deleteOne({ confirmId: confirmId });
-      console.log(res);
     } else {
-      next();
+      console.log("no order found");
     }
   } catch (err) {
     console.log(err);

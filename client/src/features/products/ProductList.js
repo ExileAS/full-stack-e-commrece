@@ -2,17 +2,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
   checkSelected,
-  countNewOnhand,
   productSelected,
   productUnSelected,
   selectAllProducts,
 } from "./productsSlice";
 import TimeAgo from "./TimeAgo";
 import SearchBar from "../search/SearchBar";
-import {
-  selectAllInCart,
-  selectAllOrdered,
-} from "../shoppingCart/shoppingCartSlice";
+import { selectAllInCart } from "../shoppingCart/shoppingCartSlice";
 import { fetchProducts } from "./productsSlice";
 import React, { useEffect, useState } from "react";
 import { Spinner } from "../../components/Spinner";
@@ -35,7 +31,8 @@ export const ProductExcerpt = React.memo(({ product, count, orderedList }) => {
   const available =
     productInCart === undefined || productInCart.onhand > 0 || availableInMain;
   return (
-    available && (
+    available &&
+    product && (
       <section className="product-card" key={product.id}>
         <Link to={"/products/" + product.id} className="product-name">
           <h2>
@@ -48,7 +45,9 @@ export const ProductExcerpt = React.memo(({ product, count, orderedList }) => {
         <span>
           added by{" "}
           {product.seller ? (
-            <Link to={"/users/" + sellerId}>{product.seller}</Link>
+            <Link to={"/users/" + sellerId} className="seller-link">
+              {product.seller}
+            </Link>
           ) : (
             "unknown"
           )}
@@ -104,17 +103,12 @@ export const ProductExcerpt = React.memo(({ product, count, orderedList }) => {
 export const ProductsList = () => {
   const dispatch = useDispatch();
   const status = useSelector((state) => state.products.status);
-  const ordered = useSelector(selectAllOrdered);
   const logged = useSelector((state) => state.user.loggedIn);
   useEffect(() => {
-    async function fetchAll() {
-      await dispatch(fetchProducts()).unwrap();
-      if (ordered) {
-        dispatch(countNewOnhand(ordered));
-      }
+    if (status === "idle") {
+      dispatch(fetchProducts());
     }
-    if (status === "idle") fetchAll();
-  }, [dispatch, status, ordered]);
+  }, [dispatch, status]);
 
   const products = useSelector(selectAllProducts);
   const error = useSelector((state) => state.error);
