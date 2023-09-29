@@ -2,10 +2,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllSelected } from "./productsSlice";
 import { ProductDetails } from "./ProductDetails";
 import { productUnSelected } from "./productsSlice";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { getCartLength } from "../shoppingCart/shoppingCartSlice";
 
 const SelectedList = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const cartHasItems = useSelector(getCartLength) > 0;
 
   const selectedList = useSelector(getAllSelected);
   const content = selectedList.map((product) => (
@@ -21,6 +25,13 @@ const SelectedList = () => {
       </button>
     </div>
   ));
+
+  useEffect(() => {
+    if (selectedList.length === 0) {
+      if (cartHasItems) navigate("/shoppingCart");
+      else navigate("/products");
+    }
+  }, [selectedList, cartHasItems, navigate]);
 
   return selectedList.length > 0 ? (
     <div>{content}</div>

@@ -241,3 +241,4 @@ export const getTotalCostOrdered = (state) =>
     (acc, item) => acc + item.price * item.count,
     0
   );
+export const getCartLength = (state) => state.shoppingCart.cart.length;

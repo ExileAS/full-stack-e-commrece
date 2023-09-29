@@ -34,7 +34,8 @@ const OrderedProductsList = () => {
       const currDiscountRatio = (discount / totalCost) * 100;
       const ratioDisplayed = `${currDiscountRatio}`.substring(0, 4);
       setDiscountRatio(ratioDisplayed);
-      setShippingFee(0);
+      if (totalCost > 1000) setShippingFee(0);
+      else setShippingFee(12);
       setCostAfterDiscount(totalCost - discount);
     }
   }, [totalCost, products]);
