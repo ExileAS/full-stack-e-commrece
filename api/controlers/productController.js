@@ -2,7 +2,7 @@ const Product = require("../models/productModel");
 const OrderedProducts = require("../models/oderedProductsModel");
 const crypto = require("crypto");
 
-const handleAddDeleteMain = (updates) => {
+const handleAddMain = (updates) => {
   for (let id in updates) {
     async function update() {
       const result = await Product.findOneAndUpdate(
@@ -15,14 +15,14 @@ const handleAddDeleteMain = (updates) => {
   }
 };
 
-const handlePatchMain = (updates) => {
+const handlePatchDeleteMain = (updates) => {
   for (let id in updates) {
     async function update() {
       const result = await Product.findOneAndUpdate(
         { id: id },
         { $inc: { onhand: updates[id] } }
       );
-      console.log(result);
+      //console.log(result);
     }
     update();
   }
@@ -56,7 +56,8 @@ module.exports.ordered_post = async (req, res) => {
   list.forEach(({ id, onhand }) => {
     updates[id] = onhand;
   });
-  handleAddDeleteMain(updates);
+  //console.log(updates);
+  handleAddMain(updates);
 
   const randomId = crypto.randomBytes(16).toString("hex");
   const confirmId = randomId;
@@ -117,7 +118,8 @@ module.exports.update_order_patch = async (req, res, next) => {
       list.forEach(({ id, count }) => {
         updates[id] = updates[id] ? updates[id] - count : -count;
       });
-      handlePatchMain(updates);
+      //console.log(updates);
+      handlePatchDeleteMain(updates);
 
       const res = await OrderedProducts.updateOne(
         { confirmId: confirmId },
@@ -142,10 +144,11 @@ module.exports.order_delete = async (req, res) => {
     );
 
     if (orderedByUser) {
-      orderedByUser.list.forEach(({ id, onhand, count }) => {
-        updates[id] = onhand + count;
+      orderedByUser.list.forEach(({ id, count }) => {
+        updates[id] = count;
       });
-      handleAddDeleteMain(updates);
+      //console.log(updates);
+      handlePatchDeleteMain(updates);
       const res = await OrderedProducts.deleteOne({ confirmId: confirmId });
     } else {
       console.log("no order found");
