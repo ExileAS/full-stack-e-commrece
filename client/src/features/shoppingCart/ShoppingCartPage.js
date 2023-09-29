@@ -76,7 +76,7 @@ const ShoppingCartPage = () => {
           className="place-order"
           onClick={() => navigate("/confirm-order")}
         >
-          Place Order
+          Confirm Order
         </button>
       )}
       <br />

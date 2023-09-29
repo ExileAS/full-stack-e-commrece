@@ -509,3 +509,7 @@ html {
 .seller-link {
   text-decoration: none;
 }
+
+.place-order:hover {
+  cursor: pointer;
+}
