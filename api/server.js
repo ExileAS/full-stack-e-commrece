@@ -5,17 +5,23 @@ const cookieParser = require("cookie-parser");
 const authRouter = require("./routes/authRoutes");
 const { checkUser, requireAuth } = require("./middleware/authMiddleware");
 const productRouter = require("./routes/productsRoutes");
+const cors = require("cors");
+require("dotenv").config();
+
+const corsOptions = {
+  origin: "http://localhost:3000",
+};
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors(corsOptions));
 
-const dbURI =
-  "mongodb+srv://ahmed-samy:shadow333@cluster0.vsmcsg8.mongodb.net/";
 mongoose
-  .connect(dbURI)
+  .connect(process.env.MONGODB_URI)
   .then((result) => {
-    app.listen(3007);
-    console.log("listening on port 3007");
+    const PORT = process.env.PORT || 3007;
+    app.listen(PORT);
+    console.log(`listening on port ${PORT}`);
   })
   .catch((err) => console.log(err));
 
