@@ -9,7 +9,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: "https://full-stack-webstore-react.onrender.com",
 };
 
 app.use(express.json());
