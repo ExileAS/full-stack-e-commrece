@@ -10,7 +10,7 @@ const initialState = {
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
   async () => {
-    const res = await fetch("/api/all-products", {
+    const res = await fetch("https://full-stack-webstore.onrender.com/", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
