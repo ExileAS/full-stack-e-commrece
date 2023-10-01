@@ -192,13 +192,10 @@ const shoppingCartSlice = createSlice({
         return state;
       })
       .addCase(retrieveOrderedList.fulfilled, (state, action) => {
-        state.ordered = action.payload.ordered ? action.payload.ordered : [];
-        state.customerInfo = action.payload.customerInfo
-          ? action.payload.customerInfo
-          : {};
-        state.orderInfo = action.payload.orderInfo
-          ? action.payload.orderInfo
-          : "undelivered";
+        state.ordered = action.payload.ordered;
+        state.customerInfo = action.payload.customerInfo;
+        state.orderInfo = action.payload.orderInfo;
+        state.confirmId = action.payload.orderId;
         return state;
       })
       .addCase(checkUserCart.rejected, (state, action) => {

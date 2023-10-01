@@ -32,9 +32,11 @@ const userSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(checkUser.fulfilled, (state, action) => {
-        state.loggedIn = true;
-        state.userEmail = action.payload.user;
-        return state;
+        if (action.payload.user) {
+          state.loggedIn = true;
+          state.userEmail = action.payload.user;
+          return state;
+        }
       })
       .addCase(checkUser.rejected, (state, action) => {
         state.loggedIn = false;

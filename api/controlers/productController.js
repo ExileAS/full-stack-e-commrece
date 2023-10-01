@@ -86,6 +86,7 @@ module.exports.retreive_ordered_post = async (req, res) => {
         res.status(200).json({
           ordered: orderedByUser.list,
           customerInfo: orderedByUser.customerInfo,
+          orderId: orderedByUser.confirmId,
         });
       } else {
         res.status(200).json({ orderInfo: "delivered" });
