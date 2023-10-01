@@ -10,6 +10,8 @@ require("dotenv").config();
 
 const corsOptions = {
   origin: "http://localhost:3000",
+  methods: ["GET", "PUT", "POST", "PATCH"],
+  credentials: true,
 };
 
 app.use(express.json());
