@@ -40,7 +40,7 @@ export const AddNewProduct = () => {
       setStatus("pending");
       try {
         await axios.post(
-          "/api",
+          `${process.env.REACT_APP_PROXY_HOST}/api`,
           {
             name: productName,
             description,

@@ -22,11 +22,14 @@ const Login = () => {
     setPasswordErr("");
     if (email.length > 0 && password.length > 0) {
       try {
-        const res = await fetch("/api/login", {
-          method: "POST",
-          body: JSON.stringify({ email, password }),
-          headers: { "Content-Type": "application/json" },
-        });
+        const res = await fetch(
+          `${process.env.REACT_APP_PROXY_HOST}/api/login`,
+          {
+            method: "POST",
+            body: JSON.stringify({ email, password }),
+            headers: { "Content-Type": "application/json" },
+          }
+        );
         const data = await res.json();
 
         if (data.errors) {

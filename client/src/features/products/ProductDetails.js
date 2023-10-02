@@ -43,10 +43,13 @@ export const ProductDetails = React.memo(({ productProp }) => {
 
   const handleAddToCart = async (product) => {
     try {
-      const res = await fetch("/api/requireAuth", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_PROXY_HOST}/api/requireAuth`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
       if (res.ok) {
         dispatch(addToShoppingCart(product));
         dispatch(productUnSelected({ productId: product.id }));

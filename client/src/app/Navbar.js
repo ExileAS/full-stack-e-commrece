@@ -17,7 +17,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await fetch("/api/logout", {
+    await fetch(`${process.env.REACT_APP_PROXY_HOST}/api/logout`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });

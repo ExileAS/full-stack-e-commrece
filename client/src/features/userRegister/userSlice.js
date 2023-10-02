@@ -6,7 +6,7 @@ const initialState = {
 };
 
 export const checkUser = createAsyncThunk("user/checkUser", async () => {
-  const res = await fetch("/api/auth", {
+  const res = await fetch(`${process.env.REACT_APP_PROXY_HOST}/api/auth`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });

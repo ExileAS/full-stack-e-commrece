@@ -18,11 +18,14 @@ const SignUp = () => {
     setEmailError("");
     setPasswordErr("");
     try {
-      const res = await fetch("/api/signup", {
-        method: "POST",
-        body: JSON.stringify({ email, password }),
-        headers: { "Content-Type": "application/json" },
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_PROXY_HOST}/api/signup`,
+        {
+          method: "POST",
+          body: JSON.stringify({ email, password }),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
       const data = await res.json();
       if (data.errors) {
         setEmailError(data.errors.email);

@@ -11,7 +11,7 @@ const initialState = {
 export const checkUserCart = createAsyncThunk(
   "shoppingCart/checkUser",
   async () => {
-    const res = await fetch("/api/auth", {
+    const res = await fetch(`${process.env.REACT_APP_PROXY_HOST}/api/auth`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
@@ -25,14 +25,17 @@ export const postOrdered = createAsyncThunk(
   async (_, { getState }) => {
     const state = getState();
     try {
-      const res = await fetch("/api/post-ordered", {
-        method: "POST",
-        body: JSON.stringify({
-          list: state.shoppingCart.ordered,
-          customerInfo: state.shoppingCart.customerInfo,
-        }),
-        headers: { "Content-Type": "application/json" },
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_PROXY_HOST}/api/post-ordered`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            list: state.shoppingCart.ordered,
+            customerInfo: state.shoppingCart.customerInfo,
+          }),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
       console.log(res);
       const data = await res.json();
       if (data.confirmId) {
@@ -48,11 +51,14 @@ export const retrieveOrderedList = createAsyncThunk(
   "shoppingCart/retrieveOrderedList",
   async (userEmail) => {
     try {
-      const res = await fetch("/api/retrieveOrdered", {
-        method: "POST",
-        body: JSON.stringify({ userEmail }),
-        headers: { "Content-Type": "application/json" },
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_PROXY_HOST}/api/retrieveOrdered`,
+        {
+          method: "POST",
+          body: JSON.stringify({ userEmail }),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
       const data = await res.json();
       if (!data.error) return data;
       console.log(data.error);
@@ -68,7 +74,7 @@ export const updateOrder = createAsyncThunk(
   (_, { getState }) => {
     const state = getState();
     try {
-      fetch("/api/updateOrder", {
+      fetch(`${process.env.REACT_APP_PROXY_HOST}/api/updateOrder`, {
         method: "PATCH",
         body: JSON.stringify({
           customerInfo: state.shoppingCart.customerInfo,
@@ -87,7 +93,7 @@ export const clearInDB = createAsyncThunk(
   "shoppingCart/clearInDB",
   (confirmId) => {
     try {
-      fetch("/api/deleteOrder", {
+      fetch(`${process.env.REACT_APP_PROXY_HOST}/api/deleteOrder`, {
         method: "DELETE",
         body: JSON.stringify({ confirmId }),
         headers: { "Content-Type": "application/json" },
