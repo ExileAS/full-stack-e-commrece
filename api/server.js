@@ -10,7 +10,7 @@ require("dotenv").config();
 
 const corsOptions = {
   origin: "http://localhost:3000",
-  methods: ["GET", "PUT", "POST", "PATCH"],
+  methods: ["GET", "PUT", "POST", "PATCH", "DELETE"],
   credentials: true,
 };
 

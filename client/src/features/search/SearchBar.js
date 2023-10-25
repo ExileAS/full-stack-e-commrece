@@ -27,6 +27,7 @@ const SearchBar = ({ data }) => {
     Object.keys(categories).every((key) => !categories[key].includes(item.type))
   );
 
+  console.log(searchCategory);
   const dataInCategory =
     searchCategory !== "others"
       ? data.filter(
@@ -61,7 +62,8 @@ const SearchBar = ({ data }) => {
 
   const handleChangeCategory = (e) => {
     const category = e.target.value;
-    setSearchCategory(category);
+    if (category === "all") setSearchCategory("");
+    else setSearchCategory(category);
     const result = data.filter(
       (item) => categories[category] && categories[category].includes(item.type)
     );
@@ -88,7 +90,9 @@ const SearchBar = ({ data }) => {
         className="search-box"
       ></textarea>
       <select className="search-categories" onChange={handleChangeCategory}>
-        <option value="" key=""></option>
+        <option value="all" key="0">
+          All
+        </option>
         <option value="devices" key="devices">
           devices
         </option>
