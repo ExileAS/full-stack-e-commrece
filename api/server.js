@@ -7,6 +7,8 @@ const { checkUser, requireAuth } = require("./middleware/authMiddleware");
 const productRouter = require("./routes/productsRoutes");
 const cors = require("cors");
 require("dotenv").config();
+const stripe = require("stripe")(process.env.STRIPE_KEY);
+const paymentRouter = require("./routes/paymentRoutes");
 
 const corsOptions = {
   origin: "http://localhost:3000",
@@ -34,3 +36,4 @@ app.get("/api/auth", checkUser);
 
 app.use(productRouter);
 app.use(authRouter);
+app.use(paymentRouter);
