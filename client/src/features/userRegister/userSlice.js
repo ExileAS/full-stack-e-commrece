@@ -36,6 +36,10 @@ const userSlice = createSlice({
           state.loggedIn = true;
           state.userEmail = action.payload.user;
           return state;
+        } else {
+          state.loggedIn = false;
+          state.userEmail = null;
+          return state;
         }
       })
       .addCase(checkUser.rejected, (state, action) => {

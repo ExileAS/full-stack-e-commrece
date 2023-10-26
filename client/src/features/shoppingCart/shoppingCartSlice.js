@@ -204,6 +204,15 @@ const shoppingCartSlice = createSlice({
         state.confirmId = null;
         state.customerInfo = {};
         return state;
+      })
+      .addCase(checkUserCart.fulfilled, (state, action) => {
+        if (action.payload.err) {
+          state.ordered = [];
+          state.cart = [];
+          state.confirmId = null;
+          state.customerInfo = {};
+          return state;
+        }
       });
   },
 });

@@ -8,7 +8,7 @@ const checkUser = (req, res, next) => {
   if (token) {
     jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
       if (err) {
-        res.json().then((json) => Promise.reject(json));
+        res.status(400).json({ err: "invalid token" });
         next();
       } else {
         const user = await userModel.findById(decodedToken.id);
@@ -17,7 +17,7 @@ const checkUser = (req, res, next) => {
       }
     });
   } else {
-    res.json().then((json) => Promise.reject(json));
+    res.status(400).json({ err: "no token" });
     next();
   }
 };

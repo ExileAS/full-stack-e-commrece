@@ -76,6 +76,25 @@ const OrderedProductsList = () => {
       </div>
     ));
 
+  const handleCheckout = async () => {
+    try {
+      const res = await fetch("/api/payment", {
+        method: "POST",
+        body: JSON.stringify({
+          confirmId: confirmId,
+        }),
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.assign(`${data.url}`);
+      }
+      console.log(data.error);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="ordered-content">
       {confirmId && totalCost > 0 && <b>Order ID: {confirmId}</b>}
@@ -101,6 +120,9 @@ const OrderedProductsList = () => {
             ordered by {customerInfo.firstName} {customerInfo.lastName}.
             shipping to <Link to="/confirm-order">{customerInfo.adress}</Link>
           </h3>
+          <button className="cancel-shipment" onClick={handleCheckout}>
+            Checkout
+          </button>
           <button
             className="cancel-shipment"
             onClick={async () => {
