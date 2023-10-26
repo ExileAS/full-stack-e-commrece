@@ -88,7 +88,7 @@ const SearchBar = ({ data }) => {
       ></textarea>
       <select className="search-categories" onChange={handleChangeCategory}>
         <option value="all" key="0">
-          All
+          Categories
         </option>
         <option value="devices" key="devices">
           devices
