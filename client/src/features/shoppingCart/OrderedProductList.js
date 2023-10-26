@@ -10,7 +10,7 @@ import {
 } from "./shoppingCartSlice";
 import { ProductExcerpt } from "../products/ProductList";
 import { useLayoutEffect, useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { fetchProducts } from "../products/productsSlice";
 
 const OrderedProductsList = () => {
@@ -24,6 +24,8 @@ const OrderedProductsList = () => {
   const [discountRatio, setDiscountRatio] = useState(0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { confirmId: confirm } = useParams();
+  const confirmed = confirm === confirmId;
 
   useEffect(() => {
     if (totalCost > 0) {
@@ -56,23 +58,27 @@ const OrderedProductsList = () => {
           count={product.count}
           orderedList={true}
         />
-        <button
-          onClick={() => {
-            dispatch(decrementInOrdered(product.id));
-            dispatch(updateOrder());
-          }}
-        >
-          -
-        </button>
-        <button
-          className="cancel-order"
-          onClick={() => {
-            dispatch(removeOrder(product.id));
-            dispatch(updateOrder());
-          }}
-        >
-          Cancel Order
-        </button>
+        {!confirmed && (
+          <div>
+            <button
+              onClick={() => {
+                dispatch(decrementInOrdered(product.id));
+                dispatch(updateOrder());
+              }}
+            >
+              -
+            </button>
+            <button
+              className="cancel-order"
+              onClick={() => {
+                dispatch(removeOrder(product.id));
+                dispatch(updateOrder());
+              }}
+            >
+              Cancel Order
+            </button>
+          </div>
+        )}
       </div>
     ));
 
@@ -118,22 +124,29 @@ const OrderedProductsList = () => {
         <div className="order-info">
           <h3>
             ordered by {customerInfo.firstName} {customerInfo.lastName}.
-            shipping to <Link to="/confirm-order">{customerInfo.adress}</Link>
+            shipping to{" "}
+            {!confirmed ? (
+              <Link to="/confirm-order">{customerInfo.adress}</Link>
+            ) : (
+              <b>{customerInfo.adress}</b>
+            )}
           </h3>
-          <button className="cancel-shipment" onClick={handleCheckout}>
-            Checkout
-          </button>
-          <button
-            className="cancel-shipment"
-            onClick={async () => {
-              dispatch(clearOrdered());
-              await dispatch(clearInDB(confirmId)).unwrap();
-              navigate("/products");
-              window.location.reload(true);
-            }}
-          >
-            <h3 className="cancel-text">Cancel Shipment</h3>
-          </button>
+          {!confirmed && (
+            <div>
+              <button onClick={handleCheckout}>Checkout</button>
+              <button
+                className="cancel-shipment"
+                onClick={async () => {
+                  dispatch(clearOrdered());
+                  await dispatch(clearInDB(confirmId)).unwrap();
+                  navigate("/products");
+                  window.location.reload(true);
+                }}
+              >
+                <h3 className="cancel-text">Cancel Shipment</h3>
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -47,6 +47,11 @@ function App() {
             path="/products/ordered"
             element={<OrderedProductsList />}
           />
+          <Route
+            exact
+            path="/products/ordered/:confirmId"
+            element={<OrderedProductsList />}
+          />
           <Route exact path="/signup" element={<SignUp />} />
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/products/selected" element={<SelectedList />} />

@@ -21,7 +21,7 @@ module.exports.payment_post = async (req, res) => {
           quantity: product.count,
         };
       }),
-      success_url: "http://localhost:3000/products/ordered",
+      success_url: `http://localhost:3000/products/ordered/${confirmId}`,
       cancel_url: "http://localhost:3000/products/ordered",
     });
     res.json({ url: session.url });
