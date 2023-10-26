@@ -55,6 +55,10 @@ const productsSlice = createSlice({
         });
       });
     },
+    setProductState(state, action) {
+      state.products = action.payload;
+      console.log(action.payload);
+    },
   },
   extraReducers(builder) {
     builder
@@ -79,6 +83,7 @@ export const {
   productSelected,
   productUnSelected,
   removeProduct,
+  setProductState,
 } = productsSlice.actions;
 
 export default productsSlice.reducer;

@@ -27,7 +27,6 @@ const SearchBar = ({ data }) => {
     Object.keys(categories).every((key) => !categories[key].includes(item.type))
   );
 
-  console.log(searchCategory);
   const dataInCategory =
     searchCategory !== "others"
       ? data.filter(
@@ -44,8 +43,6 @@ const SearchBar = ({ data }) => {
     )
     .filter((product) => !productsInCart.includes(product))
     .map((item) => <ProductExcerpt product={item} key={item.id} />);
-
-  const handleSearch = (e) => setSearch(e.target.value);
 
   let searchResult = "";
   if (search.length > 0) {
@@ -86,7 +83,7 @@ const SearchBar = ({ data }) => {
         name="search-bar"
         id="search-bar"
         value={search}
-        onChange={handleSearch}
+        onChange={(e) => setSearch(e.target.value)}
         className="search-box"
       ></textarea>
       <select className="search-categories" onChange={handleChangeCategory}>

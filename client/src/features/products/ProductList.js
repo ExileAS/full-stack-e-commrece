@@ -13,6 +13,7 @@ import { fetchProducts } from "./productsSlice";
 import React, { useEffect, useState } from "react";
 import { Spinner } from "../../components/Spinner";
 import { getIdByName } from "../sellers/sellersSlice";
+import SortOptions from "../sortingList/SortOptions";
 
 export const ProductExcerpt = React.memo(({ product, count, orderedList }) => {
   const logged = useSelector((state) => state.user.userEmail);
@@ -131,6 +132,7 @@ export const ProductsList = () => {
       <SearchBar data={products} />
       <br />
       <h2 className="all-products">All products:</h2>
+      <SortOptions products={products} />
       {content}
     </div>
   );
