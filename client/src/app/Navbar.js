@@ -6,6 +6,7 @@ import {
   clearCustomerInfo,
   clearOrdered,
   clearShoppingCart,
+  selectAllConfirmed,
 } from "../features/shoppingCart/shoppingCartSlice";
 import { getAllSelected } from "../features/products/productsSlice";
 
@@ -15,6 +16,7 @@ const Navbar = () => {
   const selected = useSelector(getAllSelected);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const confirmed = useSelector(selectAllConfirmed)?.length > 0;
 
   const handleLogout = async () => {
     await fetch("/api/logout", {
@@ -67,6 +69,7 @@ const Navbar = () => {
                 </button>
               </>
             )}
+            {confirmed && <Link to={"/products/ordered/:id"}>Confirmed</Link>}
           </div>
         </div>
       </section>

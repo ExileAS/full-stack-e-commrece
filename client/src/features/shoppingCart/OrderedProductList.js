@@ -7,25 +7,27 @@ import {
   selectAllOrdered,
   clearInDB,
   updateOrder,
+  selectAllConfirmed,
 } from "./shoppingCartSlice";
 import { ProductExcerpt } from "../products/ProductList";
 import { useLayoutEffect, useState, useEffect } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { fetchProducts } from "../products/productsSlice";
 
-const OrderedProductsList = () => {
-  const products = useSelector(selectAllOrdered);
+const OrderedProductsList = ({ confirmed }) => {
+  const productsUnconfirmed = useSelector(selectAllOrdered);
+  const productsConfirmed = useSelector(selectAllConfirmed);
+  const products = confirmed ? productsConfirmed : productsUnconfirmed;
   const totalCost = useSelector(getTotalCostOrdered);
   const status = useSelector((state) => state.products.status);
   const customerInfo = useSelector((state) => state.shoppingCart.customerInfo);
   const confirmId = useSelector((state) => state.shoppingCart.confirmId);
   const [costAfterDiscount, setCostAfterDiscount] = useState(totalCost);
-  const [shippingFee, setShippingFee] = useState(12);
+  const [shippingFee, setShippingFee] = useState(120);
   const [discountRatio, setDiscountRatio] = useState(0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { confirmId: confirm } = useParams();
-  const confirmed = confirm === confirmId;
+  console.log(productsConfirmed);
 
   useEffect(() => {
     if (totalCost > 0) {
@@ -37,7 +39,7 @@ const OrderedProductsList = () => {
       const ratioDisplayed = `${currDiscountRatio}`.substring(0, 4);
       setDiscountRatio(ratioDisplayed);
       if (totalCost > 1000) setShippingFee(0);
-      else setShippingFee(12);
+      else setShippingFee(120);
       setCostAfterDiscount(totalCost - discount);
     }
   }, [totalCost, products]);
@@ -117,7 +119,12 @@ const OrderedProductsList = () => {
             <b>total after discount {costAfterDiscount + shippingFee}</b>
           </div>
         ) : (
-          <h2 className="nothing-ordered">Nothing ordered yet</h2>
+          <div>
+            {" "}
+            {!confirmed && (
+              <h2 className="nothing-ordered">Nothing ordered yet</h2>
+            )}
+          </div>
         )}
       </div>
       {totalCost > 0 && (
@@ -131,7 +138,7 @@ const OrderedProductsList = () => {
               <b>{customerInfo.adress}</b>
             )}
           </h3>
-          {!confirmed && (
+          {!confirmed ? (
             <div>
               <button onClick={handleCheckout}>Checkout</button>
               <button
@@ -145,6 +152,10 @@ const OrderedProductsList = () => {
               >
                 <h3 className="cancel-text">Cancel Shipment</h3>
               </button>
+            </div>
+          ) : (
+            <div>
+              <h2 className="confirmed">Payment confirmed</h2>
             </div>
           )}
         </div>

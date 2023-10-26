@@ -6,6 +6,7 @@ module.exports.payment_post = async (req, res) => {
   try {
     const allOrdered = await OrderedProducts.find();
     const order = allOrdered.find((order) => order.confirmId === confirmId);
+    const id = order._id;
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
@@ -21,7 +22,7 @@ module.exports.payment_post = async (req, res) => {
           quantity: product.count,
         };
       }),
-      success_url: `http://localhost:3000/products/ordered/${confirmId}`,
+      success_url: `http://localhost:3000/products/ordered/${id}`,
       cancel_url: "http://localhost:3000/products/ordered",
     });
     res.json({ url: session.url });

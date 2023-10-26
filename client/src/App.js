@@ -14,6 +14,7 @@ import LandingPage from "./features/landingPage/LandingPage";
 import SignUp from "./features/userRegister/SignupForm";
 import Login from "./features/userRegister/LoginForm";
 import SelectedList from "./features/products/SelectedList";
+import PaymentConfirmed from "./features/shoppingCart/PaymentConfirmed";
 
 function App() {
   return (
@@ -49,8 +50,8 @@ function App() {
           />
           <Route
             exact
-            path="/products/ordered/:confirmId"
-            element={<OrderedProductsList />}
+            path="/products/ordered/:id"
+            element={<PaymentConfirmed />}
           />
           <Route exact path="/signup" element={<SignUp />} />
           <Route exact path="/login" element={<Login />} />

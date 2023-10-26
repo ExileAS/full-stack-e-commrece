@@ -536,3 +536,8 @@ html {
   position: absolute;
   padding: 2px;
 }
+
+.confirmed {
+  color: green;
+  position: relative;
+}

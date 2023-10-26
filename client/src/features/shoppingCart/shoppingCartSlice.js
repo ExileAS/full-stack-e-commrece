@@ -6,6 +6,8 @@ const initialState = {
   confirmId: null,
   customerInfo: {},
   orderInfo: "undelivered",
+  payment: false,
+  payedOrder: [],
 };
 
 export const checkUserCart = createAsyncThunk(
@@ -183,11 +185,16 @@ const shoppingCartSlice = createSlice({
       state.ordered = action.payload;
       return state;
     },
+    confirmPayment(state, action) {
+      state.payment = true;
+      state.payedOrder = [...state.ordered];
+      state.ordered = [];
+      return state;
+    },
   },
   extraReducers(builder) {
     builder
       .addCase(postOrdered.fulfilled, (state, action) => {
-        console.log(action.payload);
         state.confirmId = action.payload;
         return state;
       })
@@ -229,6 +236,7 @@ export const {
   removeOrder,
   clearCustomerInfo,
   createOrderedList,
+  confirmPayment,
 } = shoppingCartSlice.actions;
 export const selectAllInCart = (state) => state.shoppingCart.cart;
 export const getTotalCost = (state) =>
@@ -241,6 +249,7 @@ export const checkAdded = (state, id) =>
     ? false
     : true;
 export const selectAllOrdered = (state) => state.shoppingCart.ordered;
+export const selectAllConfirmed = (state) => state.shoppingCart.payedOrder;
 export const getTotalCostOrdered = (state) =>
   state.shoppingCart.ordered &&
   state.shoppingCart.ordered.reduce(
