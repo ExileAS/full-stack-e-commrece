@@ -513,3 +513,17 @@ html {
 .place-order:hover {
   cursor: pointer;
 }
+
+.sortby {
+  color: rgba(220, 20, 130, 0.885);
+  font-size: large;
+}
+
+.sortopts {
+  margin: 4px;
+  padding: 2px;
+}
+
+.orderopts {
+  padding: 2px;
+}
