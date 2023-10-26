@@ -187,9 +187,6 @@ const shoppingCartSlice = createSlice({
     },
     confirmPayment(state, action) {
       state.payment = true;
-      // state.payedOrder = [...state.ordered];
-      // state.ordered = [];
-      // return state;
       state.payedOrder = [...state.payedOrder, ...state.ordered];
       state.ordered = [];
       return state;
