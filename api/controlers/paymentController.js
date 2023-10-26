@@ -30,3 +30,16 @@ module.exports.payment_post = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+module.exports.confirm_payment = async (req, res) => {
+  const { confirmId } = req.body;
+  try {
+    await OrderedProducts.findOneAndUpdate(
+      { confirmId: confirmId },
+      { $set: { customerPayed: true } }
+    );
+    res.status(200).json({ confirm: "payment confirmed" });
+  } catch (err) {
+    console.log(err);
+  }
+};

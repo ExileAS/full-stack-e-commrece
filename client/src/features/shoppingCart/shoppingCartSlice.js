@@ -35,7 +35,6 @@ export const postOrdered = createAsyncThunk(
         }),
         headers: { "Content-Type": "application/json" },
       });
-      console.log(res);
       const data = await res.json();
       if (data.confirmId) {
         return data.confirmId;
@@ -141,6 +140,7 @@ const shoppingCartSlice = createSlice({
     },
     clearOrdered(state, action) {
       state.ordered = [];
+      state.payedOrder = [];
       return state;
     },
     productsOrdered(state, action) {
@@ -199,10 +199,14 @@ const shoppingCartSlice = createSlice({
         return state;
       })
       .addCase(retrieveOrderedList.fulfilled, (state, action) => {
-        state.ordered = action.payload.ordered;
         state.customerInfo = action.payload.customerInfo;
         state.orderInfo = action.payload.orderInfo;
         state.confirmId = action.payload.orderId;
+        if (action.payload.payed) {
+          state.payedOrder = action.payload.ordered;
+        } else {
+          state.ordered = action.payload.ordered;
+        }
         return state;
       })
       .addCase(checkUserCart.rejected, (state, action) => {
