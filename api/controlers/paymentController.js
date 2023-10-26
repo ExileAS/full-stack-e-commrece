@@ -25,7 +25,7 @@ module.exports.payment_post = async (req, res) => {
       success_url: `http://localhost:3000/products/ordered/${id}`,
       cancel_url: "http://localhost:3000/products/ordered",
     });
-    res.json({ url: session.url });
+    res.json({ url: session.url, id });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

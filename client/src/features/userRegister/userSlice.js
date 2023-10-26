@@ -3,6 +3,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 const initialState = {
   userEmail: null,
   loggedIn: false,
+  userOrderId: null,
 };
 
 export const checkUser = createAsyncThunk("user/checkUser", async () => {
@@ -28,6 +29,10 @@ const userSlice = createSlice({
       state.userEmail = action.payload;
       return state;
     },
+    setOrderId(state, action) {
+      state.userOrderId = action.payload;
+      return state;
+    },
   },
   extraReducers(builder) {
     builder
@@ -50,6 +55,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { logout, login } = userSlice.actions;
+export const { logout, login, setOrderId } = userSlice.actions;
 
 export default userSlice.reducer;

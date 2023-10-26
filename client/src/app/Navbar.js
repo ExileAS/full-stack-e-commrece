@@ -28,7 +28,6 @@ const Navbar = () => {
     dispatch(clearShoppingCart());
     dispatch(clearCustomerInfo());
     navigate("/products");
-    window.location.reload(true);
   };
 
   return (
@@ -69,7 +68,9 @@ const Navbar = () => {
                 </button>
               </>
             )}
-            {confirmed && <Link to={"/products/ordered/:id"}>Confirmed</Link>}
+            {confirmed && logged && (
+              <Link to={"/products/ordered/:id"}>Confirmed</Link>
+            )}
           </div>
         </div>
       </section>

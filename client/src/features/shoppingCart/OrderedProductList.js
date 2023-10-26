@@ -13,6 +13,7 @@ import { ProductExcerpt } from "../products/ProductList";
 import { useLayoutEffect, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchProducts } from "../products/productsSlice";
+import { setOrderId } from "../userRegister/userSlice";
 
 const OrderedProductsList = ({ confirmed }) => {
   const productsUnconfirmed = useSelector(selectAllOrdered);
@@ -27,7 +28,6 @@ const OrderedProductsList = ({ confirmed }) => {
   const [discountRatio, setDiscountRatio] = useState(0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  console.log(productsConfirmed);
 
   useEffect(() => {
     if (totalCost > 0) {
@@ -95,6 +95,7 @@ const OrderedProductsList = ({ confirmed }) => {
       });
       const data = await res.json();
       if (data.url) {
+        dispatch(setOrderId(data.id));
         window.location.assign(`${data.url}`);
       }
       console.log(data.error);
