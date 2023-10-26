@@ -15,6 +15,7 @@ const cartPersistConfig = {
 const userPersistConfig = {
   key: "users",
   storage,
+  blacklist: ["userOrderId"],
 };
 
 const persistedReducerCart = persistReducer(
