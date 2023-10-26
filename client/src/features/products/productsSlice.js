@@ -57,7 +57,6 @@ const productsSlice = createSlice({
     },
     setProductState(state, action) {
       state.products = action.payload;
-      console.log(action.payload);
     },
   },
   extraReducers(builder) {
