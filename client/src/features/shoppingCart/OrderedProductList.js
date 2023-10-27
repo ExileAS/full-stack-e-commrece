@@ -14,6 +14,7 @@ import { useLayoutEffect, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchProducts } from "../products/productsSlice";
 import { setOrderId } from "../userRegister/userSlice";
+import { Spinner } from "../../components/Spinner";
 
 const OrderedProductsList = ({ confirmed }) => {
   const productsUnconfirmed = useSelector(selectAllOrdered);
@@ -26,6 +27,7 @@ const OrderedProductsList = ({ confirmed }) => {
   const [costAfterDiscount, setCostAfterDiscount] = useState(totalCost);
   const [shippingFee, setShippingFee] = useState(120);
   const [discountRatio, setDiscountRatio] = useState(0);
+  const [disableCheckout, setDisableCheckout] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -83,10 +85,9 @@ const OrderedProductsList = ({ confirmed }) => {
         )}
       </div>
     ));
-  let disableCheckout = false;
 
   const handleCheckout = async () => {
-    disableCheckout = true;
+    setDisableCheckout(true);
     try {
       const res = await fetch("/api/payment", {
         method: "POST",
@@ -143,13 +144,19 @@ const OrderedProductsList = ({ confirmed }) => {
           </h3>
           {!confirmed && (
             <div>
-              <button
-                onClick={handleCheckout}
-                className="checkout"
-                disabled={disableCheckout}
-              >
-                <b>Checkout</b>
-              </button>
+              <div>
+                {!disableCheckout ? (
+                  <button
+                    onClick={handleCheckout}
+                    className="checkout"
+                    disabled={disableCheckout}
+                  >
+                    <b>Checkout</b>
+                  </button>
+                ) : (
+                  <Spinner text="loading..." />
+                )}
+              </div>
               <button
                 className="cancel-shipment"
                 onClick={async () => {
