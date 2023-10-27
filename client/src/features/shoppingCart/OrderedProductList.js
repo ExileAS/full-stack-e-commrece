@@ -166,7 +166,9 @@ const OrderedProductsList = ({ confirmed }) => {
                   window.location.reload(true);
                 }}
               >
-                <b className="cancel-text">Cancel Shipment &#128465;</b>
+                <b className="cancel-text" disabled={disableCheckout}>
+                  Cancel Shipment &#128465;
+                </b>
               </button>
             </div>
           )}
