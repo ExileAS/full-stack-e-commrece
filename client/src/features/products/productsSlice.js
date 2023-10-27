@@ -70,7 +70,7 @@ const productsSlice = createSlice({
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.status = "success";
-        state.products = [...state.products, ...action.payload.result];
+        state.products = [...action.payload.result];
         return state;
       });
   },

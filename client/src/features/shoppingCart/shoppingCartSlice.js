@@ -78,6 +78,7 @@ export const updateOrder = createAsyncThunk(
           customerInfo: state.shoppingCart.customerInfo,
           list: listUpdates,
           confirmId: state.shoppingCart.confirmId,
+          payedOrder: state.shoppingCart.payment,
         }),
         headers: { "Content-Type": "application/json" },
       });

@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   postOrdered,
   productsOrdered,
-  selectAllConfirmed,
   selectAllInCart,
   selectAllOrdered,
   updateOrder,
@@ -19,7 +18,6 @@ const ConfirmOrderForm = () => {
   const userEmail = useSelector((state) => state.user.userEmail);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const confirmedOrder = useSelector(selectAllConfirmed);
 
   const emptyForm = {
     firstName: "",
@@ -66,7 +64,7 @@ const ConfirmOrderForm = () => {
         })
       );
       navigate("/products/ordered");
-      if (currentOrdered.length === 0 && confirmedOrder.length === 0) {
+      if (currentOrdered.length === 0) {
         dispatch(postOrdered());
       } else {
         dispatch(updateOrder());

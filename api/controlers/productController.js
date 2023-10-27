@@ -28,6 +28,31 @@ const handlePatchDeleteMain = (updates) => {
   }
 };
 
+const handleDeleteRedundant = async (info, list, confirmId) => {
+  const { userEmail } = info;
+  try {
+    const existingOrder = await OrderedProducts.findOne({
+      "customerInfo.userEmail": userEmail,
+    });
+    if (!existingOrder) return;
+    if (existingOrder.confirmId === confirmId) return;
+    const existingList = existingOrder.list;
+    const existingId = existingOrder._id;
+    let count = 0;
+    for (let p of existingList) {
+      let redundant = list.find(({ id }) => p.id === id);
+      if (redundant) count++;
+    }
+
+    if (count === existingList.length) {
+      const res = await OrderedProducts.deleteOne({ _id: existingId });
+      console.log("res:" + res);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports.product_get = (req, res) => {
   try {
     Product.find()
@@ -67,6 +92,7 @@ module.exports.ordered_post = async (req, res) => {
     list,
     customerInfo,
     delivered: false,
+    customerPayed: false,
   });
   productsOrdered
     .save()
@@ -105,7 +131,7 @@ module.exports.retreive_ordered_post = async (req, res) => {
 };
 
 module.exports.update_order_patch = async (req, res, next) => {
-  const { confirmId, list, customerInfo } = req.body;
+  const { confirmId, list, customerInfo, payedOrder } = req.body;
   const orderUpdates = { list, customerInfo };
   const updates = {};
   try {
@@ -123,11 +149,11 @@ module.exports.update_order_patch = async (req, res, next) => {
       });
       //console.log(updates);
       handlePatchDeleteMain(updates);
-      console.log(orderUpdates);
       const res = await OrderedProducts.updateOne(
         { confirmId: confirmId },
         { $set: orderUpdates }
       );
+      if (payedOrder) handleDeleteRedundant(customerInfo, list, confirmId);
     } else {
       console.log("no order found");
     }

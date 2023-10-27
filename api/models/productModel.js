@@ -8,9 +8,11 @@ const productSchema = new Schema(
     },
     price: {
       type: Number,
+      min: [1, "price cant be 0"],
     },
     onhand: {
       type: Number,
+      min: [1, "onhand cant be 0"],
     },
     seller: {
       type: String,
