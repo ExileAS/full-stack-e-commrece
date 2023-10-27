@@ -433,7 +433,7 @@ html {
 
 .order-info {
   color: rgb(165, 42, 83);
-  font-size: large;
+  font-size: medium;
   font-style: italic;
 }
 
@@ -540,4 +540,39 @@ html {
 .confirmed {
   color: green;
   position: relative;
+}
+
+.checkout {
+  border-radius: 12px;
+  border-color: lightblue;
+  background-color: rgb(217, 0, 255);
+  margin: 12px;
+  margin-left: 9px;
+  position: relative;
+  display: inline-block;
+  font-size: larger;
+  padding: 15px;
+  color: black;
+}
+
+.checkout:hover {
+  cursor: pointer;
+  color: rgb(0, 51, 255);
+}
+
+.cancel-shipment {
+  border-radius: 10px;
+  border-color: lightblue;
+  background-color: rgba(255, 255, 255, 0);
+  margin: 10px;
+  margin-left: 9px;
+  position: relative;
+  display: inline-block;
+  font-size: large;
+  padding: 12px;
+  color: black;
+}
+
+.cancel-shipment:hover {
+  cursor: pointer;
 }

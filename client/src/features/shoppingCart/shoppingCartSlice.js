@@ -187,7 +187,32 @@ const shoppingCartSlice = createSlice({
     },
     confirmPayment(state, action) {
       state.payment = true;
-      state.payedOrder = [...state.payedOrder, ...state.ordered];
+      const order = [...state.payedOrder, ...state.ordered];
+      if (!state.payedOrder.length) {
+        state.payedOrder = order;
+        state.ordered = [];
+        return state;
+      }
+      const updated = state.payedOrder
+        .map((product) => {
+          const existing = state.ordered.find(({ id }) => product.id === id);
+          if (existing) {
+            return {
+              ...product,
+              count: product.count + 1,
+            };
+          }
+          return product;
+        })
+        .concat(state.ordered);
+
+      const filtered = updated.filter((product, ind) => {
+        return (
+          ind === updated.indexOf(updated.find(({ id }) => product.id === id))
+        );
+      });
+      state.payedOrder = filtered;
+
       state.ordered = [];
       return state;
     },

@@ -83,8 +83,10 @@ const OrderedProductsList = ({ confirmed }) => {
         )}
       </div>
     ));
+  let disableCheckout = false;
 
   const handleCheckout = async () => {
+    disableCheckout = true;
     try {
       const res = await fetch("/api/payment", {
         method: "POST",
@@ -139,9 +141,15 @@ const OrderedProductsList = ({ confirmed }) => {
               <b>{customerInfo.adress}</b>
             )}
           </h3>
-          {!confirmed ? (
+          {!confirmed && (
             <div>
-              <button onClick={handleCheckout}>Checkout</button>
+              <button
+                onClick={handleCheckout}
+                className="checkout"
+                disabled={disableCheckout}
+              >
+                <b>Checkout</b>
+              </button>
               <button
                 className="cancel-shipment"
                 onClick={async () => {
@@ -151,12 +159,8 @@ const OrderedProductsList = ({ confirmed }) => {
                   window.location.reload(true);
                 }}
               >
-                <h3 className="cancel-text">Cancel Shipment</h3>
+                <b className="cancel-text">Cancel Shipment &#128465;</b>
               </button>
-            </div>
-          ) : (
-            <div>
-              <h2 className="confirmed">Payment confirmed</h2>
             </div>
           )}
         </div>
