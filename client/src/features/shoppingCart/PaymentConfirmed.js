@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import OrderedProductsList from "./OrderedProductList";
 import { useDispatch, useSelector } from "react-redux";
-import { confirmPayment } from "./shoppingCartSlice";
+import { confirmPayment, updateOrder } from "./shoppingCartSlice";
 import { useParams } from "react-router-dom";
 const PaymentConfirmed = () => {
   const confirmId = useSelector((state) => state.shoppingCart.confirmId);
@@ -12,6 +12,7 @@ const PaymentConfirmed = () => {
   useEffect(() => {
     if (orderId === id) {
       dispatch(confirmPayment());
+      dispatch(updateOrder());
       fetch("/api/confirmPayment", {
         method: "POST",
         body: JSON.stringify({ confirmId }),

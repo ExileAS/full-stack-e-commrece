@@ -68,12 +68,15 @@ export const updateOrder = createAsyncThunk(
   "shoppingCart/updateOrder",
   (_, { getState }) => {
     const state = getState();
+    const listUpdates = state.shoppingCart.ordered.length
+      ? state.shoppingCart.ordered
+      : state.shoppingCart.payedOrder;
     try {
       fetch("/api/updateOrder", {
         method: "PATCH",
         body: JSON.stringify({
           customerInfo: state.shoppingCart.customerInfo,
-          list: state.shoppingCart.ordered,
+          list: listUpdates,
           confirmId: state.shoppingCart.confirmId,
         }),
         headers: { "Content-Type": "application/json" },
@@ -224,6 +227,7 @@ const shoppingCartSlice = createSlice({
         return state;
       })
       .addCase(retrieveOrderedList.fulfilled, (state, action) => {
+        console.log(action.payload);
         state.customerInfo = action.payload.customerInfo;
         state.orderInfo = action.payload.orderInfo;
         state.confirmId = action.payload.orderId;

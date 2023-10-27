@@ -81,6 +81,7 @@ module.exports.retreive_ordered_post = async (req, res) => {
     const orderedByUser = allOrdered.find(
       ({ customerInfo }) => customerInfo.userEmail === userEmail
     );
+    //console.log(orderedByUser);
     if (orderedByUser) {
       if (orderedByUser.delivered === false) {
         res.status(200).json({
@@ -122,7 +123,7 @@ module.exports.update_order_patch = async (req, res, next) => {
       });
       //console.log(updates);
       handlePatchDeleteMain(updates);
-
+      console.log(orderUpdates);
       const res = await OrderedProducts.updateOne(
         { confirmId: confirmId },
         { $set: orderUpdates }
