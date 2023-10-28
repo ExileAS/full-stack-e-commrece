@@ -573,6 +573,29 @@ html {
   color: black;
 }
 
+.add-all {
+  border-radius: 10px;
+  border-color: rgb(173, 181, 230);
+  background-color: rgba(255, 255, 255, 0);
+  margin: 10px;
+  margin-left: 9px;
+  position: relative;
+  display: inline-block;
+  font-size: large;
+  padding-left: 15px;
+  padding-right: 15px;
+  color: black;
+}
+
+.add-all:hover {
+  cursor: pointer;
+  color: #481499;
+}
+
+.add-all-div {
+  text-align: center;
+}
+
 .cancel-shipment:hover {
   cursor: pointer;
 }

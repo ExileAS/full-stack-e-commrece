@@ -230,8 +230,12 @@ const shoppingCartSlice = createSlice({
       .addCase(retrieveOrderedList.fulfilled, (state, action) => {
         console.log(action.payload);
         state.customerInfo = action.payload.customerInfo;
-        state.orderInfo = action.payload.orderInfo;
         state.confirmId = action.payload.orderId;
+        if (action.payload.isSplit) {
+          state.ordered = action.payload.orderedUnpaid;
+          state.payedOrder = action.payload.orderedPaid;
+          return state;
+        }
         if (action.payload.payed) {
           state.payedOrder = action.payload.ordered;
         } else {

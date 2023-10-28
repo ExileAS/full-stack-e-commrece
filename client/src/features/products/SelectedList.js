@@ -4,7 +4,10 @@ import { ProductDetails } from "./ProductDetails";
 import { productUnSelected } from "./productsSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { getCartLength } from "../shoppingCart/shoppingCartSlice";
+import {
+  getCartLength,
+  addToShoppingCart,
+} from "../shoppingCart/shoppingCartSlice";
 
 const SelectedList = () => {
   const dispatch = useDispatch();
@@ -33,8 +36,34 @@ const SelectedList = () => {
     }
   }, [selectedList, cartHasItems, navigate]);
 
+  const handleAddAll = async (selectedList) => {
+    try {
+      const res = await fetch("/api/requireAuth", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (res.ok) {
+        selectedList.forEach((product) => {
+          dispatch(addToShoppingCart(product));
+          dispatch(productUnSelected({ productId: product.id }));
+        });
+      } else {
+        navigate("/signup");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return selectedList.length > 0 ? (
-    <div>{content}</div>
+    <div>
+      {content}
+      <div className="add-all-div">
+        <button onClick={() => handleAddAll(selectedList)} className="add-all">
+          <h3>add all &#128722;</h3>
+        </button>
+      </div>
+    </div>
   ) : (
     <div>
       <h3>

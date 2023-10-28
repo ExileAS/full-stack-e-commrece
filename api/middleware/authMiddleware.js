@@ -28,14 +28,14 @@ const requireAuth = (req, res, next) => {
   if (token) {
     jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
       if (err) {
-        res.json().then((json) => Promise.reject(json));
+        res.status(400).json({ err: "invalid token" });
       } else {
         res.status(200).json({ user: decodedToken.id });
         next();
       }
     });
   } else {
-    res.json().then((json) => Promise.reject(json));
+    res.status(400).json({ err: "no token" });
   }
 };
 

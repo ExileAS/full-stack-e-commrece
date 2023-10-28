@@ -103,10 +103,32 @@ module.exports.ordered_post = async (req, res) => {
 module.exports.retreive_ordered_post = async (req, res) => {
   const { userEmail } = req.body;
   try {
-    const allOrdered = await OrderedProducts.find();
-    const orderedByUser = allOrdered.find(
-      ({ customerInfo }) => customerInfo.userEmail === userEmail
-    );
+    const orderedByUser = await OrderedProducts.findOne({
+      "customerInfo.userEmail": userEmail,
+    });
+
+    if (orderedByUser && orderedByUser.customerPayed) {
+      const unpaidOrder = await OrderedProducts.findOne({
+        "customerInfo.userEmail": userEmail,
+        customerPayed: false,
+      });
+      // console.log(unpaidOrder);
+      if (unpaidOrder) {
+        if (unpaidOrder.delivered && orderedByUser.delivered) {
+          res.status(200).json({ orderInfo: "delivered" });
+        } else {
+          res.status(200).json({
+            isSplit: true,
+            orderedPaid: orderedByUser.list,
+            orderedUnpaid: unpaidOrder.list,
+            customerInfo: orderedByUser.customerInfo,
+            orderId: orderedByUser.confirmId,
+          });
+        }
+        return;
+      }
+    }
+
     //console.log(orderedByUser);
     if (orderedByUser) {
       if (orderedByUser.delivered === false) {
@@ -135,10 +157,9 @@ module.exports.update_order_patch = async (req, res, next) => {
   const orderUpdates = { list, customerInfo };
   const updates = {};
   try {
-    const allOrdered = await OrderedProducts.find();
-    const orderedByUser = allOrdered.find(
-      (order) => order.confirmId === confirmId
-    );
+    const orderedByUser = await OrderedProducts.findOne({
+      confirmId: confirmId,
+    });
 
     if (orderedByUser) {
       orderedByUser.list.forEach(({ id, count }) => {
@@ -167,10 +188,9 @@ module.exports.order_delete = async (req, res) => {
   const updates = {};
 
   try {
-    const allOrdered = await OrderedProducts.find();
-    const orderedByUser = allOrdered.find(
-      (order) => order.confirmId === confirmId
-    );
+    const orderedByUser = await OrderedProducts.findOne({
+      confirmId: confirmId,
+    });
 
     if (orderedByUser) {
       orderedByUser.list.forEach(({ id, count }) => {

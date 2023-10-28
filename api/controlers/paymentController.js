@@ -4,8 +4,7 @@ const OrderedProducts = require("../models/oderedProductsModel");
 module.exports.payment_post = async (req, res) => {
   const { confirmId } = req.body;
   try {
-    const allOrdered = await OrderedProducts.find();
-    const order = allOrdered.find((order) => order.confirmId === confirmId);
+    const order = await OrderedProducts.findOne({ confirmId: confirmId });
     const id = order._id;
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],

@@ -156,20 +156,24 @@ const OrderedProductsList = ({ confirmed }) => {
                 ) : (
                   <Spinner text="loading..." />
                 )}
-              </div>
-              <button
-                className="cancel-shipment"
-                onClick={async () => {
-                  dispatch(clearOrdered());
-                  await dispatch(clearInDB(confirmId)).unwrap();
-                  navigate("/products");
-                  window.location.reload(true);
-                }}
-              >
-                <b className="cancel-text" disabled={disableCheckout}>
-                  Cancel Shipment &#128465;
-                </b>
-              </button>
+              </div>{" "}
+              {!disableCheckout ? (
+                <button
+                  className="cancel-shipment"
+                  onClick={async () => {
+                    dispatch(clearOrdered());
+                    await dispatch(clearInDB(confirmId)).unwrap();
+                    navigate("/products");
+                    window.location.reload(true);
+                  }}
+                >
+                  <b className="cancel-text" disabled={disableCheckout}>
+                    Cancel Shipment &#128465;
+                  </b>
+                </button>
+              ) : (
+                <div></div>
+              )}
             </div>
           )}
         </div>

@@ -38,10 +38,10 @@ const SortOptions = ({ products }) => {
         onChange={(e) => setOrder(e.target.value)}
       >
         <option value="up">
-          {sortBy === "price" ? <b> Ascending</b> : <b> newest</b>}
+          {sortBy === "price" ? "Ascending" : " newest"}
         </option>
         <option value="down">
-          {sortBy === "price" ? <b> Descending</b> : <b> oldest</b>}
+          {sortBy === "price" ? "Descending" : "oldest"}
         </option>
       </select>
     </div>
