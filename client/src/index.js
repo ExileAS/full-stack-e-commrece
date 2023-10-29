@@ -13,7 +13,6 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 
 store.dispatch(checkUser());
 store.dispatch(checkUserCart());
-console.log("hello");
 
 root.render(
   <Provider store={store}>

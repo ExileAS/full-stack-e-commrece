@@ -247,6 +247,7 @@ const shoppingCartSlice = createSlice({
         state.cart = [];
         state.confirmId = null;
         state.customerInfo = {};
+        state.payedOrder = [];
         return state;
       })
       .addCase(checkUserCart.fulfilled, (state, action) => {
@@ -255,8 +256,8 @@ const shoppingCartSlice = createSlice({
           state.cart = [];
           state.confirmId = null;
           state.customerInfo = {};
-          return state;
         }
+        return state;
       });
   },
 });

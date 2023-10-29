@@ -47,13 +47,21 @@ const userSlice = createSlice({
     },
   },
   extraReducers(builder) {
-    builder.addCase(checkUser.rejected, (state, action) => {
-      console.log(action.payload.err);
-      state.loggedIn = false;
-      state.userEmail = null;
-      state.google = false;
-      return state;
-    });
+    builder
+      .addCase(checkUser.rejected, (state, action) => {
+        state.loggedIn = false;
+        state.userEmail = null;
+        state.google = false;
+        return state;
+      })
+      .addCase(checkUser.fulfilled, (state, action) => {
+        if (action.payload.err) {
+          state.loggedIn = false;
+          state.userEmail = null;
+          state.google = false;
+        }
+        return state;
+      });
   },
 });
 
