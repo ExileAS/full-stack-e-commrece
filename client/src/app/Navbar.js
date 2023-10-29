@@ -38,49 +38,51 @@ const Navbar = () => {
   };
 
   return (
-    <nav>
-      <h1 className="page-title">
-        <Link to={"/"} className="page-title">
-          Simple Online Store
-        </Link>
-      </h1>
-      <section>
-        <div className="navContent">
-          <div className="navLinks">
-            <Link to="/products">products</Link>
-            <Link to="/users">sellers</Link>
-            <Link to="/shoppingCart">
-              <img src={imgSrc} alt="" className="img" />
-            </Link>
-            {selected.length > 0 && (
-              <Link to={"/products/selected"} className="Selected-Nav">
-                Selected
+    <div>
+      <nav>
+        <h1 className="page-title">
+          <Link to={"/"} className="page-title">
+            Simple Online Store
+          </Link>
+        </h1>
+        <section>
+          <div className="navContent">
+            <div className="navLinks">
+              <Link to="/products">products</Link>
+              <Link to="/users">sellers</Link>
+              <Link to="/shoppingCart">
+                <img src={imgSrc} alt="" className="img" />
               </Link>
-            )}
-            <Link to={"/products/ordered"}>Ordered</Link>
-            {!logged ? (
-              <>
-                <Link to={"/signup"}>
-                  <button className="signup">Sign Up</button>
+              {selected.length > 0 && (
+                <Link to={"/products/selected"} className="Selected-Nav">
+                  Selected
                 </Link>
-                <Link to={"/login"}>
-                  <button className="login">Log in</button>
-                </Link>
-              </>
-            ) : (
-              <>
-                <h2 className="welcome">Welcome {user}</h2>
-                <button className="add-button" onClick={handleLogout}>
-                  Logout
-                </button>
-              </>
-            )}
-            {confirmed && logged && (
-              <Link to={"/products/ordered/:id"}>Confirmed</Link>
-            )}
+              )}
+              <Link to={"/products/ordered"}>Ordered</Link>
+              {!logged ? (
+                <>
+                  <Link to={"/signup"}>
+                    <button className="signup">Sign Up</button>
+                  </Link>
+                  <Link to={"/login"}>
+                    <button className="login">Log in</button>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <h2 className="welcome">Welcome {user}</h2>
+                  <button className="add-button" onClick={handleLogout}>
+                    Logout
+                  </button>
+                </>
+              )}
+              {confirmed && logged && (
+                <Link to={"/products/ordered/:id"}>Confirmed</Link>
+              )}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </nav>
       {logged ? (
         <div></div>
       ) : (
@@ -89,7 +91,8 @@ const Navbar = () => {
           onError={(err) => console.log(err)}
         />
       )}
-    </nav>
+      <br />
+    </div>
   );
 };
 
