@@ -1,9 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { jwtDecode } from "jwt-decode";
 
 const initialState = {
   userEmail: null,
   loggedIn: false,
   userOrderId: null,
+  google: false,
 };
 
 export const checkUser = createAsyncThunk("user/checkUser", async () => {
@@ -22,6 +24,7 @@ const userSlice = createSlice({
     logout(state, action) {
       state.loggedIn = false;
       state.userEmail = null;
+      state.google = false;
       return state;
     },
     login(state, action) {
@@ -33,28 +36,27 @@ const userSlice = createSlice({
       state.userOrderId = action.payload;
       return state;
     },
+    googleLogin(state, action) {
+      const user = jwtDecode(action.payload);
+      if (user) {
+        state.loggedIn = true;
+        state.userEmail = user.email;
+        state.google = true;
+      }
+      return state;
+    },
   },
   extraReducers(builder) {
-    builder
-      .addCase(checkUser.fulfilled, (state, action) => {
-        if (action.payload.user) {
-          state.loggedIn = true;
-          state.userEmail = action.payload.user;
-          return state;
-        } else {
-          state.loggedIn = false;
-          state.userEmail = null;
-          return state;
-        }
-      })
-      .addCase(checkUser.rejected, (state, action) => {
-        state.loggedIn = false;
-        state.userEmail = null;
-        return state;
-      });
+    builder.addCase(checkUser.rejected, (state, action) => {
+      state.loggedIn = false;
+      state.userEmail = null;
+      state.google = false;
+      return state;
+    });
   },
 });
 
-export const { logout, login, setOrderId } = userSlice.actions;
+export const { logout, login, setOrderId, googleLogin, isGoogle } =
+  userSlice.actions;
 
 export default userSlice.reducer;

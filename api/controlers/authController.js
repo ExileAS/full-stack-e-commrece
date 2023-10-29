@@ -32,11 +32,19 @@ const handleErrors = (err) => {
 };
 
 module.exports.signup_post = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, sub, email_verified } = req.body;
 
   try {
-    const user = await userModel.create({ email, password });
-    const token = createToken(user._id);
+    let user, token;
+    if (email && password) {
+      user = await userModel.create({ email, password });
+      token = createToken(user._id);
+    } else if (sub && email_verified) {
+      token = createToken(sub);
+      user = {
+        email: email,
+      };
+    }
     res.cookie("jwt", token, {
       maxAge: 1000 * 60 * 60 * 24 * 2,
       httpOnly: true,

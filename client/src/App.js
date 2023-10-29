@@ -15,50 +15,53 @@ import SignUp from "./features/userRegister/SignupForm";
 import Login from "./features/userRegister/LoginForm";
 import SelectedList from "./features/products/SelectedList";
 import PaymentConfirmed from "./features/shoppingCart/PaymentConfirmed";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 function App() {
   return (
-    <Router>
-      <div>
-        <Navbar />
-        <Routes>
-          <Route exact path="/" element={<LandingPage />} />
-          <Route exact path="/products" element={<ProductsList />} />
-          <Route
-            exact
-            path="/products/:productId"
-            element={<ProductDetails />}
-          />
-          <Route
-            exact
-            path="/products/addProduct"
-            element={<AddNewProduct />}
-          />
-          <Route exact path="/users" element={<SellerList />} />
-          <Route exact path="/users/:userId" element={<SingleSellerPage />} />
-          <Route exact path="/shoppingCart" element={<ShoppingCartPage />} />
-          <Route
-            exact
-            path="/moreProducts/:productId"
-            element={<MoreLikeThis />}
-          />
-          <Route exact path="/confirm-order" element={<ConfirmOrderForm />} />
-          <Route
-            exact
-            path="/products/ordered"
-            element={<OrderedProductsList />}
-          />
-          <Route
-            exact
-            path="/products/ordered/:id"
-            element={<PaymentConfirmed />}
-          />
-          <Route exact path="/signup" element={<SignUp />} />
-          <Route exact path="/login" element={<Login />} />
-          <Route exact path="/products/selected" element={<SelectedList />} />
-        </Routes>
-      </div>
-    </Router>
+    <GoogleOAuthProvider clientId="638833864743-4ph4ulasbrnnfq3r6u5l0nq833h6ajqi.apps.googleusercontent.com">
+      <Router>
+        <div>
+          <Navbar />
+          <Routes>
+            <Route exact path="/" element={<LandingPage />} />
+            <Route exact path="/products" element={<ProductsList />} />
+            <Route
+              exact
+              path="/products/:productId"
+              element={<ProductDetails />}
+            />
+            <Route
+              exact
+              path="/products/addProduct"
+              element={<AddNewProduct />}
+            />
+            <Route exact path="/users" element={<SellerList />} />
+            <Route exact path="/users/:userId" element={<SingleSellerPage />} />
+            <Route exact path="/shoppingCart" element={<ShoppingCartPage />} />
+            <Route
+              exact
+              path="/moreProducts/:productId"
+              element={<MoreLikeThis />}
+            />
+            <Route exact path="/confirm-order" element={<ConfirmOrderForm />} />
+            <Route
+              exact
+              path="/products/ordered"
+              element={<OrderedProductsList />}
+            />
+            <Route
+              exact
+              path="/products/ordered/:id"
+              element={<PaymentConfirmed />}
+            />
+            <Route exact path="/signup" element={<SignUp />} />
+            <Route exact path="/login" element={<Login />} />
+            <Route exact path="/products/selected" element={<SelectedList />} />
+          </Routes>
+        </div>
+      </Router>
+    </GoogleOAuthProvider>
   );
 }
 

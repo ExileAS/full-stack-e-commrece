@@ -1,14 +1,19 @@
 import { Link, useNavigate } from "react-router-dom";
 import imgSrc from "../components/6011.jpg";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../features/userRegister/userSlice";
+import { googleLogin, logout } from "../features/userRegister/userSlice";
 import {
   clearCustomerInfo,
   clearOrdered,
   clearShoppingCart,
   selectAllConfirmed,
 } from "../features/shoppingCart/shoppingCartSlice";
-import { getAllSelected } from "../features/products/productsSlice";
+import {
+  getAllSelected,
+  productUnSelected,
+} from "../features/products/productsSlice";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 
 const Navbar = () => {
   const logged = useSelector((state) => state.user.loggedIn);
@@ -27,7 +32,27 @@ const Navbar = () => {
     dispatch(logout());
     dispatch(clearShoppingCart());
     dispatch(clearCustomerInfo());
+    selected.forEach((item) =>
+      dispatch(productUnSelected({ productId: item.id }))
+    );
     navigate("/products");
+  };
+
+  const handleGoogleLogin = async (response) => {
+    console.log(jwtDecode(response.credential));
+    try {
+      const { sub, email_verified, email } = jwtDecode(response.credential);
+      const res = await fetch("/api/signup", {
+        method: "POST",
+        body: JSON.stringify({ sub, email_verified, email }),
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await res.json();
+      console.log(data);
+      dispatch(googleLogin(response.credential));
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -74,6 +99,14 @@ const Navbar = () => {
           </div>
         </div>
       </section>
+      {logged ? (
+        <div></div>
+      ) : (
+        <GoogleLogin
+          onSuccess={handleGoogleLogin}
+          onError={(err) => console.log(err)}
+        />
+      )}
     </nav>
   );
 };
