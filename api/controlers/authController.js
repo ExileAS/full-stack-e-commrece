@@ -4,7 +4,7 @@ require("dotenv").config();
 
 const createToken = (id) => {
   return jwt.sign({ id }, process.env.SECRET_KEY, {
-    expiresIn: 60 * 60 * 24 * 2,
+    expiresIn: 60,
   });
 };
 
@@ -46,7 +46,7 @@ module.exports.signup_post = async (req, res) => {
       };
     }
     res.cookie("jwt", token, {
-      maxAge: 1000 * 60 * 60 * 24 * 2,
+      maxAge: 1000 * 60,
       httpOnly: true,
     });
     res.status(201).json({ user: user.email });
@@ -62,7 +62,7 @@ module.exports.login_post = async (req, res) => {
     const user = await userModel.login(email, password);
     const token = createToken(user._id);
     res.cookie("jwt", token, {
-      maxAge: 1000 * 60 * 60 * 24 * 2,
+      maxAge: 1000 * 60,
       httpOnly: true,
     });
     res.status(200).json({ user: user.email });

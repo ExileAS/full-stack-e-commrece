@@ -13,6 +13,7 @@ import {
 } from "../shoppingCart/shoppingCartSlice";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import useLogout from "../userRegister/useLogout";
 
 export const ProductDetails = React.memo(({ productProp }) => {
   let { productId } = useParams();
@@ -22,6 +23,7 @@ export const ProductDetails = React.memo(({ productProp }) => {
   const logged = useSelector((state) => state.user.loggedIn);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const logoutUser = useLogout();
   const productsInCart = useSelector((state) => state.shoppingCart.cart);
   const productInCart = productsInCart.find(
     (product) => product.id === productId
@@ -51,6 +53,7 @@ export const ProductDetails = React.memo(({ productProp }) => {
         dispatch(addToShoppingCart(product));
         dispatch(productUnSelected({ productId: product.id }));
       } else {
+        await logoutUser();
         navigate("/signup");
       }
     } catch (err) {

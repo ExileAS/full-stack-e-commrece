@@ -48,6 +48,7 @@ const userSlice = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(checkUser.rejected, (state, action) => {
+      console.log(action.payload.err);
       state.loggedIn = false;
       state.userEmail = null;
       state.google = false;

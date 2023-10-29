@@ -1,43 +1,23 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import imgSrc from "../components/6011.jpg";
 import { useDispatch, useSelector } from "react-redux";
-import { googleLogin, logout } from "../features/userRegister/userSlice";
+import { googleLogin } from "../features/userRegister/userSlice";
 import {
-  clearCustomerInfo,
-  clearOrdered,
-  clearShoppingCart,
   retrieveOrderedList,
   selectAllConfirmed,
 } from "../features/shoppingCart/shoppingCartSlice";
-import {
-  getAllSelected,
-  productUnSelected,
-} from "../features/products/productsSlice";
+import { getAllSelected } from "../features/products/productsSlice";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+import useLogout from "../features/userRegister/useLogout";
 
 const Navbar = () => {
   const logged = useSelector((state) => state.user.loggedIn);
   const user = useSelector((state) => state.user.userEmail);
   const selected = useSelector(getAllSelected);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const confirmed = useSelector(selectAllConfirmed)?.length > 0;
-
-  const handleLogout = async () => {
-    await fetch("/api/logout", {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
-    dispatch(clearOrdered());
-    dispatch(logout());
-    dispatch(clearShoppingCart());
-    dispatch(clearCustomerInfo());
-    selected.forEach((item) =>
-      dispatch(productUnSelected({ productId: item.id }))
-    );
-    navigate("/products");
-  };
+  const handleLogout = useLogout();
 
   const handleGoogleLogin = async (response) => {
     try {

@@ -8,10 +8,12 @@ import {
   getCartLength,
   addToShoppingCart,
 } from "../shoppingCart/shoppingCartSlice";
+import useLogout from "../userRegister/useLogout";
 
 const SelectedList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const logoutUser = useLogout();
   const cartHasItems = useSelector(getCartLength) > 0;
 
   const selectedList = useSelector(getAllSelected);
@@ -48,6 +50,7 @@ const SelectedList = () => {
           dispatch(productUnSelected({ productId: product.id }));
         });
       } else {
+        await logoutUser();
         navigate("/signup");
       }
     } catch (err) {
