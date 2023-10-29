@@ -256,6 +256,7 @@ const shoppingCartSlice = createSlice({
           state.cart = [];
           state.confirmId = null;
           state.customerInfo = {};
+          state.payedOrder = [];
         }
         return state;
       });
