@@ -108,7 +108,7 @@ const OrderedProductsList = ({ confirmed }) => {
   };
 
   return (
-    <div className="ordered-content">
+    <div className="ordered-content" transition-style="in:square:center">
       {confirmId && totalCost > 0 && <b>Order ID: {confirmId}</b>}
       {content}
       <div>

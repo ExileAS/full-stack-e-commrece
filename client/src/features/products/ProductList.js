@@ -14,6 +14,7 @@ import React, { useEffect, useState } from "react";
 import { Spinner } from "../../components/Spinner";
 import { getIdByName } from "../sellers/sellersSlice";
 import SortOptions from "../sortingList/SortOptions";
+import "transition-style";
 
 export const ProductExcerpt = React.memo(({ product, count, orderedList }) => {
   const logged = useSelector((state) => state.user.userEmail);
@@ -124,7 +125,7 @@ export const ProductsList = () => {
   if (status === "failed") content = <div>{error}</div>;
 
   return (
-    <div className="container">
+    <div className="container" transition-style="in:circle:bottom-right">
       <Link to="/products/addProduct">
         {!logged && <button className="add-button-main">Add Product</button>}
       </Link>

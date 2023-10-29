@@ -64,7 +64,7 @@ const ShoppingCartPage = () => {
   });
 
   return (
-    <section>
+    <section transition-style="in:circle:top-left">
       <span className="cart-title">
         <h2>items in your Shopping Cart</h2>
       </span>
