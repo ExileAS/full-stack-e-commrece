@@ -6,6 +6,7 @@ import {
   clearCustomerInfo,
   clearOrdered,
   clearShoppingCart,
+  retrieveOrderedList,
   selectAllConfirmed,
 } from "../features/shoppingCart/shoppingCartSlice";
 import {
@@ -39,7 +40,6 @@ const Navbar = () => {
   };
 
   const handleGoogleLogin = async (response) => {
-    console.log(jwtDecode(response.credential));
     try {
       const { sub, email_verified, email } = jwtDecode(response.credential);
       const res = await fetch("/api/signup", {
@@ -48,8 +48,10 @@ const Navbar = () => {
         headers: { "Content-Type": "application/json" },
       });
       const data = await res.json();
-      console.log(data);
       dispatch(googleLogin(response.credential));
+      if (data.user) {
+        dispatch(retrieveOrderedList(email));
+      }
     } catch (err) {
       console.log(err);
     }

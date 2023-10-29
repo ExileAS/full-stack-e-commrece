@@ -228,7 +228,6 @@ const shoppingCartSlice = createSlice({
         return state;
       })
       .addCase(retrieveOrderedList.fulfilled, (state, action) => {
-        console.log(action.payload);
         state.customerInfo = action.payload.customerInfo;
         state.confirmId = action.payload.orderId;
         if (action.payload.isSplit) {
