@@ -8,6 +8,7 @@ const productRouter = require("./routes/productsRoutes");
 const cors = require("cors");
 require("dotenv").config();
 const paymentRouter = require("./routes/paymentRoutes");
+const sellersRouter = require("./routes/sellerRoutes");
 
 const corsOptions = {
   origin: "http://localhost:3000",
@@ -34,5 +35,6 @@ app.get("/api/requireAuth", requireAuth);
 app.get("/api/auth", checkUser);
 
 app.use(productRouter);
+app.use(sellersRouter);
 app.use(authRouter);
 app.use(paymentRouter);

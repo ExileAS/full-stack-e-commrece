@@ -1,19 +1,15 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { login } from "./userSlice";
-import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import {
-  clearCustomerInfo,
-  retrieveOrderedList,
-} from "../shoppingCart/shoppingCartSlice";
+import { clearCustomerInfo } from "../shoppingCart/shoppingCartSlice";
+import GoogleReg from "./GoogleReg";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailErr, setEmailError] = useState("");
   const [passwordErr, setPasswordErr] = useState("");
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleLogin = async () => {
@@ -35,8 +31,7 @@ const Login = () => {
         }
         if (data.user) {
           dispatch(login(data.user));
-          dispatch(retrieveOrderedList(data.user));
-          navigate("/products");
+          window.history.go(-1);
         }
       } catch (err) {
         console.log(err);
@@ -45,7 +40,7 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div className="signup-form">
       <form onSubmit={(e) => e.preventDefault()}>
         <label htmlFor="email">Email</label>
         <br />
@@ -56,7 +51,7 @@ const Login = () => {
           onChange={(e) => setEmail(e.target.value)}
         />
         <p className="error">{emailErr}</p>
-        <br />
+
         <label htmlFor="password">Password</label>
         <br />
         <input
@@ -65,13 +60,15 @@ const Login = () => {
           className="name"
           onChange={(e) => setPassword(e.target.value)}
         />
-        <p className="error">{passwordErr}</p>
         <br />
-        <button className="add-button" onClick={handleLogin}>
+        <button className="button-17" onClick={handleLogin}>
           Login
         </button>
-        <p>
-          or <Link to="/signup">Signup</Link>
+        <GoogleReg />
+        <p className="error">{passwordErr}</p>
+        <p className="or">
+          or
+          <Link to="/signup"> Signup</Link>
         </p>
       </form>
     </div>

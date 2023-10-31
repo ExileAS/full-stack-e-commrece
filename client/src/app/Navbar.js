@@ -1,41 +1,16 @@
 import { Link } from "react-router-dom";
 import imgSrc from "../components/6011.jpg";
-import { useDispatch, useSelector } from "react-redux";
-import { googleLogin } from "../features/userRegister/userSlice";
-import {
-  retrieveOrderedList,
-  selectAllConfirmed,
-} from "../features/shoppingCart/shoppingCartSlice";
+import { useSelector } from "react-redux";
+import { selectAllConfirmed } from "../features/shoppingCart/shoppingCartSlice";
 import { getAllSelected } from "../features/products/productsSlice";
-import { GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
 import useLogout from "../features/userRegister/useLogout";
 
 const Navbar = () => {
   const logged = useSelector((state) => state.user.loggedIn);
   const user = useSelector((state) => state.user.userEmail);
   const selected = useSelector(getAllSelected);
-  const dispatch = useDispatch();
   const confirmed = useSelector(selectAllConfirmed)?.length > 0;
   const handleLogout = useLogout();
-
-  const handleGoogleLogin = async (response) => {
-    try {
-      const { sub, email_verified, email } = jwtDecode(response.credential);
-      const res = await fetch("/api/signup", {
-        method: "POST",
-        body: JSON.stringify({ sub, email_verified, email }),
-        headers: { "Content-Type": "application/json" },
-      });
-      const data = await res.json();
-      dispatch(googleLogin(response.credential));
-      if (data.user) {
-        dispatch(retrieveOrderedList(email));
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   return (
     <div>
@@ -49,7 +24,7 @@ const Navbar = () => {
           <div className="navContent">
             <div className="navLinks">
               <Link to="/products">products</Link>
-              <Link to="/users">sellers</Link>
+              <Link to="/sellers">sellers</Link>
               <Link to="/shoppingCart">
                 <img src={imgSrc} alt="" className="img" />
               </Link>
@@ -83,15 +58,6 @@ const Navbar = () => {
           </div>
         </section>
       </nav>
-      {logged ? (
-        <div></div>
-      ) : (
-        <GoogleLogin
-          onSuccess={handleGoogleLogin}
-          onError={(err) => console.log(err)}
-        />
-      )}
-      <br />
     </div>
   );
 };

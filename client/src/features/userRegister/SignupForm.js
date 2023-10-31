@@ -1,16 +1,15 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { login } from "./userSlice";
 import { Link } from "react-router-dom";
 import { clearCustomerInfo } from "../shoppingCart/shoppingCartSlice";
+import GoogleReg from "./GoogleReg";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailErr, setEmailError] = useState("");
   const [passwordErr, setPasswordErr] = useState("");
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleSignup = async () => {
@@ -30,8 +29,7 @@ const SignUp = () => {
       }
       if (data.user) {
         dispatch(login(data.user));
-        navigate("/products");
-        window.location.reload(true);
+        window.history.go(-1);
       }
     } catch (err) {
       console.log(err);
@@ -39,7 +37,7 @@ const SignUp = () => {
   };
 
   return (
-    <div>
+    <div className="signup-form">
       <form onSubmit={(e) => e.preventDefault()}>
         <label htmlFor="email">Email</label>
         <br />
@@ -50,7 +48,7 @@ const SignUp = () => {
           onChange={(e) => setEmail(e.target.value)}
         />
         <p className="error">{emailErr}</p>
-        <br />
+
         <label htmlFor="password">Password</label>
         <br />
         <input
@@ -59,14 +57,15 @@ const SignUp = () => {
           className="name"
           onChange={(e) => setPassword(e.target.value)}
         />
-        <p className="error">{passwordErr}</p>
         <br />
-        <button className="add-button" onClick={handleSignup}>
+        <button className="button-17" onClick={handleSignup}>
           Signup
         </button>
-        <p>
+        <GoogleReg />
+        <p className="error">{passwordErr}</p>
+        <p className="or">
           or
-          <Link to="/login">Login</Link>
+          <Link to="/login"> Login</Link>
         </p>
       </form>
     </div>
