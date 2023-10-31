@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { login } from "./userSlice";
-import { Link } from "react-router-dom";
 import { clearCustomerInfo } from "../shoppingCart/shoppingCartSlice";
 import GoogleReg from "./GoogleReg";
 
@@ -66,10 +65,6 @@ const Login = () => {
         </button>
         <GoogleReg />
         <p className="error">{passwordErr}</p>
-        <p className="or">
-          or
-          <Link to="/signup"> Signup</Link>
-        </p>
       </form>
     </div>
   );

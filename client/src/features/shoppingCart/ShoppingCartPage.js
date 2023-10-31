@@ -44,14 +44,11 @@ const ShoppingCartPage = () => {
         <p>added by {product.seller ?? "unknown"}</p>
         <TimeAgo timestamp={product.date} />
         <br />
-        <button
-          className="add-more-button"
-          onClick={() => handleIncrement(product)}
-        >
+        <button className="button-25" onClick={() => handleIncrement(product)}>
           +
         </button>
         <button
-          className="decrement-button"
+          className="button-24"
           onClick={() => {
             dispatch(decrementInCart(product.id));
             if (totalPrice > 0) setTotalPrice((prev) => prev - product.price);
@@ -73,7 +70,7 @@ const ShoppingCartPage = () => {
       <br />
       {productsInCart.length > 0 && (
         <button
-          className="place-order"
+          className="button-71"
           onClick={() => navigate("/confirm-order")}
         >
           Confirm Order
@@ -89,7 +86,7 @@ const ShoppingCartPage = () => {
             setTotalPrice(0);
             dispatch(clearShoppingCart());
           }}
-          className="clear-button"
+          className="button-45"
         >
           Clear Shopping Cart &#128465;
         </button>

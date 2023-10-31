@@ -3,6 +3,8 @@ import { ProductExcerpt } from "../products/ProductList";
 import { useSelector } from "react-redux";
 import { selectAllInCart } from "../shoppingCart/shoppingCartSlice";
 import searchImg from "../../components/icons8-google-web-search-50.png";
+import Categories from "./Categories";
+import useChange from "./useChange";
 
 const SearchBar = ({ data }) => {
   const categories = {
@@ -58,24 +60,6 @@ const SearchBar = ({ data }) => {
       );
   }
 
-  const handleChangeCategory = (e) => {
-    const category = e.target.value;
-    if (category === "all") setSearchCategory("");
-    else setSearchCategory(category);
-    const result = data.filter(
-      (item) => categories[category] && categories[category].includes(item.type)
-    );
-    const content = result.map((item) => (
-      <ProductExcerpt product={item} key={item.id} />
-    ));
-    const otherContent = others.map((item) => (
-      <ProductExcerpt product={item} key={item.id} />
-    ));
-    setCategoryResults((prev) =>
-      category === "others" ? otherContent : content
-    );
-  };
-
   return (
     <div className="search-bar">
       <div className="search-input">
@@ -94,23 +78,15 @@ const SearchBar = ({ data }) => {
           className="search-img"
         />
       </div>
-      <select className="search-categories" onChange={handleChangeCategory}>
-        <option value="all" key="0">
-          Categories
-        </option>
-        <option value="devices" key="devices">
-          devices
-        </option>
-        <option value="clothes" key="clothes">
-          clothes
-        </option>
-        <option value="accessories" key="accessories">
-          accessories
-        </option>
-        <option value="others" key="others">
-          others
-        </option>
-      </select>
+      <Categories
+        changeCategory={useChange(
+          others,
+          setSearchCategory,
+          setCategoryResults,
+          data,
+          categories
+        )}
+      />
       <div>{searchResult}</div>
       <div>
         {search.length === 0 && searchCategory.length > 0 && (

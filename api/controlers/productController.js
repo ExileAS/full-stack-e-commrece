@@ -15,14 +15,13 @@ const handleAddMain = (updates) => {
   }
 };
 
-const handlePatchDeleteMain = (updates) => {
+const handlePatchDeleteMain = async (updates) => {
   for (let id in updates) {
     async function update() {
       const result = await Product.findOneAndUpdate(
         { id: id },
         { $inc: { onhand: updates[id] } }
       );
-      //console.log(result);
     }
     update();
   }

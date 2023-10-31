@@ -56,5 +56,8 @@
   "description": "This project contains the setup and code from the \"Redux Essentials\" tutorial in the Redux docs ( https://redux.js.org/tutorials/essentials/part-1-overview-concepts ).",
   "main": "index.js",
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+  }
 }

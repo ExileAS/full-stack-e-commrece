@@ -64,10 +64,10 @@ export const ProductDetails = React.memo(({ productProp }) => {
   return (
     <div>
       <section className="product-card">
-        <h2>
+        <h2 className="title-text">
           {product.name} {amount > 1 && <b>x{amount}</b>}
         </h2>
-        <b>Price: {product.price}</b>
+        <b className="price">Price: {product.price}</b>
         <p>{product.description}</p>
         <br />
         <span> added by {product.seller ? product.seller : "unknown"}</span>
@@ -115,7 +115,7 @@ export const ProductDetails = React.memo(({ productProp }) => {
               </div>
             ) : (
               <button
-                className="add-button"
+                className="button-29"
                 onClick={() => dispatch(productSelected({ productId }))}
               >
                 Select

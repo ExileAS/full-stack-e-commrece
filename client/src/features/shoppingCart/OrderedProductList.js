@@ -65,6 +65,7 @@ const OrderedProductsList = ({ confirmed }) => {
         {!confirmed && (
           <div>
             <button
+              className="button-24"
               onClick={() => {
                 dispatch(decrementInOrdered(product.id));
                 dispatch(updateOrder());
@@ -73,7 +74,7 @@ const OrderedProductsList = ({ confirmed }) => {
               -
             </button>
             <button
-              className="cancel-order"
+              className="button-24"
               onClick={() => {
                 dispatch(removeOrder(product.id));
                 dispatch(updateOrder());
@@ -109,7 +110,7 @@ const OrderedProductsList = ({ confirmed }) => {
 
   return (
     <div className="ordered-content" transition-style="in:square:center">
-      {confirmId && totalCost > 0 && <b>Order ID: {confirmId}</b>}
+      {confirmId && totalCost > 0 && !confirmed && <b>Order ID: {confirmId}</b>}
       {content}
       <div>
         {totalCost > 0 ? (
@@ -148,7 +149,7 @@ const OrderedProductsList = ({ confirmed }) => {
                 {!disableCheckout ? (
                   <button
                     onClick={handleCheckout}
-                    className="checkout"
+                    className="button-77"
                     disabled={disableCheckout}
                   >
                     <b>Checkout</b>
@@ -159,7 +160,7 @@ const OrderedProductsList = ({ confirmed }) => {
               </div>{" "}
               {!disableCheckout ? (
                 <button
-                  className="cancel-shipment"
+                  className="button-45"
                   onClick={async () => {
                     dispatch(clearOrdered());
                     await dispatch(clearInDB(confirmId)).unwrap();

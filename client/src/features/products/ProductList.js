@@ -30,7 +30,7 @@ export const ProductExcerpt = React.memo(
     const productInMain = useSelector(selectAllProducts).find(
       (product) => productId === product.id
     );
-    const availableInMain = productInMain.onhand > 0;
+    const availableInMain = productInMain?.onhand > 0;
     const available =
       productInCart === undefined ||
       productInCart.onhand > 0 ||

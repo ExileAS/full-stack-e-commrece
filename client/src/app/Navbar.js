@@ -29,16 +29,16 @@ const Navbar = () => {
               {!logged ? (
                 <>
                   <Link to={"/signup"}>
-                    <button className="signup">Sign Up</button>
+                    <button className="button-33">Sign Up</button>
                   </Link>
                   <Link to={"/login"}>
-                    <button className="login">Log in</button>
+                    <button className="button-33">Log in</button>
                   </Link>
                 </>
               ) : (
                 <>
                   <h2 className="welcome">Welcome {user}</h2>
-                  <button className="add-button" onClick={handleLogout}>
+                  <button className="button-81" onClick={handleLogout}>
                     Logout
                   </button>
                 </>
