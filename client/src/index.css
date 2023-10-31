@@ -97,13 +97,16 @@ nav section {
   color: white;
 }
 
-nav a,
-nav a:active {
+nav a {
   font-weight: 700;
   border-radius: 4px;
-  color: white !important;
+  color: whitesmoke;
   text-decoration: none;
   padding-top: 8px;
+}
+
+nav a:active {
+  color: brown;
 }
 
 nav a:first-of-type {
@@ -113,8 +116,7 @@ nav a:first-of-type {
 }
 
 nav a:hover {
-  color: white;
-  background: rgba(0, 0, 255, 0.842);
+  color: darkblue;
 }
 
 .navContent {
@@ -127,7 +129,7 @@ nav a:hover {
 
 .navLinks {
   display: flex;
-  padding: 17.5px;
+  padding: 10px;
   text-decoration: none;
   padding-top: 8px;
 }
@@ -389,8 +391,7 @@ html {
 
 .search-bar {
   text-align: center;
-  padding: 0;
-  color: #481499;
+  margin: 4px;
 }
 
 .search-box {
@@ -609,11 +610,9 @@ html {
   margin: 5px;
 }
 
-/* https://projects.lukehaas.me/css-loaders/ , Loader #3 */
 .loader {
   font-size: 10px;
   margin: 10px;
-  /* text-indent: -9999em; */
   width: 5em;
   height: 5em;
   border-radius: 50%;
@@ -721,7 +720,7 @@ html {
 }
 
 [transition-style="in:circle:bottom-right"] {
-  animation: 1.5s cubic-bezier(0.25, 1, 0.3, 1) circle-in-bottom-right both;
+  animation: 0.5s cubic-bezier(0.25, 1, 0.3, 1) circle-in-bottom-right both;
 }
 
 @keyframes circle-in-top-left {
@@ -944,4 +943,22 @@ html {
 
 .item-link :hover {
   color: crimson;
+}
+
+img {
+  width: 16px;
+}
+
+.search-img {
+  padding-top: 0px;
+  position: absolute;
+  width: 24px;
+}
+
+.search-img:hover {
+  cursor: pointer;
+}
+
+.search-input {
+  padding: 3px;
 }

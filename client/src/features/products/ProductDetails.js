@@ -65,7 +65,7 @@ export const ProductDetails = React.memo(({ productProp }) => {
     <div>
       <section className="product-card">
         <h2>
-          {product.name} <b>x{amount}</b>
+          {product.name} {amount > 1 && <b>x{amount}</b>}
         </h2>
         <b>Price: {product.price}</b>
         <p>{product.description}</p>

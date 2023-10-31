@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ProductExcerpt } from "../products/ProductList";
 import { useSelector } from "react-redux";
 import { selectAllInCart } from "../shoppingCart/shoppingCartSlice";
+import searchImg from "../../components/icons8-google-web-search-50.png";
 
 const SearchBar = ({ data }) => {
   const categories = {
@@ -77,15 +78,22 @@ const SearchBar = ({ data }) => {
 
   return (
     <div className="search-bar">
-      <label>Search Products:</label>
-      <br />
-      <textarea
-        name="search-bar"
-        id="search-bar"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="search-box"
-      ></textarea>
+      <div className="search-input">
+        <input
+          name="search-bar"
+          id="search-bar"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="search..."
+          className="search-input"
+        ></input>
+        <img
+          src={searchImg}
+          alt=""
+          onClick={() => alert("hi")}
+          className="search-img"
+        />
+      </div>
       <select className="search-categories" onChange={handleChangeCategory}>
         <option value="all" key="0">
           Categories

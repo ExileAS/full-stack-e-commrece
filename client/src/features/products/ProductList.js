@@ -129,7 +129,7 @@ export const ProductsList = () => {
   if (status === "failed") content = <div>{error}</div>;
 
   return (
-    <div className="container" transition-style="in:circle:bottom-right">
+    <div className="container">
       <Link to="/products/addProduct" className="add-link">
         {logged && <button className="button-63">Add Product</button>}
       </Link>
