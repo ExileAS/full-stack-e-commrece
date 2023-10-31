@@ -63,7 +63,7 @@ const ShoppingCartPage = () => {
   return (
     <section transition-style="in:circle:top-left">
       <span className="cart-title">
-        <h2>items in your Shopping Cart</h2>
+        <h2 className="nothing-incart">items in your Shopping Cart</h2>
       </span>
       {products}
       {totalPrice > 0 && <b className="cost">Total Cost: {totalPrice}</b>}

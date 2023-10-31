@@ -1,10 +1,18 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { selectSellerById } from "./sellersSlice";
-import { selectProductsByUser } from "../products/productsSlice";
+import { getAllSellers, selectSellerById } from "./sellersSlice";
+import { fetchProducts, selectProductsByUser } from "../products/productsSlice";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 export const SingleSellerPage = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getAllSellers());
+    dispatch(fetchProducts());
+    console.log("worked");
+  }, [dispatch]);
+
   const { sellerId } = useParams();
   const user = useSelector((state) => selectSellerById(state, sellerId));
   const userProducts = useSelector((state) =>
@@ -22,7 +30,9 @@ export const SingleSellerPage = () => {
 
   return (
     <div>
-      <h2 className="user-products">{user.name}'s products for selling:</h2>
+      {user && (
+        <h2 className="user-products">{user.name}'s products for selling:</h2>
+      )}
       {content}
     </div>
   );

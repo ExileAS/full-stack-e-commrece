@@ -1,11 +1,15 @@
 @import "transition-style";
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans:400,400i,700,700i&subset=greek-ext");
+
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  background-image: url("https://images.pexels.com/photos/891252/pexels-photo-891252.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260");
+  background-position: center;
+  background-origin: content-box;
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 85vh;
+  font-family: "Noto Sans", sans-serif;
+  width: 100%;
 }
 
 code {
@@ -17,18 +21,13 @@ a {
   text-decoration: none;
 }
 
-.product-card {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  background-color: azure;
-  margin: 9px;
-}
-
 .product-card:hover {
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
   position: relative;
 }
 
 .container {
+  width: 100%;
   padding: 2px 16px;
   background-color: aliceblue;
 }
@@ -120,13 +119,13 @@ nav a:first-of-type {
 }
 
 nav a:hover {
-  color: darkblue;
+  color: rgb(107, 107, 182);
 }
 
 .navContent {
   display: flex;
   justify-content: space-between;
-  background-color: rgb(0, 102, 255);
+  background-color: #31486a;
   text-decoration: none;
   padding-top: 8px;
 }
@@ -369,7 +368,7 @@ nav a:hover {
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
   font-style: italic;
   text-align: center;
-  color: rgb(145, 255, 0);
+  color: rgb(61, 91, 21);
 }
 
 .landing-title {
@@ -403,6 +402,9 @@ html {
   padding-bottom: 0;
   font-size: x-large;
   color: #481499;
+  background: transparent
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' class='bi bi-search' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'%3E%3C/path%3E%3C/svg%3E")
+    no-repeat 13px center;
 }
 
 .all-products {
@@ -488,7 +490,7 @@ html {
 }
 
 .welcome {
-  color: rgb(92, 0, 100);
+  color: #b34ff9;
   font-family: "Times New Roman", Times, serif;
   margin: 8px;
 }
@@ -750,11 +752,6 @@ html {
   text-align: center;
 }
 
-.google {
-  position: fixed;
-  margin-left: 45.1%;
-}
-
 .signup-button {
   margin-top: 12px;
   margin-bottom: 10px;
@@ -794,7 +791,7 @@ html {
   width: auto;
   will-change: transform, opacity;
   z-index: 0;
-  margin: 10px;
+  margin: 10px 5px 10px 41.5px;
 }
 
 .button-17:hover {
@@ -1403,4 +1400,155 @@ img {
 
 .title-text {
   color: #5e20c2;
+}
+
+form.nosubmit {
+  border: none;
+  padding: 0;
+  align-content: center;
+  margin-left: 43%;
+}
+
+input.nosubmit {
+  width: 260px;
+  border: 1px solid #555;
+  display: block;
+  padding: 9px 4px 9px 40px;
+  background: transparent
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' class='bi bi-search' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'%3E%3C/path%3E%3C/svg%3E")
+    no-repeat 13px center;
+}
+
+.text-center {
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 23px;
+  margin: -50px 0 80px 0;
+  display: block;
+  text-align: center;
+}
+.box {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.89);
+  border-radius: 3px;
+  padding: 70px 100px;
+}
+.input-container {
+  position: relative;
+  margin-bottom: 25px;
+}
+.input-container label {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  font-size: 16px;
+  color: #fff;
+  transition: all 0.5s ease-in-out;
+}
+.input-container input {
+  border: 0;
+  border-bottom: 1px solid #555;
+  background: transparent;
+  padding: 8px 0 5px 0;
+  font-size: 16px;
+  color: #fff;
+}
+.input-container input:focus {
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #e74c3c;
+}
+/*.btn:after{
+	content:"";
+	position:absolute;
+	background:rgba(0,0,0,0.50);
+	top:0;
+	right:0;
+	width:100%;
+	height:100%;
+}*/
+.input-container input:focus ~ label,
+.input-container input:valid ~ label {
+  top: -12px;
+  font-size: 12px;
+}
+
+.button-85 {
+  padding: 0.6em 2em;
+  border: none;
+  outline: none;
+  color: rgb(255, 255, 255);
+  background: #111;
+  cursor: pointer;
+  position: relative;
+  z-index: 0;
+  border-radius: 10px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-85:before {
+  content: "";
+  background: linear-gradient(
+    45deg,
+    #ff0000,
+    #ff7300,
+    #fffb00,
+    #48ff00,
+    #00ffd5,
+    #002bff,
+    #7a00ff,
+    #ff00c8,
+    #ff0000
+  );
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  background-size: 400%;
+  z-index: -1;
+  filter: blur(5px);
+  -webkit-filter: blur(5px);
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  animation: glowing-button-85 20s linear infinite;
+  transition: opacity 0.3s ease-in-out;
+  border-radius: 10px;
+}
+
+@keyframes glowing-button-85 {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 400% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+.button-85:after {
+  z-index: -1;
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #222;
+  left: 0;
+  top: 0;
+  border-radius: 10px;
+}
+
+.customer-info {
+  font-family: "Times New Roman", Times, serif;
+  font-size: x-large;
+  color: #111;
+}
+
+.nothing-incart {
+  color: #163269;
 }

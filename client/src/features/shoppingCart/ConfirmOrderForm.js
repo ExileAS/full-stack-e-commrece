@@ -74,7 +74,7 @@ const ConfirmOrderForm = () => {
 
   return (
     <form className="add-product-form" onSubmit={(e) => e.preventDefault()}>
-      <label className="confirm-title">Customer info</label>
+      <label className="customer-info">Customer info</label>
       <br />
       <input
         type="text"
@@ -108,7 +108,7 @@ const ConfirmOrderForm = () => {
         className="number"
       />
       <br />
-      <button onClick={handleSubmitInfo} className="add-button-main">
+      <button onClick={handleSubmitInfo} className="button-85">
         Confirm order
       </button>
     </form>

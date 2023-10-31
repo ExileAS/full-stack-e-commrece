@@ -2,7 +2,6 @@ import { useState } from "react";
 import { ProductExcerpt } from "../products/ProductList";
 import { useSelector } from "react-redux";
 import { selectAllInCart } from "../shoppingCart/shoppingCartSlice";
-import searchImg from "../../components/icons8-google-web-search-50.png";
 import Categories from "./Categories";
 import useChange from "./useChange";
 
@@ -63,20 +62,17 @@ const SearchBar = ({ data }) => {
   return (
     <div className="search-bar">
       <div className="search-input">
-        <input
-          name="search-bar"
-          id="search-bar"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="search..."
-          className="search-input"
-        ></input>
-        <img
-          src={searchImg}
-          alt=""
-          onClick={() => alert("hi")}
-          className="search-img"
-        />
+        <form className="nosubmit" onSubmit={(e) => e.preventDefault()}>
+          <input
+            name="search-bar"
+            id="search-bar"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="search..."
+            className="nosubmit"
+            type="search"
+          ></input>
+        </form>
       </div>
       <Categories
         changeCategory={useChange(
