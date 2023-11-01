@@ -21,7 +21,7 @@ const SelectedList = () => {
     <div key={product.id}>
       <ProductDetails productProp={product} />
       <button
-        className="add-button"
+        className="button-42"
         onClick={() => {
           dispatch(productUnSelected({ productId: product.id }));
         }}

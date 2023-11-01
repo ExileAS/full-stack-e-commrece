@@ -99,7 +99,7 @@ export const selectProductById = (state, id) =>
   state.products.products.find((product) => product.id === id);
 
 export const selectProductsByUser = (state, user) =>
-  state.products.products.filter((product) => product.seller === user.name);
+  state.products.products.filter((product) => product.seller === user?.name);
 
 export const generateId = (state) => {
   const products = state.products.products;

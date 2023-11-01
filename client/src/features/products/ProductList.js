@@ -12,7 +12,7 @@ import { selectAllInCart } from "../shoppingCart/shoppingCartSlice";
 import { fetchProducts } from "./productsSlice";
 import React, { useEffect, useState } from "react";
 import { Spinner } from "../../components/Spinner";
-import { getIdByName } from "../sellers/sellersSlice";
+import { getAllSellers, getIdByName } from "../sellers/sellersSlice";
 import SortOptions from "../sortingList/SortOptions";
 import "transition-style";
 
@@ -50,7 +50,7 @@ export const ProductExcerpt = React.memo(
           <span>
             added by{" "}
             {product.seller ? (
-              <Link to={"/users/" + sellerId} className="seller-link">
+              <Link to={"/sellers/" + sellerId} className="seller-link">
                 {product.seller}
               </Link>
             ) : (
@@ -63,7 +63,7 @@ export const ProductExcerpt = React.memo(
             <div>
               {!select ? (
                 <button
-                  className="add-button"
+                  className="button-29"
                   onClick={() => {
                     dispatch(productSelected({ productId: product.id }));
                     setSelect(true);
@@ -113,6 +113,7 @@ export const ProductsList = () => {
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchProducts());
+      dispatch(getAllSellers());
     }
   }, [dispatch, status]);
 

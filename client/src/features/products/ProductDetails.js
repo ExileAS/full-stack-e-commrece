@@ -86,7 +86,7 @@ export const ProductDetails = React.memo(({ productProp }) => {
             {product.selected ? (
               <div>
                 <button
-                  className="add-button-main"
+                  className="button-37"
                   onClick={() => navigate("/moreProducts/" + productId)}
                 >
                   See Similar Products
@@ -103,7 +103,7 @@ export const ProductDetails = React.memo(({ productProp }) => {
                   ) : (
                     <>
                       <button
-                        className="add-more-button"
+                        className="button-3"
                         onClick={() => {
                           count === product.onhand
                             ? toggleExceededError()

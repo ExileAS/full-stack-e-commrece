@@ -2,37 +2,45 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getAllSellers, selectSellerById } from "./sellersSlice";
 import { fetchProducts, selectProductsByUser } from "../products/productsSlice";
-import { Link } from "react-router-dom";
 import { useEffect } from "react";
+import { ProductExcerpt } from "../products/ProductList";
+import { Spinner } from "../../components/Spinner";
 
 export const SingleSellerPage = () => {
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getAllSellers());
-    dispatch(fetchProducts());
-    console.log("worked");
-  }, [dispatch]);
-
   const { sellerId } = useParams();
+  const sellerStatus = useSelector((state) => state.sellers.status);
   const user = useSelector((state) => selectSellerById(state, sellerId));
   const userProducts = useSelector((state) =>
     selectProductsByUser(state, user)
   );
-  const content = userProducts.map((product) => (
-    <section key={product.id} className="product-card">
-      <Link to={"/products/" + product.id} className="item-link">
-        <h3>{product.name}</h3>
-      </Link>
-      <p>{product.description.substring(0, 50)}</p>
-      <b>{product.price}</b>
-    </section>
-  ));
+  const productStatus = useSelector((state) => state.products.status);
+
+  useEffect(() => {
+    if (sellerStatus === "idle") {
+      dispatch(getAllSellers());
+    }
+    if (productStatus === "idle") {
+      dispatch(fetchProducts());
+    }
+  }, [dispatch, sellerStatus, productStatus]);
+
+  let content;
+  if (sellerStatus === "loading") content = <Spinner text="Loading..." />;
+  if (sellerStatus === "success") {
+    content = userProducts.map((product) => (
+      <ProductExcerpt product={product} key={product.id} />
+    ));
+  }
+
+  if (sellerStatus === "failed") content = <div>[]</div>;
 
   return (
     <div>
       {user && (
         <h2 className="user-products">{user.name}'s products for selling:</h2>
       )}
+      <br />
       {content}
     </div>
   );

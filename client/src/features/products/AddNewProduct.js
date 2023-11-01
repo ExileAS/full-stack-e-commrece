@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { generateId } from "./productsSlice";
+import { generateId } from "../sellers/sellersSlice";
+import { addNewSeller } from "../sellers/sellersSlice";
 
 export const AddNewProduct = () => {
   const [productName, setProductName] = useState("");
@@ -13,7 +14,6 @@ export const AddNewProduct = () => {
   const id = useSelector((state) => generateId(state));
   const currUser = useSelector((state) => state.user.userEmail);
   const userName = currUser.substring(0, currUser.indexOf("@"));
-
   const handleChangeName = (e) => setProductName(e.target.value);
   const handlechangedescription = (e) => setdescription(e.target.value);
   const handleChangePrice = (e) => setPrice(e.target.value);
@@ -23,10 +23,12 @@ export const AddNewProduct = () => {
     [productName, description, price, amountToSell].every(Boolean) && price > 0;
 
   const [status, setStatus] = useState("idle");
-
+  const dispatch = useDispatch();
+  const sellerId = useSelector((state) => generateId(state));
   const handleProductAdded = async () => {
     if (canAdd) {
       setStatus("pending");
+      dispatch(addNewSeller({ name: userName, id: sellerId }));
       try {
         await axios.post(
           "/api",
@@ -36,7 +38,7 @@ export const AddNewProduct = () => {
             price,
             onhand: amountToSell,
             id,
-            userName,
+            seller: userName,
           },
           {
             headers: {
@@ -52,6 +54,7 @@ export const AddNewProduct = () => {
       window.location.reload(true);
     }
   };
+  console.log(status);
 
   return (
     <div className="body-add-product">

@@ -17,7 +17,7 @@ export const SellerList = () => {
   let sellerList;
 
   if (status === "loading") {
-    sellerList = <Spinner text="loding" />;
+    sellerList = <Spinner text="loading" />;
   }
   if (status === "success") {
     sellerList = sellers.map((user) => (

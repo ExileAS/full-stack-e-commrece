@@ -16,6 +16,7 @@ const productSchema = new Schema(
     },
     seller: {
       type: String,
+      required: true,
     },
     description: {
       type: String,
