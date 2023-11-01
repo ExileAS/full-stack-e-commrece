@@ -63,7 +63,7 @@ const SelectedList = () => {
       {content}
       <div className="add-all-div">
         <button onClick={() => handleAddAll(selectedList)} className="add-all">
-          <h3>add all &#128722;</h3>
+          <h3 className="button-87">add all &#128722;</h3>
         </button>
       </div>
     </div>

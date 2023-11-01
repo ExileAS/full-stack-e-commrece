@@ -38,10 +38,12 @@ const ShoppingCartPage = () => {
             {product.name} x{product.count}
           </h2>
         </Link>
-        <b value={product.price}>Price: {product.price}</b>
+        <b value={product.price} className="description">
+          Price: {product.price}
+        </b>
         <br />
-        <b>Description: {product.description}</b>
-        <p>added by {product.seller ?? "unknown"}</p>
+        <b className="description">Description: {product.description}</b>
+        <p className="description">added by {product.seller ?? "unknown"}</p>
         <TimeAgo timestamp={product.date} />
         <br />
         <button className="button-25" onClick={() => handleIncrement(product)}>
@@ -65,6 +67,7 @@ const ShoppingCartPage = () => {
       <span className="cart-title">
         <h2 className="nothing-incart">items in your Shopping Cart</h2>
       </span>
+      <br />
       {products}
       {totalPrice > 0 && <b className="cost">Total Cost: {totalPrice}</b>}
       <br />

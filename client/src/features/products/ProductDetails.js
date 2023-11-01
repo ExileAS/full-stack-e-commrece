@@ -95,7 +95,7 @@ export const ProductDetails = React.memo(({ productProp }) => {
                 <div>
                   {!added ? (
                     <button
-                      className="add-to-cart"
+                      className="button-87"
                       onClick={() => handleAddToCart(product)}
                     >
                       Add to Cart
@@ -121,12 +121,19 @@ export const ProductDetails = React.memo(({ productProp }) => {
                 </div>
               </div>
             ) : (
-              <button
-                className="button-29"
-                onClick={() => dispatch(productSelected({ productId }))}
-              >
-                Select
-              </button>
+              <div>
+                {!productInCart && product.onhand > 0 && (
+                  <button
+                    className="button-29"
+                    onClick={() => dispatch(productSelected({ productId }))}
+                  >
+                    Select
+                  </button>
+                )}
+                <div>
+                  {product.onhand <= 0 && <h2 className="soldout">Sold Out</h2>}
+                </div>
+              </div>
             )}
           </div>
         ) : (

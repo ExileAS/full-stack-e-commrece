@@ -8,6 +8,7 @@ const initialState = {
   orderInfo: "undelivered",
   payment: false,
   payedOrder: [],
+  isSplit: false,
 };
 
 export const checkUserCart = createAsyncThunk(
@@ -79,6 +80,7 @@ export const updateOrder = createAsyncThunk(
           list: listUpdates,
           confirmId: state.shoppingCart.confirmId,
           payedOrder: state.shoppingCart.payment,
+          isSplit: state.shoppingCart.isSplit,
         }),
         headers: { "Content-Type": "application/json" },
       });
@@ -231,6 +233,7 @@ const shoppingCartSlice = createSlice({
         state.customerInfo = action.payload.customerInfo;
         state.confirmId = action.payload.orderId;
         if (action.payload.isSplit) {
+          state.isSplit = true;
           state.ordered = action.payload.orderedUnpaid;
           state.payedOrder = action.payload.orderedPaid;
           return state;

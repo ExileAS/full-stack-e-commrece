@@ -15,21 +15,25 @@ const SortOptions = ({ products }) => {
   }, [sortBy, dispatch, order]);
 
   return (
-    <div>
+    <div className="sort-container">
       <label htmlFor="sortOptions" className="sortby">
         SortBy:
       </label>
       <select
         name="sortOptins"
         id="sortoptions"
-        className="sortopts"
         onChange={(e) => setSortBy(e.target.value)}
+        className="date-price"
       >
         <option disabled={sortBy.length > 0} value="">
           none
         </option>
-        <option value="date">Date</option>
-        <option value="price">Price</option>
+        <option value="date" className="sort">
+          Date
+        </option>
+        <option value="price" className="sort">
+          Price
+        </option>
       </select>
       <select
         name="order"
@@ -37,10 +41,10 @@ const SortOptions = ({ products }) => {
         className="orderopts"
         onChange={(e) => setOrder(e.target.value)}
       >
-        <option value="up">
+        <option value="up" className="sort">
           {sortBy === "price" ? "Ascending" : " newest"}
         </option>
-        <option value="down">
+        <option value="down" className="sort">
           {sortBy === "price" ? "Descending" : "oldest"}
         </option>
       </select>

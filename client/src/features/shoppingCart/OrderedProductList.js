@@ -57,11 +57,14 @@ const OrderedProductsList = ({ confirmed }) => {
     status === "success" &&
     products.map((product) => (
       <div key={product.id}>
-        <ProductExcerpt
-          product={product}
-          count={product.count}
-          orderedList={true}
-        />
+        <div className="item-ordered">
+          <ProductExcerpt
+            product={product}
+            count={product.count}
+            orderedList={true}
+            confirmed={confirmed}
+          />
+        </div>
         {!confirmed && (
           <div>
             <button

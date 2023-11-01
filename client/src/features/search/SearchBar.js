@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { selectAllInCart } from "../shoppingCart/shoppingCartSlice";
 import Categories from "./Categories";
 import useChange from "./useChange";
+import SortOptions from "../sortingList/SortOptions";
 
 const SearchBar = ({ data }) => {
   const categories = {
@@ -50,12 +51,9 @@ const SearchBar = ({ data }) => {
   if (search.length > 0) {
     searchResult =
       filterdData.length === 0 ? (
-        <h2>No Matching Results</h2>
+        <h2 className="search-res">No Matching Results</h2>
       ) : (
-        <div>
-          <h2>Search Results:</h2>
-          {filterdData}
-        </div>
+        <div className="grid">{filterdData}</div>
       );
   }
 
@@ -74,17 +72,12 @@ const SearchBar = ({ data }) => {
           ></input>
         </form>
       </div>
-      <Categories
-        changeCategory={useChange(
-          others,
-          setSearchCategory,
-          setCategoryResults,
-          data,
-          categories
-        )}
-      />
-      <div>{searchResult}</div>
-      <div>
+      <SortOptions products={data} />
+      {search !== "" && searchResult.length > 0 && (
+        <h2 className="search-res">Search Results:</h2>
+      )}
+      <div className="grid">{searchResult}</div>
+      <div className="grid">
         {search.length === 0 && searchCategory.length > 0 && (
           <div>
             <h2 className="category-name">{searchCategory}:</h2>

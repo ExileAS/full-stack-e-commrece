@@ -73,45 +73,53 @@ const ConfirmOrderForm = () => {
   };
 
   return (
-    <form className="add-product-form" onSubmit={(e) => e.preventDefault()}>
-      <label className="customer-info">Customer info</label>
-      <br />
-      <input
-        type="text"
-        placeholder="first name"
-        value={formState.firstName}
-        onChange={changeFirstName}
-        className="name"
-      />
-      <input
-        type="text"
-        placeholder="last name"
-        value={formState.lastName}
-        onChange={changeLasttName}
-        className="name"
-      />
-      <br />
-      <br />
-      <input
-        type="text"
-        placeholder="adress"
-        value={formState.adress}
-        onChange={changeAdress}
-        className="adress"
-      />
-      <br />
-      <input
-        type="text"
-        placeholder="phone number"
-        value={formState.phoneNumber}
-        onChange={changePhoneNumber}
-        className="number"
-      />
-      <br />
-      <button onClick={handleSubmitInfo} className="button-85">
-        Confirm order
-      </button>
-    </form>
+    <div className="bg-img">
+      <div className="box-confirm">
+        <form className="add-product-form" onSubmit={(e) => e.preventDefault()}>
+          <div className="input-container">
+            <label>Customer info</label>
+            <br />
+            <input
+              type="text"
+              placeholder="first name"
+              value={formState.firstName}
+              onChange={changeFirstName}
+              className="name"
+            />
+          </div>
+          <div className="input-container">
+            <input
+              type="text"
+              placeholder="last name"
+              value={formState.lastName}
+              onChange={changeLasttName}
+              className="name"
+            />
+          </div>
+          <div className="input-container">
+            <input
+              type="text"
+              placeholder="adress"
+              value={formState.adress}
+              onChange={changeAdress}
+              className="adress"
+            />
+          </div>
+          <div className="input-container">
+            <input
+              type="text"
+              placeholder="phone number"
+              value={formState.phoneNumber}
+              onChange={changePhoneNumber}
+              className="number"
+            />
+          </div>
+          <button onClick={handleSubmitInfo} className="button-85">
+            Confirm order
+          </button>
+        </form>
+      </div>
+    </div>
   );
 };
 

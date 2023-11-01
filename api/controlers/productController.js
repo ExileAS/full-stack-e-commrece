@@ -27,14 +27,18 @@ const handlePatchDeleteMain = async (updates) => {
   }
 };
 
-const handleDeleteRedundant = async (info, list, confirmId) => {
+const handleDeleteRedundant = async (info, list, confirmId, isSplit) => {
   const { userEmail } = info;
   try {
     const existingOrder = await OrderedProducts.findOne({
       "customerInfo.userEmail": userEmail,
+      customerPayed: false,
     });
     if (!existingOrder) return;
-    if (existingOrder.confirmId === confirmId) return;
+    if (existingOrder.confirmId === confirmId && !isSplit) {
+      console.log("wrong");
+      return;
+    }
     const existingList = existingOrder.list;
     const existingId = existingOrder._id;
     let count = 0;
@@ -44,6 +48,7 @@ const handleDeleteRedundant = async (info, list, confirmId) => {
     }
 
     if (count === existingList.length) {
+      console.log("deleted");
       const res = await OrderedProducts.deleteOne({ _id: existingId });
       console.log("res:" + res);
     }
@@ -152,7 +157,7 @@ module.exports.retreive_ordered_post = async (req, res) => {
 };
 
 module.exports.update_order_patch = async (req, res, next) => {
-  const { confirmId, list, customerInfo, payedOrder } = req.body;
+  const { confirmId, list, customerInfo, payedOrder, isSplit } = req.body;
   const orderUpdates = { list, customerInfo };
   const updates = {};
   try {
@@ -173,7 +178,8 @@ module.exports.update_order_patch = async (req, res, next) => {
         { confirmId: confirmId },
         { $set: orderUpdates }
       );
-      if (payedOrder) handleDeleteRedundant(customerInfo, list, confirmId);
+      if (payedOrder)
+        handleDeleteRedundant(customerInfo, list, confirmId, isSplit);
     } else {
       console.log("no order found");
     }

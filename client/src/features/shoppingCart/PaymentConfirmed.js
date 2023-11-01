@@ -12,6 +12,7 @@ const PaymentConfirmed = () => {
 
   useEffect(() => {
     if (orderId === id) {
+      console.log("confirmed");
       dispatch(confirmPayment());
       dispatch(updateOrder());
       fetch("/api/confirmPayment", {
@@ -31,7 +32,7 @@ const PaymentConfirmed = () => {
     <div>
       <OrderedProductsList confirmed={true} />
       <h2 className="confirmed">Payment confirmed</h2>
-      <b>Order Id: {confirmId}</b>
+      <b className="confirmed">Order Id: {confirmId}</b>
     </div>
   );
 };
