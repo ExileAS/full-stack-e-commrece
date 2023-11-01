@@ -19,8 +19,7 @@ import useLogout from "../userRegister/useLogout";
 export const ProductDetails = React.memo(({ productProp }) => {
   let { productId } = useParams();
   productId = productId || productProp.id;
-  const product =
-    useSelector((state) => selectProductById(state, productId)) || {};
+  const product = useSelector((state) => selectProductById(state, productId));
   const added = useSelector((state) => checkAdded(state, productId));
   const logged = useSelector((state) => state.user.loggedIn);
   const dispatch = useDispatch();
@@ -35,8 +34,10 @@ export const ProductDetails = React.memo(({ productProp }) => {
   const [amountExceeded, setAmountExceeded] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchProducts());
-  }, [dispatch]);
+    if (!product) {
+      dispatch(fetchProducts());
+    }
+  }, [dispatch, product]);
 
   useEffect(() => {
     if (count > 1) setAmount(count);

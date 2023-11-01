@@ -54,51 +54,70 @@ export const AddNewProduct = () => {
   };
 
   return (
-    <form className="add-product-form" onSubmit={(e) => e.preventDefault()}>
-      <label>Product title:</label>
-      <br />
-      <input
-        type="text"
-        value={productName}
-        onChange={handleChangeName}
-        className="name"
-      />
-      <br />
-      <label>Price:</label>
-      <br />
-      <input
-        type="number"
-        value={price}
-        onChange={handleChangePrice}
-        className="price"
-      />
-      <br />
-      <label>Product Description:</label>
-      <br />
-      <textarea
-        className="description"
-        name="description"
-        value={description}
-        onChange={handlechangedescription}
-      ></textarea>
-      <br />
-      <label>Amount:</label>
-      <br />
-      <input
-        type="number"
-        value={amountToSell}
-        onChange={handleChangeAmount}
-        className="amount"
-      />
-      <br />
-      <button
-        className="button-64"
-        type="button"
-        onClick={handleProductAdded}
-        disabled={status !== "idle"}
-      >
-        Add Product
-      </button>
-    </form>
+    <div className="body-add-product">
+      <div className="container-add-product">
+        <div className="text-add-product">Add a product</div>
+        <form className="add-product-form" onSubmit={(e) => e.preventDefault()}>
+          <div className="form-row">
+            <div className="input-data">
+              <label className="add-form-titles">Product title:</label>
+              <input
+                type="text"
+                value={productName}
+                onChange={handleChangeName}
+              />
+              <div className="underline"></div>
+            </div>
+            <div className="input-data">
+              <label className="add-form-titles">Price:</label>
+              <input
+                type="number"
+                value={price}
+                onChange={handleChangePrice}
+                className="input-price"
+              />
+              <div className="underline"></div>
+            </div>
+          </div>
+          <div className="input-data">
+            <label className="amount-input">Amount:</label>
+            <input
+              type="number"
+              value={amountToSell}
+              onChange={handleChangeAmount}
+              className="input-amount"
+            />
+            <div className="underline"></div>
+          </div>
+          <br />
+          <div>
+            <div className="input-data textarea">
+              <label className="add-form-titles">Product Description:</label>
+              <textarea
+                name="description"
+                value={description}
+                onChange={handlechangedescription}
+              ></textarea>
+              <div className="underline"></div>
+            </div>
+          </div>
+          <div>
+            <div className="form-row">
+              <div className="input-data">
+                <div className="inner"></div>
+                <button
+                  className="button-64"
+                  type="button"
+                  onClick={handleProductAdded}
+                  disabled={status !== "idle"}
+                >
+                  Add Product
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 };
