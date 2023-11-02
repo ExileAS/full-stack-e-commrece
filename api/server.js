@@ -16,6 +16,7 @@ const corsOptions = {
   credentials: true,
 };
 
+app.use("/images", express.static("images"));
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors(corsOptions));

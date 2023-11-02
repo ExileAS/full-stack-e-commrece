@@ -1,6 +1,8 @@
 const Product = require("../models/productModel");
 const OrderedProducts = require("../models/oderedProductsModel");
 const crypto = require("crypto");
+const fs = require("fs");
+const multer = require("multer");
 
 const handleAddMain = (updates) => {
   for (let id in updates) {
@@ -71,7 +73,10 @@ module.exports.product_post = async (req, res) => {
   const productDetails = req.body;
   try {
     const date = new Date().toISOString();
-    const product = await Product.create({ ...productDetails, date });
+    const product = await Product.create({
+      ...productDetails,
+      date,
+    });
     await product.save();
     res.redirect("/");
   } catch (err) {

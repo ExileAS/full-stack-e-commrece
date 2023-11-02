@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -10,6 +10,7 @@ export const AddNewProduct = () => {
   const [description, setdescription] = useState("");
   const [price, setPrice] = useState("");
   const [amountToSell, setAmountToSell] = useState("");
+  const imgRef = useRef(null);
   const navigate = useNavigate();
   const id = useSelector((state) => generateId(state));
   const currUser = useSelector((state) => state.user.userEmail);
@@ -39,6 +40,10 @@ export const AddNewProduct = () => {
             onhand: amountToSell,
             id,
             seller: userName,
+            img: {
+              name: productName,
+              file: imgRef.current.value,
+            },
           },
           {
             headers: {
@@ -82,15 +87,28 @@ export const AddNewProduct = () => {
               <div className="underline"></div>
             </div>
           </div>
-          <div className="input-data">
-            <label className="amount-input">Amount:</label>
-            <input
-              type="number"
-              value={amountToSell}
-              onChange={handleChangeAmount}
-              className="input-amount"
-            />
-            <div className="underline"></div>
+          <div className="form-row">
+            <div className="input-data">
+              <label className="amount-input">Amount:</label>
+              <input
+                type="number"
+                value={amountToSell}
+                onChange={handleChangeAmount}
+                className="input-amount"
+              />
+              <div className="underline"></div>
+            </div>
+            <div className="input-data">
+              <label className="amount-input">Image:</label>
+              <form enctype="multipart/form-data">
+                <input
+                  type="file"
+                  name="myImage"
+                  accept="image/*"
+                  ref={imgRef}
+                />
+              </form>
+            </div>
           </div>
           <br />
           <div>

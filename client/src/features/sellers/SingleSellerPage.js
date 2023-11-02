@@ -10,11 +10,11 @@ export const SingleSellerPage = () => {
   const dispatch = useDispatch();
   const { sellerId } = useParams();
   const sellerStatus = useSelector((state) => state.sellers.status);
+  const productStatus = useSelector((state) => state.products.status);
   const user = useSelector((state) => selectSellerById(state, sellerId));
   const userProducts = useSelector((state) =>
     selectProductsByUser(state, user)
   );
-  const productStatus = useSelector((state) => state.products.status);
 
   useEffect(() => {
     if (sellerStatus === "idle") {

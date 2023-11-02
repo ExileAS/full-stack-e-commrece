@@ -15,6 +15,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useLogout from "../userRegister/useLogout";
+import { getAllSellers, getIdByName } from "../sellers/sellersSlice";
 
 export const ProductDetails = React.memo(({ productProp }) => {
   let { productId } = useParams();
@@ -22,6 +23,8 @@ export const ProductDetails = React.memo(({ productProp }) => {
   const product = useSelector((state) => selectProductById(state, productId));
   const added = useSelector((state) => checkAdded(state, productId));
   const logged = useSelector((state) => state.user.loggedIn);
+  const sellerStatus = useSelector((state) => state.sellers.status);
+  const productStatus = useSelector((state) => state.products.status);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const logoutUser = useLogout();
@@ -29,15 +32,19 @@ export const ProductDetails = React.memo(({ productProp }) => {
   const productInCart = productsInCart.find(
     (product) => product.id === productId
   );
+  const sellerId = useSelector((state) => getIdByName(state, product.seller));
   const count = productInCart === undefined ? 1 : productInCart.count;
   const [amount, setAmount] = useState(1);
   const [amountExceeded, setAmountExceeded] = useState(false);
 
   useEffect(() => {
-    if (!product) {
+    if (sellerStatus === "idle") {
+      dispatch(getAllSellers());
+    }
+    if (productStatus === "idle") {
       dispatch(fetchProducts());
     }
-  }, [dispatch, product]);
+  }, [dispatch, sellerStatus, productStatus]);
 
   useEffect(() => {
     if (count > 1) setAmount(count);
@@ -69,15 +76,27 @@ export const ProductDetails = React.memo(({ productProp }) => {
   };
 
   return (
-    <div>
+    <div className="details-container">
       <section className="product-card">
         <h2 className="title-text">
           {product.name} {amount > 1 && <b>x{amount}</b>}
         </h2>
-        <b className="price">Price: {product.price}</b>
-        <p>{product.description}</p>
+        <img src="" alt="" className="laptop" />
         <br />
-        <span> added by {product.seller ? product.seller : "unknown"}</span>
+        <b className="price">Price: {product.price}</b>
+        <p className="description">{product.description}</p>
+
+        <span className="addedby">
+          added by{" "}
+          {product.seller ? (
+            <Link to={"/sellers/" + sellerId} className="seller-title">
+              {product.seller}
+            </Link>
+          ) : (
+            "unknown"
+          )}
+        </span>
+
         <br />
         <TimeAgo timestamp={product.date} />
         <br />

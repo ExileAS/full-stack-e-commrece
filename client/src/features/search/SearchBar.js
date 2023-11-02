@@ -71,6 +71,7 @@ const SearchBar = ({ data }) => {
             type="search"
           ></input>
         </form>
+        <br />
       </div>
       <SortOptions products={data} />
       {search !== "" && searchResult.length > 0 && (
@@ -80,7 +81,7 @@ const SearchBar = ({ data }) => {
       <div className="grid">
         {search.length === 0 && searchCategory.length > 0 && (
           <div>
-            <h2 className="category-name">{searchCategory}:</h2>
+            <h2 className="category-name">{searchCategory}: </h2>
             {categoryResults}
           </div>
         )}

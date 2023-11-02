@@ -6,7 +6,6 @@ import {
   productUnSelected,
   selectAllProducts,
 } from "./productsSlice";
-import TimeAgo from "./TimeAgo";
 import SearchBar from "../search/SearchBar";
 import { selectAllInCart } from "../shoppingCart/shoppingCartSlice";
 import { fetchProducts } from "./productsSlice";
@@ -43,34 +42,26 @@ export const ProductExcerpt = React.memo(
             <h2>
               {product.name} {count > 1 && <b>x{count}</b>}
             </h2>
+            <div className="product-img">
+              <img src="" alt="" className="laptop" />
+            </div>
           </Link>
           <p className="description">
-            description: {product.description.substring(0, 10)}
+            {product.description.length > 25
+              ? `${product.description.substring(0, 25)}...`
+              : `${product.description}`}
           </p>
           <b className="description">Price: {product.price}</b>
           <br />
           <div>
             {" "}
-            {!confirmed ? (
-              <span className="addedby">
-                added by{" "}
-                {product.seller ? (
-                  <Link to={"/sellers/" + sellerId} className="product-name">
-                    {product.seller}
-                  </Link>
-                ) : (
-                  "unknown"
-                )}
-              </span>
-            ) : (
+            {confirmed && (
               <div>
                 others by{" "}
                 <Link to={"/sellers/" + sellerId}>{product.seller}</Link>
               </div>
             )}
           </div>
-          <TimeAgo timestamp={product.date} />
-          <br />{" "}
           {logged && !productInCart && !orderedList && !mainPage && (
             <div>
               {!select ? (
@@ -96,16 +87,13 @@ export const ProductExcerpt = React.memo(
               )}
             </div>
           )}
-          <br />
           {!orderedList && (
             <div>
               {!productInCart ? (
                 <div>
                   {" "}
                   {product.onhand > 0 ? (
-                    <b className="description">
-                      on hand quantity: {product.onhand}
-                    </b>
+                    <b className="description">quantity: {product.onhand}</b>
                   ) : (
                     <div className="soldout">
                       <b className="sold">Sold out</b>
@@ -114,7 +102,7 @@ export const ProductExcerpt = React.memo(
                 </div>
               ) : (
                 <div>
-                  <b>on hand quantity: {productInCart.onhand}</b>
+                  <b>quantity: {productInCart.onhand}</b>
                   <h3>
                     you added this to your{" "}
                     <Link to={"/shoppingCart"}>shopping cart</Link>
