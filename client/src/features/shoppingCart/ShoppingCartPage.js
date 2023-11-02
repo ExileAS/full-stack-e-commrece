@@ -39,7 +39,7 @@ const ShoppingCartPage = () => {
           </h2>
         </Link>
         <b value={product.price} className="description">
-          Price: {product.price}
+          {product.price / 100} $
         </b>
         <br />
         <b className="description">Description: {product.description}</b>
@@ -69,7 +69,9 @@ const ShoppingCartPage = () => {
       </span>
       <br />
       {products}
-      {totalPrice > 0 && <b className="cost">Total Cost: {totalPrice}</b>}
+      {totalPrice > 0 && (
+        <b className="cost">Total Cost: {totalPrice / 100} $</b>
+      )}
       <br />
       {productsInCart.length > 0 && (
         <button

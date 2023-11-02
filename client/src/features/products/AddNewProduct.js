@@ -99,14 +99,11 @@ export const AddNewProduct = () => {
               <div className="underline"></div>
             </div>
             <div className="input-data">
-              <label className="amount-input">Image:</label>
-              <form enctype="multipart/form-data">
-                <input
-                  type="file"
-                  name="myImage"
-                  accept="image/*"
-                  ref={imgRef}
-                />
+              <label className="amount-input" htmlFor="imgform">
+                Image:
+              </label>
+              <form enctype="multipart/form-data" name="imgform">
+                <input type="file" name="img" accept="image/*" ref={imgRef} />
               </form>
             </div>
           </div>

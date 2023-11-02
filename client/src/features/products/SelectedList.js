@@ -18,7 +18,7 @@ const SelectedList = () => {
 
   const selectedList = useSelector(getAllSelected);
   const content = selectedList.map((product) => (
-    <div key={product.id}>
+    <div key={product.id} className="details-container">
       <ProductDetails productProp={product} />
       <button
         className="button-42"

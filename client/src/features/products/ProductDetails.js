@@ -15,36 +15,43 @@ import {
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useLogout from "../userRegister/useLogout";
-import { getAllSellers, getIdByName } from "../sellers/sellersSlice";
+import { getIdByName, getAllSellers } from "../sellers/sellersSlice";
 
 export const ProductDetails = React.memo(({ productProp }) => {
+  const [amount, setAmount] = useState(1);
+  const [amountExceeded, setAmountExceeded] = useState(false);
   let { productId } = useParams();
-  productId = productId || productProp.id;
-  const product = useSelector((state) => selectProductById(state, productId));
-  const added = useSelector((state) => checkAdded(state, productId));
-  const logged = useSelector((state) => state.user.loggedIn);
-  const sellerStatus = useSelector((state) => state.sellers.status);
-  const productStatus = useSelector((state) => state.products.status);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const logoutUser = useLogout();
+  productId = productId || productProp.id;
+  const added = useSelector((state) => checkAdded(state, productId));
+  const logged = useSelector((state) => state.user.loggedIn);
+  const productStatus = useSelector((state) => state.products.status);
+  const sellerStatus = useSelector((state) => state.sellers.status);
+  let product = useSelector((state) => selectProductById(state, productId));
+  if (!product) product = localStorage.getItem(productId);
   const productsInCart = useSelector((state) => state.shoppingCart.cart);
   const productInCart = productsInCart.find(
     (product) => product.id === productId
   );
+
   const sellerId = useSelector((state) => getIdByName(state, product.seller));
+
   const count = productInCart === undefined ? 1 : productInCart.count;
-  const [amount, setAmount] = useState(1);
-  const [amountExceeded, setAmountExceeded] = useState(false);
 
   useEffect(() => {
-    if (sellerStatus === "idle") {
-      dispatch(getAllSellers());
-    }
+    if (product) localStorage.setItem(productId, product);
+  }, [product, productId]);
+
+  useEffect(() => {
     if (productStatus === "idle") {
       dispatch(fetchProducts());
     }
-  }, [dispatch, sellerStatus, productStatus]);
+    if (sellerStatus === "idle") {
+      dispatch(getAllSellers());
+    }
+  }, [dispatch, productStatus, sellerStatus]);
 
   useEffect(() => {
     if (count > 1) setAmount(count);
@@ -83,7 +90,7 @@ export const ProductDetails = React.memo(({ productProp }) => {
         </h2>
         <img src="" alt="" className="laptop" />
         <br />
-        <b className="price">Price: {product.price}</b>
+        <b className="price">{product.price / 100} $</b>
         <p className="description">{product.description}</p>
 
         <span className="addedby">

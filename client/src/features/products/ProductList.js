@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import {
   checkSelected,
   productSelected,
-  productUnSelected,
   selectAllProducts,
 } from "./productsSlice";
 import SearchBar from "../search/SearchBar";
@@ -51,7 +50,7 @@ export const ProductExcerpt = React.memo(
               ? `${product.description.substring(0, 25)}...`
               : `${product.description}`}
           </p>
-          <b className="description">Price: {product.price}</b>
+          <b className="description">{product.price / 100} $</b>
           <br />
           <div>
             {" "}
@@ -64,27 +63,19 @@ export const ProductExcerpt = React.memo(
           </div>
           {logged && !productInCart && !orderedList && !mainPage && (
             <div>
-              {!select ? (
-                <button
-                  className="button-29"
-                  onClick={() => {
-                    dispatch(productSelected({ productId: product.id }));
-                    setSelect(true);
-                  }}
-                >
-                  Select
-                </button>
-              ) : (
-                <button
-                  className="add-button"
-                  onClick={() => {
-                    dispatch(productUnSelected({ productId: product.id }));
-                    setSelect(false);
-                  }}
-                >
-                  Remove
-                </button>
-              )}
+              {!select &&
+                product.onhand >
+                  0(
+                    <button
+                      className="button-29"
+                      onClick={() => {
+                        dispatch(productSelected({ productId: product.id }));
+                        setSelect(true);
+                      }}
+                    >
+                      Select
+                    </button>
+                  )}
             </div>
           )}
           {!orderedList && (
@@ -102,8 +93,10 @@ export const ProductExcerpt = React.memo(
                 </div>
               ) : (
                 <div>
-                  <b>quantity: {productInCart.onhand}</b>
-                  <h3>
+                  <b className="description">
+                    quantity: {productInCart.onhand}
+                  </b>
+                  <h3 className="description">
                     you added this to your{" "}
                     <Link to={"/shoppingCart"}>shopping cart</Link>
                   </h3>
