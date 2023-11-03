@@ -232,7 +232,9 @@ const shoppingCartSlice = createSlice({
       .addCase(retrieveOrderedList.fulfilled, (state, action) => {
         state.customerInfo = action.payload.customerInfo;
         state.confirmId = action.payload.orderId;
+        state.payedId = action.payload.payedId;
         if (action.payload.isSplit) {
+          console.log("IS SPLIT");
           state.isSplit = true;
           state.ordered = action.payload.orderedUnpaid;
           state.payedOrder = action.payload.orderedPaid;
@@ -240,8 +242,10 @@ const shoppingCartSlice = createSlice({
         }
         if (action.payload.payed) {
           state.payedOrder = action.payload.ordered;
+          state.isSplit = false;
         } else {
           state.ordered = action.payload.ordered;
+          state.isSplit = false;
         }
         return state;
       })

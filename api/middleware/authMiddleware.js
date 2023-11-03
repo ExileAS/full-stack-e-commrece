@@ -28,7 +28,6 @@ const requireAuth = (req, res, next) => {
       if (err) {
         res.status(400).json({ err: "invalid token" });
       } else {
-        res.status(200).json({ user: decodedToken.id });
         next();
       }
     });

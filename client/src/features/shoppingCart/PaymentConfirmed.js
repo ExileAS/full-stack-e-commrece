@@ -5,10 +5,14 @@ import { confirmPayment, updateOrder } from "./shoppingCartSlice";
 import { useParams } from "react-router-dom";
 import { setOrderId } from "../userRegister/userSlice";
 const PaymentConfirmed = () => {
-  const confirmId = useSelector((state) => state.shoppingCart.confirmId);
+  const confirmId = useSelector(
+    (state) => state.shoppingCart.payedId || state.shoppingCart.confirmId
+  );
   const orderId = useSelector((state) => state.user.userOrderId);
   const dispatch = useDispatch();
   const { id } = useParams();
+  const payed = useSelector((state) => state.shoppingCart.payment);
+  console.log(payed);
 
   useEffect(() => {
     if (orderId === id) {

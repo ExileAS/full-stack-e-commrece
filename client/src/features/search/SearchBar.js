@@ -60,7 +60,11 @@ const SearchBar = ({ data }) => {
   return (
     <div className="search-bar">
       <div className="search-input">
-        <form className="nosubmit" onSubmit={(e) => e.preventDefault()}>
+        <form
+          className="nosubmit"
+          onSubmit={(e) => e.preventDefault()}
+          autoComplete="off"
+        >
           <input
             name="search-bar"
             id="search-bar"

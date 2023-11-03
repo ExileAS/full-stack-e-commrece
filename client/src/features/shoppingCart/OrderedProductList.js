@@ -33,14 +33,15 @@ const OrderedProductsList = ({ confirmed }) => {
 
   useEffect(() => {
     if (totalCost > 0) {
-      const discountMultiplier = Math.floor(totalCost / 1000);
+      const discountMultiplier = Math.floor(totalCost / 10000);
       const discountValue =
         totalCost - totalCost * (1 - 0.0009 * discountMultiplier);
-      const discount = discountValue >= 3000 ? 3000 : Math.round(discountValue);
+      const discount =
+        discountValue >= 30000 ? 30000 : Math.round(discountValue);
       const currDiscountRatio = (discount / totalCost) * 100;
       const ratioDisplayed = `${currDiscountRatio}`.substring(0, 4);
       setDiscountRatio(ratioDisplayed);
-      if (totalCost > 1000) setShippingFee(0);
+      if (totalCost > 10000) setShippingFee(0);
       else setShippingFee(120);
       setCostAfterDiscount(totalCost - discount);
     }
@@ -157,7 +158,7 @@ const OrderedProductsList = ({ confirmed }) => {
                     className="button-77"
                     disabled={disableCheckout}
                   >
-                    <b>Checkout</b>
+                    Checkout
                   </button>
                 ) : (
                   <Spinner text="loading..." />

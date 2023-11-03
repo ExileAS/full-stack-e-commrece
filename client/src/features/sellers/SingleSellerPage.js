@@ -29,7 +29,7 @@ export const SingleSellerPage = () => {
   if (sellerStatus === "loading") content = <Spinner text="Loading..." />;
   if (sellerStatus === "success") {
     content = userProducts.map((product) => (
-      <ProductExcerpt product={product} key={product.id} seller={user} />
+      <ProductExcerpt product={product} key={product.id} />
     ));
   }
 

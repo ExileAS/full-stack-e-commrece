@@ -39,6 +39,7 @@ const ShoppingCartPage = () => {
           </h2>
         </Link>
         <img src={product.img} alt="" className="laptop" />
+        <br />
         <b value={product.price} className="description">
           {product.price / 100} $
         </b>
@@ -76,7 +77,7 @@ const ShoppingCartPage = () => {
       <br />
       {productsInCart.length > 0 && (
         <button
-          className="button-71"
+          className="button-100"
           onClick={() => navigate("/confirm-order")}
         >
           Confirm Order
