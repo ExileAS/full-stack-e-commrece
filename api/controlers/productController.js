@@ -2,7 +2,7 @@ const Product = require("../models/productModel");
 const OrderedProducts = require("../models/oderedProductsModel");
 const crypto = require("crypto");
 const fs = require("fs");
-const multer = require("multer");
+const path = require("path");
 
 const handleAddMain = (updates) => {
   for (let id in updates) {
@@ -59,23 +59,41 @@ const handleDeleteRedundant = async (info, list, confirmId, isSplit) => {
   }
 };
 
-module.exports.product_get = (req, res) => {
+module.exports.product_get = async (req, res) => {
   try {
-    Product.find()
-      .sort({ createdAt: -1 })
-      .then((result) => res.status(200).json({ result }));
+    const result = await Product.find().sort({ createdAt: -1 });
+    // for (let i = 0; i < result.length; i++) {
+    //   if (fs.existsSync(result[i].img)) {
+    //     const image = path.join(
+    //       __dirname,
+    //       "..",
+    //       "images" + "/" + result[i].img
+    //     );
+    //     result[i].img = image;
+    //   } else {
+    //     result[i].img = path.join(__dirname, "..", "images" + "/" + "none.jpg");
+    //   }
+    // }
+    res.status(200).json({ result });
   } catch (err) {
+    console.log(err);
     res.status(400).json({ error: err.message });
   }
 };
 
+// controller ../images/
+
 module.exports.product_post = async (req, res) => {
   const productDetails = req.body;
+  const { img } = req.files;
+  const imgPath = path.join(__dirname, "..", "images" + "/" + img.name);
+  img.mv(imgPath);
   try {
     const date = new Date().toISOString();
     const product = await Product.create({
       ...productDetails,
       date,
+      img: img.name,
     });
     await product.save();
     res.redirect("/");

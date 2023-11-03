@@ -70,7 +70,12 @@ const productsSlice = createSlice({
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.status = "success";
-        state.products = [...action.payload.result];
+        const res = action.payload.result.map((product) => {
+          product.img = `${process.env.PROXY}/images/${product.img}`;
+          console.log(product.img);
+          return product;
+        });
+        state.products = [...res];
         return state;
       });
   },

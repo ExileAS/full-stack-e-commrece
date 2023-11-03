@@ -1,8 +1,8 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { generateId } from "../sellers/sellersSlice";
+import { generateId } from "../products/productsSlice";
 import { addNewSeller } from "../sellers/sellersSlice";
 
 export const AddNewProduct = () => {
@@ -10,7 +10,7 @@ export const AddNewProduct = () => {
   const [description, setdescription] = useState("");
   const [price, setPrice] = useState("");
   const [amountToSell, setAmountToSell] = useState("");
-  const imgRef = useRef(null);
+  const [img, setImage] = useState();
   const navigate = useNavigate();
   const id = useSelector((state) => generateId(state));
   const currUser = useSelector((state) => state.user.userEmail);
@@ -40,14 +40,12 @@ export const AddNewProduct = () => {
             onhand: amountToSell,
             id,
             seller: userName,
-            img: {
-              name: productName,
-              file: imgRef.current.value,
-            },
+            img: img,
           },
           {
             headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
+              "Content-Type": "multipart/form-data",
+              "x-rapidapi-host": "file-upload8.p.rapidapi.com",
             },
           }
         );
@@ -59,13 +57,16 @@ export const AddNewProduct = () => {
       window.location.reload(true);
     }
   };
-  console.log(status);
 
   return (
     <div className="body-add-product">
       <div className="container-add-product">
         <div className="text-add-product">Add a product</div>
-        <form className="add-product-form" onSubmit={(e) => e.preventDefault()}>
+        <form
+          className="add-product-form"
+          encType="multipart/form-data"
+          onSubmit={(e) => e.preventDefault()}
+        >
           <div className="form-row">
             <div className="input-data">
               <label className="add-form-titles">Product title:</label>
@@ -102,9 +103,13 @@ export const AddNewProduct = () => {
               <label className="amount-input" htmlFor="imgform">
                 Image:
               </label>
-              <form enctype="multipart/form-data" name="imgform">
-                <input type="file" name="img" accept="image/*" ref={imgRef} />
-              </form>
+              <input
+                type="file"
+                name="img"
+                accept="image/*"
+                required={true}
+                onChange={(e) => setImage(e.target.files[0])}
+              />
             </div>
           </div>
           <br />

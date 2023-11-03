@@ -9,6 +9,7 @@ const cors = require("cors");
 require("dotenv").config();
 const paymentRouter = require("./routes/paymentRoutes");
 const sellersRouter = require("./routes/sellerRoutes");
+const fileUpload = require("express-fileupload");
 
 const corsOptions = {
   origin: "http://localhost:3000",
@@ -20,6 +21,7 @@ app.use("/images", express.static("images"));
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors(corsOptions));
+app.use(fileUpload());
 
 mongoose
   .connect(process.env.MONGODB_URI)
