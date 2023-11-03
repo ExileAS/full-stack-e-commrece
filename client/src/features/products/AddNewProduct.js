@@ -1,16 +1,22 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { generateId } from "../products/productsSlice";
+import { generateId, selectProductById } from "../products/productsSlice";
 import { addNewSeller } from "../sellers/sellersSlice";
 
 export const AddNewProduct = () => {
-  const [productName, setProductName] = useState("");
-  const [description, setdescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [amountToSell, setAmountToSell] = useState("");
-  const [img, setImage] = useState();
+  const { productId } = useParams();
+  const currProduct = useSelector((state) =>
+    selectProductById(state, productId)
+  );
+  const [productName, setProductName] = useState(currProduct?.name || "");
+  const [description, setdescription] = useState(
+    currProduct?.description || ""
+  );
+  const [price, setPrice] = useState(currProduct?.price || "");
+  const [amountToSell, setAmountToSell] = useState(currProduct?.onhand || "");
+  const [img, setImage] = useState(currProduct?.img || "");
   const navigate = useNavigate();
   const id = useSelector((state) => generateId(state));
   const currUser = useSelector((state) => state.user.userEmail);
@@ -19,7 +25,10 @@ export const AddNewProduct = () => {
   const handlechangedescription = (e) => setdescription(e.target.value);
   const handleChangePrice = (e) => setPrice(e.target.value);
   const handleChangeAmount = (e) => setAmountToSell(e.target.value);
-
+  let sellerEdit = false;
+  if (currProduct) {
+    sellerEdit = currProduct.seller === userName;
+  }
   const canAdd =
     [productName, description, price, amountToSell].every(Boolean) && price > 0;
 
@@ -56,6 +65,38 @@ export const AddNewProduct = () => {
       navigate("/products");
       window.location.reload(true);
     }
+  };
+
+  const handleEdit = async () => {
+    if (canAdd && sellerEdit) {
+      try {
+        const res = await axios.patch(
+          "/api/editProduct",
+          {
+            name: productName,
+            description,
+            price,
+            onhand: amountToSell,
+            id: productId,
+            seller: userName,
+            img: img,
+          },
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              "x-rapidapi-host": "file-upload8.p.rapidapi.com",
+            },
+          }
+        );
+        const info = await res.json();
+        console.log(info);
+        setStatus("success");
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    navigate("/products");
+    window.location.reload(true);
   };
 
   return (
@@ -128,14 +169,25 @@ export const AddNewProduct = () => {
             <div className="form-row">
               <div className="input-data">
                 <div className="inner"></div>
-                <button
-                  className="button-64"
-                  type="button"
-                  onClick={handleProductAdded}
-                  disabled={status !== "idle"}
-                >
-                  Add Product
-                </button>
+                {!sellerEdit ? (
+                  <button
+                    className="button-64"
+                    type="button"
+                    onClick={handleProductAdded}
+                    disabled={status !== "idle"}
+                  >
+                    Add Product
+                  </button>
+                ) : (
+                  <button
+                    className="button-64"
+                    type="button"
+                    onClick={handleEdit}
+                    disabled={status !== "idle"}
+                  >
+                    Edit
+                  </button>
+                )}
               </div>
             </div>
           </div>

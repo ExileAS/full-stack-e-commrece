@@ -1,7 +1,6 @@
 const Product = require("../models/productModel");
 const OrderedProducts = require("../models/oderedProductsModel");
 const crypto = require("crypto");
-const fs = require("fs");
 const path = require("path");
 
 const handleAddMain = (updates) => {
@@ -62,26 +61,12 @@ const handleDeleteRedundant = async (info, list, confirmId, isSplit) => {
 module.exports.product_get = async (req, res) => {
   try {
     const result = await Product.find().sort({ createdAt: -1 });
-    // for (let i = 0; i < result.length; i++) {
-    //   if (fs.existsSync(result[i].img)) {
-    //     const image = path.join(
-    //       __dirname,
-    //       "..",
-    //       "images" + "/" + result[i].img
-    //     );
-    //     result[i].img = image;
-    //   } else {
-    //     result[i].img = path.join(__dirname, "..", "images" + "/" + "none.jpg");
-    //   }
-    // }
     res.status(200).json({ result });
   } catch (err) {
     console.log(err);
     res.status(400).json({ error: err.message });
   }
 };
-
-// controller ../images/
 
 module.exports.product_post = async (req, res) => {
   const productDetails = req.body;
@@ -133,7 +118,7 @@ module.exports.retreive_ordered_post = async (req, res) => {
     const orderedByUser = await OrderedProducts.findOne({
       "customerInfo.userEmail": userEmail,
     });
-
+    console.log(orderedByUser);
     if (orderedByUser && orderedByUser.customerPayed) {
       const unpaidOrder = await OrderedProducts.findOne({
         "customerInfo.userEmail": userEmail,
@@ -156,7 +141,6 @@ module.exports.retreive_ordered_post = async (req, res) => {
       }
     }
 
-    //console.log(orderedByUser);
     if (orderedByUser) {
       if (orderedByUser.delivered === false) {
         res.status(200).json({

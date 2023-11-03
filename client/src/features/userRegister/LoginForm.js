@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { login } from "./userSlice";
-import { clearCustomerInfo } from "../shoppingCart/shoppingCartSlice";
+import {
+  clearCustomerInfo,
+  retrieveOrderedList,
+} from "../shoppingCart/shoppingCartSlice";
 import GoogleReg from "./GoogleReg";
 
 const Login = () => {
@@ -31,6 +34,7 @@ const Login = () => {
         if (data.user) {
           dispatch(login(data.user));
           window.history.go(-1);
+          dispatch(retrieveOrderedList(data.user));
         }
       } catch (err) {
         console.log(err);

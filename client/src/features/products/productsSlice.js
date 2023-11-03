@@ -71,7 +71,7 @@ const productsSlice = createSlice({
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.status = "success";
         const res = action.payload.result.map((product) => {
-          product.img = `${process.env.PROXY}/images/${product.img}`;
+          product.img = `${process.env.REACT_APP_PROXY_DEV}/images/${product.img}`;
           console.log(product.img);
           return product;
         });

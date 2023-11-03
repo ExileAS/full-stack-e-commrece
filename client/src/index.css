@@ -1926,8 +1926,9 @@ form .form-row .textarea {
 }
 
 .laptop {
-  width: 110px;
-  padding-right: 2px;
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
 }
 
 .price {
@@ -1948,4 +1949,10 @@ form .form-row .textarea {
 
 .seller-name :hover {
   color: crimson;
+}
+
+.title {
+  text-align: center;
+  color: #0d172a;
+  margin: 6px;
 }

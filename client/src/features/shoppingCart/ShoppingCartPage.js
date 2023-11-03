@@ -38,12 +38,13 @@ const ShoppingCartPage = () => {
             {product.name} x{product.count}
           </h2>
         </Link>
+        <img src={product.img} alt="" className="laptop" />
         <b value={product.price} className="description">
           {product.price / 100} $
         </b>
         <br />
-        <b className="description">Description: {product.description}</b>
-        <p className="description">added by {product.seller ?? "unknown"}</p>
+        <b className="description">{product.description}</b>
+        <p className="description">{product.seller ?? "unknown"}</p>
         <TimeAgo timestamp={product.date} />
         <br />
         <button className="button-25" onClick={() => handleIncrement(product)}>

@@ -36,6 +36,11 @@ function App() {
               path="/products/addProduct"
               element={<AddNewProduct />}
             />
+            <Route
+              exact
+              path="/products/addProduct/:productId"
+              element={<AddNewProduct />}
+            />
             <Route exact path="/sellers" element={<SellerList />} />
             <Route
               exact

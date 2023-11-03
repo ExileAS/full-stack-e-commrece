@@ -29,6 +29,7 @@ export const ProductDetails = React.memo(({ productProp }) => {
   const logged = useSelector((state) => state.user.loggedIn);
   const productStatus = useSelector((state) => state.products.status);
   const sellerStatus = useSelector((state) => state.sellers.status);
+  const currUser = useSelector((state) => state.user.userName);
   let product = useSelector((state) => selectProductById(state, productId));
   if (!product) product = localStorage.getItem(productId);
   const productsInCart = useSelector((state) => state.shoppingCart.cart);
@@ -88,7 +89,7 @@ export const ProductDetails = React.memo(({ productProp }) => {
         <h2 className="title-text">
           {product.name} {amount > 1 && <b>x{amount}</b>}
         </h2>
-        <img src="" alt="" className="laptop" />
+        <img src={product.img} alt="" className="laptop" />
         <br />
         <b className="price">{product.price / 100} $</b>
         <p className="description">{product.description}</p>
@@ -148,15 +149,22 @@ export const ProductDetails = React.memo(({ productProp }) => {
               </div>
             ) : (
               <div>
-                {!productInCart && product.onhand > 0 && (
-                  <button
-                    className="button-29"
-                    onClick={() => dispatch(productSelected({ productId }))}
-                  >
-                    Select
-                  </button>
-                )}
+                {!productInCart &&
+                  product.onhand > 0 &&
+                  currUser !== product.seller && (
+                    <button
+                      className="button-29"
+                      onClick={() => dispatch(productSelected({ productId }))}
+                    >
+                      Select
+                    </button>
+                  )}
                 <div>
+                  {currUser === product.seller && (
+                    <div className="description">
+                      <Link to={"/products/addProduct/" + productId}>Edit</Link>
+                    </div>
+                  )}
                   {product.onhand <= 0 && <h2 className="soldout">Sold Out</h2>}
                 </div>
               </div>

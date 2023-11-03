@@ -13,7 +13,7 @@ const cartPersistConfig = {
 };
 
 const userPersistConfig = {
-  key: "users",
+  key: "user",
   storage,
 };
 

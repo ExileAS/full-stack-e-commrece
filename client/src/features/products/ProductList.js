@@ -15,7 +15,8 @@ import "transition-style";
 import bagSrc from "../../components/shoppingBag.jpg";
 
 export const ProductExcerpt = React.memo(
-  ({ product, count, orderedList, mainPage, confirmed }) => {
+  ({ product, count, orderedList, mainPage, confirmed, seller }) => {
+    console.log(seller);
     const logged = useSelector((state) => state.user.userEmail);
     const dispatch = useDispatch();
     const productId = product.id;
@@ -42,12 +43,12 @@ export const ProductExcerpt = React.memo(
               {product.name} {count > 1 && <b>x{count}</b>}
             </h2>
             <div className="product-img">
-              <img src="" alt="" className="laptop" />
+              <img src={product.img} alt="" className="laptop" />
             </div>
           </Link>
           <p className="description">
-            {product.description.length > 25
-              ? `${product.description.substring(0, 25)}...`
+            {product.description.length > 40
+              ? `${product.description.substring(0, 40)}...`
               : `${product.description}`}
           </p>
           <b className="description">{product.price / 100} $</b>
@@ -61,23 +62,25 @@ export const ProductExcerpt = React.memo(
               </div>
             )}
           </div>
-          {logged && !productInCart && !orderedList && !mainPage && (
-            <div>
-              {!select &&
-                product.onhand >
-                  0(
-                    <button
-                      className="button-29"
-                      onClick={() => {
-                        dispatch(productSelected({ productId: product.id }));
-                        setSelect(true);
-                      }}
-                    >
-                      Select
-                    </button>
-                  )}
-            </div>
-          )}
+          {logged &&
+            !productInCart &&
+            !orderedList &&
+            !mainPage &&
+            seller.name !== product.seller && (
+              <div>
+                {!select && product.onhand > 0 && (
+                  <button
+                    className="button-29"
+                    onClick={() => {
+                      dispatch(productSelected({ productId: product.id }));
+                      setSelect(true);
+                    }}
+                  >
+                    Select
+                  </button>
+                )}
+              </div>
+            )}
           {!orderedList && (
             <div>
               {!productInCart ? (
@@ -135,12 +138,12 @@ export const ProductsList = () => {
 
   return (
     <div className="container">
-      <Link to="/products/addProduct" className="add-link">
-        {logged && <button className="button-63">Add Product</button>}
-      </Link>
       <SearchBar data={products} />
       <img src={bagSrc} alt="store-logo" className="main-logo" />
       <br />
+      <Link to="/products/addProduct" className="add-link">
+        {logged && <button className="button-63">Add Product</button>}
+      </Link>
       <div className="grid">{content}</div>
     </div>
   );

@@ -6,6 +6,7 @@ const initialState = {
   loggedIn: false,
   userOrderId: null,
   google: false,
+  userName: null,
 };
 
 export const checkUser = createAsyncThunk("user/checkUser", async () => {
@@ -25,11 +26,16 @@ const userSlice = createSlice({
       state.loggedIn = false;
       state.userEmail = null;
       state.google = false;
+      state.userName = null;
       return state;
     },
     login(state, action) {
       state.loggedIn = true;
       state.userEmail = action.payload;
+      state.userName = state.userEmail.substring(
+        0,
+        state.userEmail.indexOf("@")
+      );
       return state;
     },
     setOrderId(state, action) {
@@ -42,6 +48,10 @@ const userSlice = createSlice({
         state.loggedIn = true;
         state.userEmail = user.email;
         state.google = true;
+        state.userName = state.userEmail.substring(
+          0,
+          state.userEmail.indexOf("@")
+        );
       }
       return state;
     },

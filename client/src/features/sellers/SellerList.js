@@ -39,8 +39,8 @@ export const SellerList = () => {
         <div key="seller">
           {map[seller.name].map((item) => (
             <h2 className="description" key={item.id}>
-              <li className="description">
-                <Link to={"/products/" + item.id} className="description">
+              <li className="product-name">
+                <Link to={"/products/" + item.id} className="product-name">
                   {item.name}
                 </Link>
               </li>
