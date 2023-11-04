@@ -8,6 +8,7 @@ import {
   selectAllOrdered,
   updateOrder,
 } from "./shoppingCartSlice";
+import { countNewOnhand } from "../products/productsSlice";
 
 const ConfirmOrderForm = () => {
   const info = useSelector((state) => state.shoppingCart.customerInfo);
@@ -63,6 +64,7 @@ const ConfirmOrderForm = () => {
           orderedInCart,
         })
       );
+      dispatch(countNewOnhand(orderedInCart));
       navigate("/products/ordered");
       if (currentOrdered.length === 0) {
         dispatch(postOrdered());

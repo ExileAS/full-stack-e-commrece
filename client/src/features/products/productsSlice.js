@@ -87,6 +87,7 @@ export const {
   productUnSelected,
   removeProduct,
   setProductState,
+  countNewOnhand,
 } = productsSlice.actions;
 
 export default productsSlice.reducer;

@@ -44,7 +44,7 @@ const SelectedList = () => {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
-      if (res.ok) {
+      if (!res.err) {
         selectedList.forEach((product) => {
           dispatch(addToShoppingCart(product));
           dispatch(productUnSelected({ productId: product.id }));
