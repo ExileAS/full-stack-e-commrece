@@ -50,7 +50,7 @@ const handleDeleteRedundant = async (info, list, confirmId) => {
     if (count === existingList.length) {
       //console.log("deleted");
       const res = await OrderedProducts.deleteOne({ _id: existingId });
-      console.log("res:" + res);
+      console.log("redundant delete result:" + res);
     }
   } catch (error) {
     console.log(error);
