@@ -1,8 +1,16 @@
-const Categories = ({ changeCategory }) => {
+import { useContext } from "react";
+import { CategoriesContext } from "../../contexts/categories-context";
+
+const Categories = () => {
+  const { setCategory } = useContext(CategoriesContext);
+
   return (
-    <div>
-      <select className="search-categories" onChange={changeCategory}>
-        <option value="all" key="0">
+    <div className="categories">
+      <select
+        onChange={(e) => setCategory(e.target.value)}
+        className="select-category"
+      >
+        <option value="" key="0" className="">
           Categories
         </option>
         <option value="devices" key="devices">

@@ -14,7 +14,7 @@ module.exports.get_all_sellers = async (req, res) => {
 };
 
 module.exports.edit_product = async (req, res) => {
-  const { name, description, price, onhand, id, seller } = req.body;
+  const { name, description, price, onhand, id, seller, category } = req.body;
   const { img } = req.files;
   const existing = await Product.findOne({ id: id, seller: seller });
   const prevImg = existing.img;
@@ -28,10 +28,10 @@ module.exports.edit_product = async (req, res) => {
         console.log("file deleted");
       });
     });
-    const imgPath = path.join(__dirname, "..", "images" + "/" + img.name);
-    img.mv(imgPath);
   }
-  const updates = { name, description, price, onhand, img: img.name };
+  const imgPath = path.join(__dirname, "..", "images" + "/" + img.name);
+  img.mv(imgPath);
+  const updates = { name, description, price, onhand, img: img.name, category };
   try {
     const response = await Product.findOneAndUpdate(
       { id: id, seller: seller },

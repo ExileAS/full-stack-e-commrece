@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { generateId, selectProductById } from "../products/productsSlice";
-import { addNewSeller } from "../sellers/sellersSlice";
+import { addNewSeller, generateIdSeller } from "../sellers/sellersSlice";
 
 export const AddNewProduct = () => {
   const { productId } = useParams();
@@ -16,7 +16,8 @@ export const AddNewProduct = () => {
   );
   const [price, setPrice] = useState(currProduct?.price || "");
   const [amountToSell, setAmountToSell] = useState(currProduct?.onhand || "");
-  const [img, setImage] = useState(currProduct?.img || "");
+  const [img, setImage] = useState();
+  const [category, setCategory] = useState(currProduct?.category || "others");
   const navigate = useNavigate();
   const id = useSelector((state) => generateId(state));
   const currUser = useSelector((state) => state.user.userEmail);
@@ -30,11 +31,15 @@ export const AddNewProduct = () => {
     sellerEdit = currProduct.seller === userName;
   }
   const canAdd =
-    [productName, description, price, amountToSell].every(Boolean) && price > 0;
+    [productName, description, price, amountToSell, img, category].every(
+      Boolean
+    ) && price > 0;
 
   const [status, setStatus] = useState("idle");
   const dispatch = useDispatch();
-  const sellerId = useSelector((state) => generateId(state));
+  const sellerId = useSelector((state) => generateIdSeller(state));
+  console.log(category);
+
   const handleProductAdded = async () => {
     if (canAdd) {
       setStatus("pending");
@@ -49,6 +54,7 @@ export const AddNewProduct = () => {
             onhand: amountToSell,
             id,
             seller: userName,
+            category,
             img: img,
           },
           {
@@ -79,6 +85,7 @@ export const AddNewProduct = () => {
             onhand: amountToSell,
             id: productId,
             seller: userName,
+            category,
             img: img,
           },
           {
@@ -94,9 +101,9 @@ export const AddNewProduct = () => {
       } catch (err) {
         console.log(err);
       }
+      navigate("/products");
+      window.location.reload(true);
     }
-    navigate("/products");
-    window.location.reload(true);
   };
 
   return (
@@ -151,6 +158,29 @@ export const AddNewProduct = () => {
                 required={true}
                 onChange={(e) => setImage(e.target.files[0])}
               />
+            </div>
+          </div>
+          <div className="form-row">
+            <div className="input-data">
+              <label className="amount-input">Category: </label>
+              <select
+                onChange={(e) => setCategory(e.target.value)}
+                className="add-form-category"
+                required={true}
+              >
+                <option value="devices" key="devices">
+                  devices
+                </option>
+                <option value="clothes" key="clothes">
+                  clothes
+                </option>
+                <option value="accessories" key="accessories">
+                  accessories
+                </option>
+                <option value="others" key="others">
+                  others
+                </option>
+              </select>
             </div>
           </div>
           <br />

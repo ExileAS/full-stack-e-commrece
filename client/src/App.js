@@ -16,6 +16,8 @@ import Login from "./features/userRegister/LoginForm";
 import SelectedList from "./features/products/SelectedList";
 import PaymentConfirmed from "./features/shoppingCart/PaymentConfirmed";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import CategoriesContextProvider from "./contexts/categories-context";
+import Categories from "./features/search/Categories";
 
 function App() {
   return (
@@ -25,7 +27,16 @@ function App() {
           <Navbar />
           <Routes>
             <Route exact path="/" element={<LandingPage />} />
-            <Route exact path="/products" element={<ProductsList />} />
+            <Route
+              exact
+              path="/products"
+              element={
+                <CategoriesContextProvider>
+                  <Categories />
+                  <ProductsList />
+                </CategoriesContextProvider>
+              }
+            />
             <Route
               exact
               path="/products/:productId"

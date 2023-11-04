@@ -61,7 +61,7 @@ export const selectSellerById = (state, id) =>
 export const getIdByName = (state, name) =>
   state.sellers.sellers.find((seller) => seller.name === name)?.id;
 
-export const generateId = (state) => {
+export const generateIdSeller = (state) => {
   const sellers = state.sellers.sellers;
   let max = 0;
   sellers.forEach((element) => {

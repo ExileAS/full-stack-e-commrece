@@ -8,7 +8,7 @@ import {
 import SearchBar from "../search/SearchBar";
 import { selectAllInCart } from "../shoppingCart/shoppingCartSlice";
 import { fetchProducts } from "./productsSlice";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Spinner } from "../../components/Spinner";
 import {
   getAllSellers,
@@ -17,6 +17,7 @@ import {
 } from "../sellers/sellersSlice";
 import "transition-style";
 import bagSrc from "../../components/shoppingBag.jpg";
+import { CategoriesContext } from "../../contexts/categories-context";
 
 export const ProductExcerpt = React.memo(
   ({ product, count, orderedList, mainPage, confirmed }) => {
@@ -122,6 +123,7 @@ export const ProductExcerpt = React.memo(
 );
 
 export const ProductsList = () => {
+  const { categories, category } = useContext(CategoriesContext);
   const dispatch = useDispatch();
   const status = useSelector((state) => state.products.status);
   const logged = useSelector((state) => state.user.loggedIn);
@@ -137,16 +139,27 @@ export const ProductsList = () => {
 
   let content;
   if (status === "loading") content = <Spinner text="Loading..." />;
-  if (status === "success")
-    content = products.map((product) => (
-      <ProductExcerpt product={product} key={product.id} mainPage={true} />
-    ));
-
+  if (status === "success") {
+    const filtered = products.filter(
+      (product) =>
+        category.length === 0 ||
+        (categories.includes(category) && category === product.category)
+    );
+    content = filtered.length ? (
+      filtered.map((product) => (
+        <ProductExcerpt product={product} key={product.id} mainPage={true} />
+      ))
+    ) : (
+      <div>
+        <h2>No Matching Results</h2>
+      </div>
+    );
+  }
   if (status === "failed") content = <div>{error}</div>;
 
   return (
     <div className="container">
-      <SearchBar data={products} />
+      <SearchBar data={products} categories={categories} />
       <img src={bagSrc} alt="store-logo" className="main-logo" />
       <br />
       <Link to="/products/addProduct" className="add-link">
