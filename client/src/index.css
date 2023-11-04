@@ -1992,7 +1992,7 @@ form .form-row .textarea {
 
 .categories {
   position: relative;
-  margin-top: -25px;
+  margin-top: -26px;
   margin-left: 4px;
   font-size: small;
 }
@@ -2000,14 +2000,17 @@ form .form-row .textarea {
 .categories :hover {
   cursor: pointer;
 }
+option {
+  font-size: 14px;
+}
 
 .select-category {
   background-color: #31486a;
   border: none;
   color: aliceblue;
   margin-left: -6px;
-  font-size: 14px;
-  font-style: italic;
+  font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
 }
 
 .select-category :hover {

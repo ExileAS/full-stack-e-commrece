@@ -11,7 +11,7 @@ const Categories = () => {
         className="select-category"
       >
         <option value="" key="0" className="">
-          Categories
+          All
         </option>
         <option value="devices" key="devices">
           devices
