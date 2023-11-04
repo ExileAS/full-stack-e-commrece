@@ -111,5 +111,6 @@ export const generateId = (state) => {
   products.forEach((element) => {
     max = max > Number(element.id) ? max : Number(element.id);
   });
+  console.log(max);
   return `${1 + max}`;
 };

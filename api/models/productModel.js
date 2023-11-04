@@ -21,6 +21,9 @@ const productSchema = new Schema(
     description: {
       type: String,
     },
+    category: {
+      type: String,
+    },
     id: {
       type: String,
     },

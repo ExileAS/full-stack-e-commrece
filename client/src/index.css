@@ -396,6 +396,7 @@ html {
 .search-bar {
   margin-left: auto;
   margin-right: auto;
+  margin-top: 0.5%;
 }
 
 .search-box {
@@ -947,16 +948,6 @@ html {
 
 img {
   width: 16px;
-}
-
-.search-img {
-  padding-top: 0px;
-  position: absolute;
-  width: 24px;
-}
-
-.search-img:hover {
-  cursor: pointer;
 }
 
 .search-input {
@@ -1997,4 +1988,40 @@ form .form-row .textarea {
 
 .button-100:active {
   transform: scale(0.95);
+}
+
+.categories {
+  position: relative;
+  margin-top: -25px;
+  margin-left: 4px;
+  font-size: small;
+}
+
+.categories :hover {
+  cursor: pointer;
+}
+
+.select-category {
+  background-color: #31486a;
+  border: none;
+  color: aliceblue;
+  margin-left: -6px;
+  font-size: 14px;
+  font-style: italic;
+}
+
+.select-category :hover {
+  cursor: pointer;
+}
+
+.add-form-category {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 16px;
+  margin-bottom: -20px;
+  padding: 3px;
+}
+
+.all-categories {
+  color: whitesmoke;
 }
