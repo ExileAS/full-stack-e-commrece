@@ -38,14 +38,21 @@ const ConfirmOrderForm = () => {
 
   const [formState, setFormState] = useState(initialForm);
 
-  const changeFirstName = (e) =>
-    setFormState((prev) => ({ ...prev, firstName: e.target.value }));
-  const changeLasttName = (e) =>
-    setFormState((prev) => ({ ...prev, lastName: e.target.value }));
-  const changeAdress = (e) =>
-    setFormState((prev) => ({ ...prev, adress: e.target.value }));
-  const changePhoneNumber = (e) =>
-    setFormState((prev) => ({ ...prev, phoneNumber: e.target.value }));
+  // const changeFirstName = (e) =>
+  //   setFormState((prev) => ({ ...prev, firstName: e.target.value }));
+  // const changeLasttName = (e) =>
+  //   setFormState((prev) => ({ ...prev, lastName: e.target.value }));
+  // const changeAdress = (e) =>
+  //   setFormState((prev) => ({ ...prev, adress: e.target.value }));
+  // const changePhoneNumber = (e) =>
+  //   setFormState((prev) => ({ ...prev, phoneNumber: e.target.value }));
+
+  const handleChangeForm = (e) => {
+    setFormState((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
 
   const canSumbit =
     [
@@ -84,8 +91,8 @@ const ConfirmOrderForm = () => {
             <input
               type="text"
               placeholder="first name"
-              value={formState.firstName}
-              onChange={changeFirstName}
+              name="firstName"
+              onChange={handleChangeForm}
               className="name"
             />
           </div>
@@ -93,8 +100,8 @@ const ConfirmOrderForm = () => {
             <input
               type="text"
               placeholder="last name"
-              value={formState.lastName}
-              onChange={changeLasttName}
+              name="lastName"
+              onChange={handleChangeForm}
               className="name"
             />
           </div>
@@ -102,8 +109,8 @@ const ConfirmOrderForm = () => {
             <input
               type="text"
               placeholder="adress"
-              value={formState.adress}
-              onChange={changeAdress}
+              name="adress"
+              onChange={handleChangeForm}
               className="adress"
             />
           </div>
@@ -111,8 +118,8 @@ const ConfirmOrderForm = () => {
             <input
               type="text"
               placeholder="phone number"
-              value={formState.phoneNumber}
-              onChange={changePhoneNumber}
+              name="phoneNumber"
+              onChange={handleChangeForm}
               className="number"
             />
           </div>

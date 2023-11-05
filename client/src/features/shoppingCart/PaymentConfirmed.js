@@ -11,8 +11,6 @@ const PaymentConfirmed = () => {
   const orderId = useSelector((state) => state.user.userOrderId);
   const dispatch = useDispatch();
   const { id } = useParams();
-  const payed = useSelector((state) => state.shoppingCart.payment);
-  console.log(payed);
 
   useEffect(() => {
     if (orderId === id) {

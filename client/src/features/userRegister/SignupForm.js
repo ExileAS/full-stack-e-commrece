@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { login } from "./userSlice";
 import { clearCustomerInfo } from "../shoppingCart/shoppingCartSlice";
 import GoogleReg from "./GoogleReg";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -10,6 +11,7 @@ const SignUp = () => {
   const [emailErr, setEmailError] = useState("");
   const [passwordErr, setPasswordErr] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSignup = async () => {
     dispatch(clearCustomerInfo());
@@ -28,7 +30,7 @@ const SignUp = () => {
       }
       if (data.user) {
         dispatch(login(data.user));
-        window.history.go(-1);
+        navigate("/products");
       }
     } catch (err) {
       console.log(err);
