@@ -71,7 +71,8 @@ export const ProductDetails = React.memo(({ productProp }) => {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
-      if (res.ok) {
+      console.log(res);
+      if (!res.err) {
         dispatch(addToShoppingCart(product));
         dispatch(productUnSelected({ productId: product.id }));
       } else {
@@ -110,15 +111,15 @@ export const ProductDetails = React.memo(({ productProp }) => {
         <br />
         {logged ? (
           <div>
+            <button
+              className="button-37"
+              onClick={() => navigate("/moreProducts/" + productId)}
+            >
+              See Similar Products
+            </button>
+            <br />
             {product.selected ? (
               <div>
-                <button
-                  className="button-37"
-                  onClick={() => navigate("/moreProducts/" + productId)}
-                >
-                  See Similar Products
-                </button>
-                <br />
                 <div>
                   {!added ? (
                     <button

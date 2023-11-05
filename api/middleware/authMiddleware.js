@@ -28,13 +28,23 @@ const requireAuth = (req, res, next) => {
       if (err) {
         res.status(400).json({ err: "invalid token" });
       } else {
-        res.status(200).json({});
         next();
       }
     });
   } else {
     res.status(400).json({ err: "no token" });
   }
+};
+
+const requireAuthSeller = (req, res, next) => {
+  // need to keep in mind we also need img auth while creating.
+  // do seller auth
+  // will be using middleware, new db model and routes/controllers
+  // as well as a different type of JWT (diffrent server secret).
+  // make jwt if info is valid(number, company name etc...)
+  // modify checkuser to accept both types of tokens.
+  // change UI for seller.
+  // try to isolate this to prevent bugs.
 };
 
 module.exports = { checkUser, requireAuth };

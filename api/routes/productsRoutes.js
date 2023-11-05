@@ -7,11 +7,12 @@ const {
   update_order_patch,
   order_delete,
 } = require("../controlers/productController");
+const { requireAuth } = require("../middleware/authMiddleware");
 
 const router = Router();
 
 router.get("/api/all-products", product_get);
-router.post("/api", product_post);
+router.post("/api", requireAuth, product_post);
 router.post("/api/post-ordered", ordered_post);
 router.post("/api/retrieveOrdered", retreive_ordered_post);
 router.patch("/api/updateOrder", update_order_patch);

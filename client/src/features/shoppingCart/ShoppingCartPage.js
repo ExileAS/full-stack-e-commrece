@@ -45,7 +45,7 @@ const ShoppingCartPage = () => {
         </b>
         <br />
         <b className="description">{product.description}</b>
-        <p className="description">{product.seller ?? "unknown"}</p>
+        <p className="description">by: {product.seller ?? "unknown"}</p>
         <TimeAgo timestamp={product.date} />
         <br />
         <button className="button-25" onClick={() => handleIncrement(product)}>

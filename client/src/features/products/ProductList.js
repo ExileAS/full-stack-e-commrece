@@ -109,8 +109,7 @@ export const ProductExcerpt = React.memo(
                     quantity: {productInCart.onhand}
                   </b>
                   <h3 className="description">
-                    you added this to your{" "}
-                    <Link to={"/shoppingCart"}>shopping cart</Link>
+                    in <Link to={"/shoppingCart"}>your cart</Link>
                   </h3>
                 </div>
               )}

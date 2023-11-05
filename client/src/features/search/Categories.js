@@ -6,7 +6,7 @@ const Categories = () => {
 
   return (
     <div className="categories">
-      <label className="category-label">Categories :</label>
+      <label className="category-label">Category</label>
       <br />
       <select
         onChange={(e) => setCategory(e.target.value)}
