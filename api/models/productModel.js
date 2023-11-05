@@ -5,14 +5,17 @@ const productSchema = new Schema(
   {
     name: {
       type: String,
+      required: true,
     },
     price: {
       type: Number,
-      min: [1, "price cant be 0"],
+      min: [100, "price cant be less than a dollar"],
+      required: true,
     },
     onhand: {
       type: Number,
-      min: [1, "onhand cant be 0"],
+      min: [1, "onhand cant be less than 1"],
+      required: true,
     },
     seller: {
       type: String,
@@ -20,18 +23,19 @@ const productSchema = new Schema(
     },
     description: {
       type: String,
+      required: true,
     },
     category: {
       type: String,
+      required: true,
     },
     id: {
       type: String,
-    },
-    type: {
-      type: String,
+      required: true,
     },
     date: {
       type: String,
+      required: true,
     },
     img: {
       type: String,

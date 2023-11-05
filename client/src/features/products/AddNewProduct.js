@@ -10,35 +10,47 @@ export const AddNewProduct = () => {
   const currProduct = useSelector((state) =>
     selectProductById(state, productId)
   );
-  const [productName, setProductName] = useState(currProduct?.name || "");
-  const [description, setdescription] = useState(
-    currProduct?.description || ""
-  );
-  const [price, setPrice] = useState(currProduct?.price || "");
-  const [amountToSell, setAmountToSell] = useState(currProduct?.onhand || "");
-  const [img, setImage] = useState();
-  const [category, setCategory] = useState(currProduct?.category || "others");
+
+  const [img, setImage] = useState(null);
+
+  const [formState, setFormState] = useState({
+    productName: currProduct?.name || "",
+    description: currProduct?.description || "",
+    price: currProduct?.price || null,
+    amountToSell: currProduct?.onhand || null,
+    category: currProduct?.category || "others",
+  });
   const navigate = useNavigate();
   const id = useSelector((state) => generateId(state));
   const currUser = useSelector((state) => state.user.userEmail);
   const userName = currUser.substring(0, currUser.indexOf("@"));
-  const handleChangeName = (e) => setProductName(e.target.value);
-  const handlechangedescription = (e) => setdescription(e.target.value);
-  const handleChangePrice = (e) => setPrice(e.target.value);
-  const handleChangeAmount = (e) => setAmountToSell(e.target.value);
+  const handleChangeForm = (e) => {
+    setFormState((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
   let sellerEdit = false;
   if (currProduct) {
     sellerEdit = currProduct.seller === userName;
   }
   const canAdd =
-    [productName, description, price, amountToSell, img, category].every(
-      Boolean
-    ) && price > 0;
+    [
+      formState.productName,
+      formState.description,
+      formState.price,
+      formState.amountToSell,
+      img,
+      formState.category,
+    ].every(Boolean) &&
+    Number(formState.price) >= 100 &&
+    Number.isInteger(Number(formState.amountToSell)) &&
+    Number(formState.amountToSell) > 0;
 
   const [status, setStatus] = useState("idle");
   const dispatch = useDispatch();
   const sellerId = useSelector((state) => generateIdSeller(state));
-  console.log(category);
 
   const handleProductAdded = async () => {
     if (canAdd) {
@@ -48,13 +60,13 @@ export const AddNewProduct = () => {
         await axios.post(
           "/api",
           {
-            name: productName,
-            description,
-            price,
-            onhand: amountToSell,
+            name: formState.productName,
+            description: formState.description,
+            price: formState.price,
+            onhand: formState.amountToSell,
             id,
             seller: userName,
-            category,
+            category: formState.category,
             img: img,
           },
           {
@@ -79,13 +91,13 @@ export const AddNewProduct = () => {
         const res = await axios.patch(
           "/api/editProduct",
           {
-            name: productName,
-            description,
-            price,
-            onhand: amountToSell,
+            name: formState.productName,
+            description: formState.description,
+            price: formState.price,
+            onhand: formState.amountToSell,
             id: productId,
             seller: userName,
-            category,
+            category: formState.category,
             img: img,
           },
           {
@@ -117,20 +129,20 @@ export const AddNewProduct = () => {
         >
           <div className="form-row">
             <div className="input-data">
-              <label className="add-form-titles">Product title:</label>
+              <label className="add-form-titles">title:</label>
               <input
                 type="text"
-                value={productName}
-                onChange={handleChangeName}
+                name="productName"
+                onChange={handleChangeForm}
               />
               <div className="underline"></div>
             </div>
             <div className="input-data">
-              <label className="add-form-titles">Price:</label>
+              <label className="add-form-titles">Price in cents:</label>
               <input
                 type="number"
-                value={price}
-                onChange={handleChangePrice}
+                name="price"
+                onChange={handleChangeForm}
                 className="input-price"
               />
               <div className="underline"></div>
@@ -141,8 +153,8 @@ export const AddNewProduct = () => {
               <label className="amount-input">Amount:</label>
               <input
                 type="number"
-                value={amountToSell}
-                onChange={handleChangeAmount}
+                name="amountToSell"
+                onChange={handleChangeForm}
                 className="input-amount"
               />
               <div className="underline"></div>
@@ -164,9 +176,10 @@ export const AddNewProduct = () => {
             <div className="input-data">
               <label className="amount-input">Category: </label>
               <select
-                onChange={(e) => setCategory(e.target.value)}
+                onChange={handleChangeForm}
                 className="add-form-category"
                 required={true}
+                name="category"
               >
                 <option value="devices" key="devices">
                   devices
@@ -186,11 +199,10 @@ export const AddNewProduct = () => {
           <br />
           <div>
             <div className="input-data textarea">
-              <label className="add-form-titles">Product Description:</label>
+              <label className="add-form-titles">Description:</label>
               <textarea
                 name="description"
-                value={description}
-                onChange={handlechangedescription}
+                onChange={handleChangeForm}
               ></textarea>
               <div className="underline"></div>
             </div>

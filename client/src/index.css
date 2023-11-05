@@ -1992,9 +1992,9 @@ form .form-row .textarea {
 
 .categories {
   position: relative;
-  margin-top: -25px;
+  margin-top: -26px;
   margin-left: 4px;
-  font-size: small;
+  font-size: medium;
 }
 
 .categories :hover {
@@ -2005,8 +2005,8 @@ form .form-row .textarea {
   background-color: #31486a;
   border: none;
   color: aliceblue;
-  margin-left: -6px;
-  font-size: 14px;
+  margin-left: -3.8px;
+  font-size: 15px;
   font-style: italic;
 }
 
@@ -2024,4 +2024,111 @@ form .form-row .textarea {
 
 .all-categories {
   color: whitesmoke;
+}
+
+@keyframes float {
+  0% {
+    box-shadow: 0 5px 15px 0px rgba(0, 0, 0, 0.6);
+    transform: translatey(0px);
+  }
+  50% {
+    box-shadow: 0 25px 15px 0px rgba(0, 0, 0, 0.2);
+    transform: translatey(-20px);
+  }
+  100% {
+    box-shadow: 0 5px 15px 0px rgba(0, 0, 0, 0.6);
+    transform: translatey(0px);
+  }
+}
+
+.container-landing {
+  background: linear-gradient(115deg, #40bfcb 10%, #7403a9 90%);
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.avatar {
+  width: 220px;
+  height: 220px;
+  box-sizing: border-box;
+  border: 5px white solid;
+  background-color: white solid;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 5px 15px 0px rgba(0, 0, 0, 0.6);
+  transform: translatey(0px);
+  animation: float 6s ease-in-out infinite;
+}
+
+.content-landing {
+  width: 100%;
+  max-width: 600px;
+  padding: 20px 40px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.landing-logo {
+  width: 115%;
+  height: 100%;
+  padding-right: 12%;
+}
+
+:root {
+  --main-color: #ecf0f1;
+  --point-color: #460763;
+  --size: 5px;
+}
+
+.loader-container {
+  margin-top: 3%;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  z-index: 100000;
+}
+
+.loader__element {
+  border-radius: 100%;
+  border: var(--size) solid var(--point-color);
+  margin: calc(var(--size) * 2);
+}
+
+.loader__element:nth-child(1) {
+  animation: preloader 0.6s ease-in-out alternate infinite;
+}
+.loader__element:nth-child(2) {
+  animation: preloader 0.6s ease-in-out alternate 0.2s infinite;
+}
+
+.loader__element:nth-child(3) {
+  animation: preloader 0.6s ease-in-out alternate 0.4s infinite;
+}
+
+@keyframes preloader {
+  100% {
+    transform: scale(2);
+  }
+}
+
+.title-landing {
+  color: #0b224c;
+}
+
+.category-label {
+  color: white;
 }

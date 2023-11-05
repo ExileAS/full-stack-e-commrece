@@ -80,7 +80,7 @@ module.exports.product_post = async (req, res) => {
       img: img.name,
     });
     await product.save();
-    res.redirect("/");
+    res.status(200).json({});
   } catch (err) {
     res.status(400).json({ error: err.message });
   }

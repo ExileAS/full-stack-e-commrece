@@ -6,12 +6,14 @@ const Categories = () => {
 
   return (
     <div className="categories">
+      <label className="category-label">Categories :</label>
+      <br />
       <select
         onChange={(e) => setCategory(e.target.value)}
         className="select-category"
       >
         <option value="" key="0" className="">
-          Categories
+          All
         </option>
         <option value="devices" key="devices">
           devices

@@ -6,6 +6,7 @@ import {
   retrieveOrderedList,
 } from "../shoppingCart/shoppingCartSlice";
 import GoogleReg from "./GoogleReg";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -13,6 +14,7 @@ const Login = () => {
   const [emailErr, setEmailError] = useState("");
   const [passwordErr, setPasswordErr] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     dispatch(clearCustomerInfo());
@@ -33,7 +35,7 @@ const Login = () => {
         }
         if (data.user) {
           dispatch(login(data.user));
-          window.history.go(-1);
+          navigate("/products");
           dispatch(retrieveOrderedList(data.user));
         }
       } catch (err) {
