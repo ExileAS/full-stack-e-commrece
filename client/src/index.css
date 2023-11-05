@@ -2127,7 +2127,18 @@ option {
 
 .laptop {
   width: 200px;
-  height: 205px;
+  height: 200px;
   object-fit: cover;
   margin-left: -1.5px;
+}
+
+.product-title {
+  text-decoration: none;
+  color: rgb(42, 177, 22);
+  font-size: 14px;
+  margin: 0.5px;
+}
+
+.product-title:hover {
+  color: crimson;
 }
