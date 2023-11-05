@@ -51,9 +51,9 @@ export const ProductExcerpt = React.memo(
       available &&
       product && (
         <section className="item-product" key={product.id}>
-          <Link to={"/products/" + product.id} className="product-name">
+          <Link to={"/products/" + product.id} className="product-title">
             <h2>
-              {product.name} {count > 1 && <b>x{count}</b>}
+              {product.name.substring(0, 15)} {count > 1 && <b>x{count}</b>}
             </h2>
             <div className="product-img">
               <img src={product.img} alt="" className="laptop" />
