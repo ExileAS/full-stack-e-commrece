@@ -38,15 +38,6 @@ const ConfirmOrderForm = () => {
 
   const [formState, setFormState] = useState(initialForm);
 
-  // const changeFirstName = (e) =>
-  //   setFormState((prev) => ({ ...prev, firstName: e.target.value }));
-  // const changeLasttName = (e) =>
-  //   setFormState((prev) => ({ ...prev, lastName: e.target.value }));
-  // const changeAdress = (e) =>
-  //   setFormState((prev) => ({ ...prev, adress: e.target.value }));
-  // const changePhoneNumber = (e) =>
-  //   setFormState((prev) => ({ ...prev, phoneNumber: e.target.value }));
-
   const handleChangeForm = (e) => {
     setFormState((prev) => ({
       ...prev,

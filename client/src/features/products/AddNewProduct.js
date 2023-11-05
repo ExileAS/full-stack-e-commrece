@@ -7,12 +7,17 @@ import { addNewSeller, generateIdSeller } from "../sellers/sellersSlice";
 
 export const AddNewProduct = () => {
   const { productId } = useParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const currProduct = useSelector((state) =>
     selectProductById(state, productId)
   );
+  const id = useSelector((state) => generateId(state));
+  const sellerId = useSelector((state) => generateIdSeller(state));
+  const currUser = useSelector((state) => state.user.userEmail);
+  const userName = currUser.substring(0, currUser.indexOf("@"));
 
   const [img, setImage] = useState(null);
-
   const [formState, setFormState] = useState({
     productName: currProduct?.name || "",
     description: currProduct?.description || "",
@@ -20,10 +25,6 @@ export const AddNewProduct = () => {
     amountToSell: currProduct?.onhand || null,
     category: currProduct?.category || "others",
   });
-  const navigate = useNavigate();
-  const id = useSelector((state) => generateId(state));
-  const currUser = useSelector((state) => state.user.userEmail);
-  const userName = currUser.substring(0, currUser.indexOf("@"));
   const handleChangeForm = (e) => {
     setFormState((prev) => ({
       ...prev,
@@ -49,9 +50,6 @@ export const AddNewProduct = () => {
     Number(formState.amountToSell) > 0;
 
   const [status, setStatus] = useState("idle");
-  const dispatch = useDispatch();
-  const sellerId = useSelector((state) => generateIdSeller(state));
-
   const handleProductAdded = async () => {
     if (canAdd) {
       setStatus("pending");
