@@ -131,6 +131,7 @@ export const AddNewProduct = () => {
               <input
                 type="text"
                 name="productName"
+                value={formState.productName}
                 onChange={handleChangeForm}
               />
               <div className="underline"></div>
@@ -140,6 +141,7 @@ export const AddNewProduct = () => {
               <input
                 type="number"
                 name="price"
+                value={formState.price}
                 onChange={handleChangeForm}
                 className="input-price"
               />
@@ -152,6 +154,7 @@ export const AddNewProduct = () => {
               <input
                 type="number"
                 name="amountToSell"
+                value={formState.amountToSell}
                 onChange={handleChangeForm}
                 className="input-amount"
               />
@@ -176,6 +179,7 @@ export const AddNewProduct = () => {
               <select
                 onChange={handleChangeForm}
                 className="add-form-category"
+                value={formState.category}
                 required={true}
                 name="category"
               >
@@ -201,6 +205,7 @@ export const AddNewProduct = () => {
               <textarea
                 name="description"
                 onChange={handleChangeForm}
+                value={formState.description}
               ></textarea>
               <div className="underline"></div>
             </div>

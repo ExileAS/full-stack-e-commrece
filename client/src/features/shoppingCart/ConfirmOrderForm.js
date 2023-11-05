@@ -85,6 +85,7 @@ const ConfirmOrderForm = () => {
               name="firstName"
               onChange={handleChangeForm}
               className="name"
+              value={formState.firstName}
             />
           </div>
           <div className="input-container">
@@ -94,6 +95,7 @@ const ConfirmOrderForm = () => {
               name="lastName"
               onChange={handleChangeForm}
               className="name"
+              value={formState.lastName}
             />
           </div>
           <div className="input-container">
@@ -103,6 +105,7 @@ const ConfirmOrderForm = () => {
               name="adress"
               onChange={handleChangeForm}
               className="adress"
+              value={formState.adress}
             />
           </div>
           <div className="input-container">
@@ -112,6 +115,7 @@ const ConfirmOrderForm = () => {
               name="phoneNumber"
               onChange={handleChangeForm}
               className="number"
+              value={formState.phoneNumber}
             />
           </div>
           <button onClick={handleSubmitInfo} className="button-85">
