@@ -24,7 +24,6 @@ export const ProductExcerpt = React.memo(
   ({ productId, count, orderedList, mainPage, confirmed }) => {
     const logged = useSelector((state) => state.user.userEmail);
     const dispatch = useDispatch();
-    // const productId = product.id;
     const product = useSelector((state) => selectProductById(state, productId));
     let sellerId = useSelector((state) => getIdByName(state, product.seller));
     if (sellerId) localStorage.setItem(productId, sellerId);
