@@ -24,7 +24,7 @@ module.exports.detectExplicit = async (imgPath) => {
     console.log(res.data);
     const safe =
       res.data.api4ai.status === "success" &&
-      res.data.api4ai.nsfw_likelihood_score < 0.22;
+      res.data.api4ai.nsfw_likelihood_score < 0.1;
     return safe;
   } catch (err) {
     console.log(err);
