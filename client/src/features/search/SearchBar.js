@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { selectAllInCart } from "../shoppingCart/shoppingCartSlice";
 import SortOptions from "../sortingList/SortOptions";
 import { CategoriesContext } from "../../contexts/categories-context";
+import sortByRelevance from "./sortBySearchTerm";
 
 const SearchBar = ({ data }) => {
   const { category } = useContext(CategoriesContext);
@@ -20,6 +21,7 @@ const SearchBar = ({ data }) => {
         search !== "" && item.name.toLowerCase().includes(search.toLowerCase())
     )
     .filter((product) => !productsInCart.includes(product))
+    .sort(sortByRelevance(search))
     .map((item) => <ProductExcerpt productId={item.id} key={item.id} />);
 
   let searchResult = "";
