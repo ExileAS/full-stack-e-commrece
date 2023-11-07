@@ -135,6 +135,7 @@ export const AddNewProduct = () => {
                 name="productName"
                 value={formState.productName}
                 onChange={handleChangeForm}
+                autoComplete="off"
               />
               <div className="underline"></div>
             </div>

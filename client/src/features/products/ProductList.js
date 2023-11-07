@@ -10,7 +10,6 @@ import SearchBar from "../search/SearchBar";
 import { selectAllInCart } from "../shoppingCart/shoppingCartSlice";
 import { fetchProducts } from "./productsSlice";
 import React, { useContext, useEffect, useState } from "react";
-import { Spinner } from "../../components/Spinner";
 import {
   getAllSellers,
   getIdByName,
@@ -19,6 +18,7 @@ import {
 import "transition-style";
 import bagSrc from "../../components/shoppingBag.jpg";
 import { CategoriesContext } from "../../contexts/categories-context";
+import Loader from "../../components/Loader";
 
 export const ProductExcerpt = React.memo(
   ({ productId, count, orderedList, mainPage, confirmed }) => {
@@ -138,7 +138,7 @@ export const ProductsList = () => {
   const error = useSelector((state) => state.error);
 
   let content;
-  if (status === "loading") content = <Spinner text="Loading..." />;
+  if (status === "loading") content = <Loader />;
   if (status === "success") {
     const filtered = products.filter(
       (product) =>

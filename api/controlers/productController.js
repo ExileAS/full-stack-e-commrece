@@ -3,7 +3,6 @@ const OrderedProducts = require("../models/oderedProductsModel");
 const crypto = require("crypto");
 const path = require("path");
 const { detectExplicit } = require("../services/EdenAi");
-const logger = require("../logs/winstonLogger");
 
 const handleAddMain = (updates) => {
   for (let id in updates) {
@@ -76,7 +75,6 @@ module.exports.product_post = async (req, res) => {
   img.mv(imgPath);
   const edenResSafe = await detectExplicit(imgPath);
   if (!edenResSafe) {
-    logger.info(`${req.body.seller}: ${imgPath}`);
     res.status(400).json({ explicit: true });
     return;
   }

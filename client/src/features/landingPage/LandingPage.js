@@ -3,6 +3,7 @@ import useRunOnce from "./useRunOnce";
 import { fetchProducts } from "../products/productsSlice";
 import { useDispatch } from "react-redux";
 import logo from "../../components/shoppingBag.jpg";
+import Loader from "../../components/Loader";
 
 const LandingPage = () => {
   const naviate = useNavigate();
@@ -23,11 +24,7 @@ const LandingPage = () => {
       </div>
       <div className="content-landing">
         <h1 className="title-landing">Welcome To Shopping Bag</h1>
-        <div className="loader-container">
-          <span className="loader__element"></span>
-          <span className="loader__element"></span>
-          <span className="loader__element"></span>
-        </div>
+        <Loader />
       </div>
     </div>
   );
