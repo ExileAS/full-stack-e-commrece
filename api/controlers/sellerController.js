@@ -32,7 +32,7 @@ module.exports.edit_product = async (req, res) => {
   }
   const imgPath = path.join(__dirname, "..", "images" + "/" + img.name);
   img.mv(imgPath);
-  const edenResSafe = await detectExplicit(imgPath);
+  const edenResSafe = await detectExplicit(imgPath, seller);
   if (!edenResSafe) {
     res.status(403).json({ explicit: true });
     return;

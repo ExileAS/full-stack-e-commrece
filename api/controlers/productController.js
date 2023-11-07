@@ -73,7 +73,7 @@ module.exports.product_post = async (req, res) => {
   const { img } = req.files;
   const imgPath = path.join(__dirname, "..", "images" + "/" + img.name);
   img.mv(imgPath);
-  const edenResSafe = await detectExplicit(imgPath);
+  const edenResSafe = await detectExplicit(imgPath, req.body.seller);
   if (!edenResSafe) {
     res.status(400).json({ explicit: true });
     return;

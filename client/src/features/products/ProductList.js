@@ -172,9 +172,15 @@ export const ProductsList = () => {
       <SearchBar data={products} categories={categories} />
       <img src={bagSrc} alt="store-logo" className="main-logo" />
       <br />
-      <Link to="/products/addProduct" className="add-link">
-        {logged && <button className="button-63">Add Product</button>}
-      </Link>
+
+      {logged && (
+        <button className="button-63">
+          <Link to="/products/addProduct" className="inner-link">
+            Add Product
+          </Link>
+        </button>
+      )}
+
       <div className="grid">{content}</div>
     </div>
   );
