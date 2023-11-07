@@ -2,6 +2,7 @@ const Product = require("../models/productModel");
 const OrderedProducts = require("../models/oderedProductsModel");
 const crypto = require("crypto");
 const path = require("path");
+const { detectExplicit } = require("../services/EdenAi");
 
 const handleAddMain = (updates) => {
   for (let id in updates) {
@@ -72,6 +73,11 @@ module.exports.product_post = async (req, res) => {
   const { img } = req.files;
   const imgPath = path.join(__dirname, "..", "images" + "/" + img.name);
   img.mv(imgPath);
+  const edenResSafe = await detectExplicit(imgPath);
+  if (!edenResSafe) {
+    res.status(403).json({ explicit: true });
+    return;
+  }
   try {
     const date = new Date().toISOString();
     const product = await Product.create({
