@@ -20,7 +20,7 @@ const SearchBar = ({ data }) => {
         search !== "" && item.name.toLowerCase().includes(search.toLowerCase())
     )
     .filter((product) => !productsInCart.includes(product))
-    .map((item) => <ProductExcerpt product={item} key={item.id} />);
+    .map((item) => <ProductExcerpt productId={item.id} key={item.id} />);
 
   let searchResult = "";
   if (search.length > 0) {

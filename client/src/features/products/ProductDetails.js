@@ -17,14 +17,14 @@ import { Link } from "react-router-dom";
 import useLogout from "../userRegister/useLogout";
 import { getIdByName, getAllSellers } from "../sellers/sellersSlice";
 
-export const ProductDetails = React.memo(({ productProp }) => {
+export const ProductDetails = React.memo(({ productPropId }) => {
   const [amount, setAmount] = useState(1);
   const [amountExceeded, setAmountExceeded] = useState(false);
   let { productId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const logoutUser = useLogout();
-  productId = productId || productProp.id;
+  productId = productId || productPropId;
   const added = useSelector((state) => checkAdded(state, productId));
   const logged = useSelector((state) => state.user.loggedIn);
   const productStatus = useSelector((state) => state.products.status);

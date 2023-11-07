@@ -4,6 +4,7 @@ import {
   checkSelected,
   productSelected,
   selectAllProducts,
+  selectProductById,
 } from "./productsSlice";
 import SearchBar from "../search/SearchBar";
 import { selectAllInCart } from "../shoppingCart/shoppingCartSlice";
@@ -20,10 +21,11 @@ import bagSrc from "../../components/shoppingBag.jpg";
 import { CategoriesContext } from "../../contexts/categories-context";
 
 export const ProductExcerpt = React.memo(
-  ({ product, count, orderedList, mainPage, confirmed }) => {
+  ({ productId, count, orderedList, mainPage, confirmed }) => {
     const logged = useSelector((state) => state.user.userEmail);
     const dispatch = useDispatch();
-    const productId = product.id;
+    // const productId = product.id;
+    const product = useSelector((state) => selectProductById(state, productId));
     let sellerId = useSelector((state) => getIdByName(state, product.seller));
     if (sellerId) localStorage.setItem(productId, sellerId);
     else sellerId = localStorage.getItem(productId);
@@ -146,7 +148,11 @@ export const ProductsList = () => {
     );
     content = filtered.length ? (
       filtered.map((product) => (
-        <ProductExcerpt product={product} key={product.id} mainPage={true} />
+        <ProductExcerpt
+          productId={product.id}
+          key={product.id}
+          mainPage={true}
+        />
       ))
     ) : (
       <div>

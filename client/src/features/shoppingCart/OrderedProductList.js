@@ -60,7 +60,7 @@ const OrderedProductsList = ({ confirmed }) => {
       <div key={product.id}>
         <div className="item-ordered">
           <ProductExcerpt
-            product={product}
+            productId={product.id}
             count={product.count}
             orderedList={true}
             confirmed={confirmed}
