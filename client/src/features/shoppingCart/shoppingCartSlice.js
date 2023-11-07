@@ -234,7 +234,6 @@ const shoppingCartSlice = createSlice({
         state.confirmId = action.payload.orderId;
         state.payedId = action.payload.payedId;
         if (action.payload.isSplit) {
-          console.log("IS SPLIT");
           state.isSplit = true;
           state.ordered = action.payload.orderedUnpaid;
           state.payedOrder = action.payload.orderedPaid;

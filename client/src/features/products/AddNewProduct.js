@@ -53,9 +53,8 @@ export const AddNewProduct = () => {
   const handleProductAdded = async () => {
     if (canAdd) {
       setStatus("pending");
-      dispatch(addNewSeller({ name: userName, id: sellerId }));
       try {
-        await axios.post(
+        const res = await axios.post(
           "/api",
           {
             name: formState.productName,
@@ -74,6 +73,9 @@ export const AddNewProduct = () => {
             },
           }
         );
+        if (res.ok) {
+          dispatch(addNewSeller({ name: userName, id: sellerId }));
+        }
         setStatus("success");
       } catch (err) {
         console.log(err);

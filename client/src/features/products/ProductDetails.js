@@ -71,8 +71,7 @@ export const ProductDetails = React.memo(({ productPropId }) => {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
-      console.log(res);
-      if (!res.err) {
+      if (res.status === 404) {
         dispatch(addToShoppingCart(product));
         dispatch(productUnSelected({ productId: product.id }));
       } else {
