@@ -10,6 +10,7 @@ require("dotenv").config();
 const paymentRouter = require("./routes/paymentRoutes");
 const sellersRouter = require("./routes/sellerRoutes");
 const fileUpload = require("express-fileupload");
+const morgan = require("morgan");
 
 const corsOptions = {
   origin: "http://localhost:3000",
@@ -17,6 +18,7 @@ const corsOptions = {
   credentials: true,
 };
 
+app.use(morgan("tiny"));
 app.use("/images", express.static("images"));
 app.use(express.json());
 app.use(cookieParser());
