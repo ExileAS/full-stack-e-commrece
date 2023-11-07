@@ -26,7 +26,7 @@ const SortOptions = ({ products }) => {
         className="date-price"
       >
         <option disabled={sortBy.length > 0} value="">
-          none
+          Default
         </option>
         <option value="date" className="sort">
           Date

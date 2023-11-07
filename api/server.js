@@ -18,7 +18,7 @@ const corsOptions = {
   credentials: true,
 };
 
-app.use(morgan("tiny"));
+// app.use(morgan("tiny"));
 app.use("/images", express.static("images"));
 app.use(express.json());
 app.use(cookieParser());

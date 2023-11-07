@@ -21,14 +21,14 @@ export const AddNewProduct = () => {
   const [formState, setFormState] = useState({
     productName: currProduct?.name || "",
     description: currProduct?.description || "",
-    price: currProduct?.price || null,
-    amountToSell: currProduct?.onhand || null,
+    price: currProduct?.price || "",
+    amountToSell: currProduct?.onhand || "",
     category: currProduct?.category || "others",
   });
   const handleChangeForm = (e) => {
     setFormState((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.valueAsNumber || e.target.value,
     }));
   };
 
@@ -45,9 +45,9 @@ export const AddNewProduct = () => {
       img,
       formState.category,
     ].every(Boolean) &&
-    Number(formState.price) >= 100 &&
-    Number.isInteger(Number(formState.amountToSell)) &&
-    Number(formState.amountToSell) > 0;
+    formState.price >= 100 &&
+    Number.isInteger(formState.amountToSell) &&
+    formState.amountToSell > 0;
 
   const [status, setStatus] = useState("idle");
   const handleProductAdded = async () => {

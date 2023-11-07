@@ -2,6 +2,7 @@ const Product = require("../models/productModel");
 const path = require("path");
 const fs = require("fs");
 const { detectExplicit } = require("../services/EdenAi");
+const logger = require("../logs/winstonLogger");
 
 module.exports.get_all_sellers = async (req, res) => {
   try {
@@ -34,6 +35,7 @@ module.exports.edit_product = async (req, res) => {
   img.mv(imgPath);
   const edenResSafe = await detectExplicit(imgPath);
   if (!edenResSafe) {
+    logger.info(`${seller}: ${imgPath}`);
     res.status(403).json({ explicit: true });
     return;
   }
