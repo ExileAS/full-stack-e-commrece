@@ -145,7 +145,12 @@ export const ProductsList = () => {
         category.length === 0 ||
         (categories.includes(category) && category === product.category)
     );
-    if (status === "error") content = <div>Error Loading from server</div>;
+    if (status === "failed")
+      content = (
+        <div>
+          <h2>Error loading from server</h2>
+        </div>
+      );
     content = filtered.length ? (
       filtered.map((product) => (
         <ProductExcerpt
