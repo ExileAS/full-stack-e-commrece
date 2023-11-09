@@ -1,4 +1,3 @@
-const logger = require("../logs/winstonLogger");
 const ReviewsModel = require("../models/reviews");
 
 module.exports.get_reviews = async (req, res) => {
@@ -13,7 +12,6 @@ module.exports.get_reviews = async (req, res) => {
 
 module.exports.add_review = async (req, res) => {
   const { id, email, review } = req.body;
-  logger.info(req.body);
   const product = await ReviewsModel.create({
     productId: id,
     info: {
@@ -24,35 +22,6 @@ module.exports.add_review = async (req, res) => {
   });
   res.json({ product });
   console.log(product);
-  // module.exports.editReview = async (req, res) => {};
-
-  // const Customers = new Schema({
-  //     name: String,
-  //     comment: String,
-  //     rating: {
-  //       type: Number,
-  //       min: [1],
-  //       max: [5],
-  //     },
-  //   });
-
-  //   const reviewsModel = new Schema({
-  //     productId: {
-  //       type: String,
-  //       required: true,
-  //     },
-  //     info: {
-  //       reviewCount: {
-  //         type: Number,
-  //         required: true,
-  //       },
-  //       rating: {
-  //         type: Number,
-  //         required: true,
-  //       },
-  //       customers: [Customers],
-  //     },
-  //   });
 };
 
 module.exports.edit_review = async (req, res) => {};
