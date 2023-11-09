@@ -3,6 +3,7 @@ import productsReducer from "../features/products/productsSlice";
 import sellersReducer from "../features/sellers/sellersSlice";
 import shoppingCartReducer from "../features/shoppingCart/shoppingCartSlice";
 import userReducer from "../features/userRegister/userSlice";
+import reviewReducer from "../features/reviews/reviewSlice";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import thunk from "redux-thunk";
@@ -30,6 +31,7 @@ const store = configureStore({
     sellers: sellersReducer,
     shoppingCart: persistedReducerCart,
     user: persistedReducerUser,
+    review: reviewReducer,
   },
   middleware: [thunk],
 });

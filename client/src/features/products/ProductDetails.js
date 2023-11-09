@@ -16,6 +16,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useLogout from "../userRegister/useLogout";
 import { getIdByName, getAllSellers } from "../sellers/sellersSlice";
+import { ReviewStars } from "../reviews/ReviewStars";
 
 export const ProductDetails = React.memo(({ productPropId }) => {
   const [amount, setAmount] = useState(1);
@@ -92,6 +93,7 @@ export const ProductDetails = React.memo(({ productPropId }) => {
         <img src={product.img} alt="" className="laptop" />
         <br />
         <b className="price">{product.price / 100} $</b>
+        <ReviewStars readonly={true} />
         <p className="description">{product.description}</p>
 
         <span className="addedby">

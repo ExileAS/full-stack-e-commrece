@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const authRouter = require("./routes/authRoutes");
 const { checkUser, requireAuth } = require("./middleware/authMiddleware");
 const productRouter = require("./routes/productsRoutes");
+const reviewRouter = require("./routes/reviewRoutes");
 const cors = require("cors");
 require("dotenv").config();
 const paymentRouter = require("./routes/paymentRoutes");
@@ -41,5 +42,6 @@ app.get("/api/auth", checkUser);
 
 app.use(productRouter);
 app.use(sellersRouter);
+app.use(reviewRouter);
 app.use(authRouter);
 app.use(paymentRouter);

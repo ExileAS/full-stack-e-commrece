@@ -2142,3 +2142,29 @@ option {
 .product-title:hover {
   color: crimson;
 }
+
+.inner-link {
+  color: white;
+}
+
+.inner-link:hover {
+  color: #0b224c;
+}
+
+.orange {
+  cursor: pointer;
+  color: #f09819;
+}
+
+.grey {
+  cursor: pointer;
+  color: #ccc;
+}
+
+input[type="radio"] {
+  display: none;
+}
+
+.star {
+  cursor: pointer;
+}
