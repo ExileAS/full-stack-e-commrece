@@ -15,16 +15,6 @@ export function ReviewStars({ readonly, productId }) {
     getReviewByUser(state, currUser, productId)
   );
 
-  const latestRatingRef = useRef(rating);
-  const debouncedSendRating = useDebounce(
-    useCallback(() => {
-      if (!currReview) {
-        addReviewDb({ productId, currUser, rating: latestRatingRef.current });
-      }
-    }, [productId, currUser, currReview]),
-    2000
-  );
-
   const handleReview = (curr) => {
     setRating(curr);
   };
