@@ -20,7 +20,7 @@ import bagSrc from "../../components/shoppingBag.jpg";
 import { CategoriesContext } from "../../contexts/categories-context";
 import Loader from "../../components/Loader";
 import { ReviewStars } from "../reviews/ReviewStars";
-import { fetchReviews } from "../reviews/reviewSlice";
+import { fetchReviews, setStatus } from "../reviews/reviewSlice";
 
 export const ProductExcerpt = React.memo(
   ({ productId, count, orderedList, mainPage, confirmed }) => {
@@ -133,19 +133,27 @@ export const ProductsList = () => {
   const dispatch = useDispatch();
   const status = useSelector((state) => state.products.status);
   const logged = useSelector((state) => state.user.loggedIn);
+  const reviewStatus = useSelector((state) => state.review.status);
   useEffect(() => {
     if (status === "idle") {
+      dispatch(setStatus());
       dispatch(fetchProducts());
       dispatch(getAllSellers());
-      dispatch(fetchReviews());
     }
   }, [dispatch, status]);
+
+  useEffect(() => {
+    if (reviewStatus === "idle") {
+      dispatch(fetchReviews());
+      console.log("MAIN DISPATCHED");
+    }
+  }, [dispatch, reviewStatus]);
 
   const products = useSelector(selectAllProducts);
   const error = useSelector((state) => state.error);
 
   let content;
-  if (status === "loading") content = <Loader />;
+  if (status === "loading" || reviewStatus === "loading") content = <Loader />;
   if (status === "success") {
     const filtered = products.filter(
       (product) =>

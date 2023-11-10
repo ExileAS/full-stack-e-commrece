@@ -1,46 +1,147 @@
-import { useState, useCallback, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
-import useDebounce from "./useDebounce";
 import { useDispatch, useSelector } from "react-redux";
-import { addReview, getReviewByUser } from "./reviewSlice";
-import { addReviewDb } from "./sendReview";
+import {
+  addReviewDb,
+  editReviewDb,
+  fetchReviews,
+  getInfoByProductId,
+  getReviewByUser,
+  setStatus,
+} from "./reviewSlice";
+import { selectProductById } from "../products/productsSlice";
 
-export function ReviewStars({ readonly, productId }) {
-  const [rating, setRating] = useState(readonly ? 5 : null);
-  const [hover, setHover] = useState(null);
-
-  const dispatch = useDispatch();
+export const ReviewStars = React.memo(({ readonly, productId, details }) => {
+  const product = useSelector((state) => selectProductById(state, productId));
+  const info = useSelector((state) => getInfoByProductId(state, productId));
+  const currRating = info?.rating;
+  const customers = info?.customers || [];
   const currUser = useSelector((state) => state.user.userEmail);
-  const currReview = useSelector((state) =>
+  let currUserReview = useSelector((state) =>
     getReviewByUser(state, currUser, productId)
   );
+  // if (!currUserReview)
+  //   currUserReview = localStorage.getItem(`${productId}review`) || 0;
+  const [submitted, setSubmitted] = useState(Boolean(currUserReview) || false);
+
+  const [rating, setRating] = useState(readonly ? currRating : currUserReview);
+  const [hover, setHover] = useState(null);
+  const [submit, setSubmit] = useState(false);
+  const [comment, setComment] = useState("");
+  const dispatch = useDispatch();
+  const status = useSelector((state) => state.review.status);
+  console.log(status);
+
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchReviews());
+      console.log("DISPATCHED");
+    }
+  }, [status, dispatch]);
+
+  // useEffect(() => {
+  //   if (submitted) localStorage.setItem(`${productId}review`, rating);
+  //   // console.log(localStorage.getItem(`${productId}review`), rating, submitted);
+  // }, [rating, productId, submitted]);
 
   const handleReview = (curr) => {
     setRating(curr);
+    setSubmit(true);
+    setSubmitted(false);
   };
 
-  return (
-    <div>
+  const handleSubmit = () => {
+    if (!comment || !rating) return;
+    setSubmitted(true);
+    dispatch(setStatus());
+    if (!info) {
+      dispatch(
+        addReviewDb({
+          rating,
+          comment,
+          currUser,
+          productId,
+          productName: product.name,
+        })
+      );
+    } else {
+      console.log("EDITING");
+      dispatch(
+        editReviewDb({
+          rating,
+          comment,
+          currUser,
+          productId,
+        })
+      );
+    }
+  };
+
+  const stars = [...Array(5)].map((_, i) => {
+    const currRating = i + 1;
+    return (
+      <label key={i}>
+        <input
+          type="radio"
+          name="rating"
+          value={currRating}
+          onClick={() => !readonly && handleReview(currRating)}
+        />
+        <FaStar
+          size={24}
+          className="star"
+          color={currRating <= (hover || rating) ? "#ffc107" : "#e4e5e9"}
+          onMouseEnter={() => !readonly && setHover(currRating)}
+          onMouseLeave={() => !readonly && setHover(null)}
+        />
+      </label>
+    );
+  });
+
+  const customerReviews = customers.map((customer, i) => (
+    <div key={i}>
+      <li>{customer.name.substring(0, customer.name.indexOf("@"))}</li>
       {[...Array(5)].map((_, i) => {
         const currRating = i + 1;
         return (
           <label key={i}>
-            <input
-              type="radio"
-              name="rating"
-              value={currRating}
-              onClick={() => !readonly && handleReview(currRating)}
-            />
+            <input type="radio" name="rating" value={currRating} />
             <FaStar
               size={24}
               className="star"
-              color={currRating <= (hover || rating) ? "#ffc107" : "#e4e5e9"}
-              onMouseEnter={() => !readonly && setHover(currRating)}
-              onMouseLeave={() => !readonly && setHover(null)}
+              color={
+                currRating <= (hover || customer.rating) ? "#ffc107" : "#e4e5e9"
+              }
             />
           </label>
         );
       })}
     </div>
+  ));
+
+  return (
+    <div>
+      {!details && <div>{stars}</div>}
+      {submit && !submitted && (
+        <div>
+          <input
+            type="text"
+            placeholder="review the product"
+            onChange={(e) => setComment(e.target.value)}
+          />
+
+          <button className="button-79" onClick={handleSubmit}>
+            Submit
+          </button>
+        </div>
+      )}
+      {submitted && !readonly && <h3>your review has been submitted</h3>}
+      {details && (
+        <div>
+          {customers.length > 0 && <h3>Customer reviews:</h3>}
+          {customerReviews}
+        </div>
+      )}
+    </div>
   );
-}
+});

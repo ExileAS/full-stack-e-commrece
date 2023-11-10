@@ -32,6 +32,8 @@ const reviewsModel = new Schema({
     rating: {
       type: Number,
       required: true,
+      min: [1, "min review is 1"],
+      max: [5, "max review is 5"],
     },
     customers: [Customer],
   },

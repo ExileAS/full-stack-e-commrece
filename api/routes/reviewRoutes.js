@@ -9,6 +9,6 @@ const {
 
 router.get("/api/reviews", get_reviews);
 router.post("/api/addReview", add_review);
-// router.patch("/api/editReview", edit_review);
+router.patch("/api/editReview", edit_review);
 
 module.exports = router;

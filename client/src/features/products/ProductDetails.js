@@ -79,7 +79,6 @@ export const ProductDetails = React.memo(({ productPropId }) => {
         <img src={product.img} alt="" className="laptop" />
         <br />
         <b className="price">{product.price / 100} $</b>
-        <ReviewStars readonly={true} details={true} productId={productId} />
         <p className="description">{product.description}</p>
 
         <span className="addedby">
@@ -105,6 +104,7 @@ export const ProductDetails = React.memo(({ productPropId }) => {
               See Similar Products
             </button>
             <br />
+
             {product.selected ? (
               <div>
                 <div>
@@ -168,6 +168,8 @@ export const ProductDetails = React.memo(({ productPropId }) => {
             </h3>
           </div>
         )}
+        <br />
+        <ReviewStars readonly={true} details={true} productId={productId} />
       </section>
     </div>
   );
