@@ -18,6 +18,11 @@ const userPersistConfig = {
   storage,
 };
 
+const reviewPersistConfig = {
+  key: "review",
+  storage,
+};
+
 const persistedReducerCart = persistReducer(
   cartPersistConfig,
   shoppingCartReducer
@@ -25,13 +30,18 @@ const persistedReducerCart = persistReducer(
 
 const persistedReducerUser = persistReducer(userPersistConfig, userReducer);
 
+const persistedReducerreview = persistReducer(
+  reviewPersistConfig,
+  reviewReducer
+);
+
 const store = configureStore({
   reducer: {
     products: productsReducer,
     sellers: sellersReducer,
     shoppingCart: persistedReducerCart,
     user: persistedReducerUser,
-    review: reviewReducer,
+    review: persistedReducerreview,
   },
   middleware: [thunk],
 });

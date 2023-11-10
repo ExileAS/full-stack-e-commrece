@@ -22,19 +22,12 @@ export function ReviewStars({ readonly, productId }) {
         addReviewDb({ productId, currUser, rating: latestRatingRef.current });
       }
     }, [productId, currUser, currReview]),
-    5000
+    2000
   );
 
-  const handleReview = useCallback(
-    (curr) => {
-      setRating(curr);
-      dispatch(addReview({ id: productId, user: currUser, rating: curr }));
-
-      latestRatingRef.current = curr;
-      debouncedSendRating();
-    },
-    [dispatch, productId, currUser, debouncedSendRating]
-  );
+  const handleReview = (curr) => {
+    setRating(curr);
+  };
 
   return (
     <div>

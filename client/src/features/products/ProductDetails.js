@@ -14,7 +14,6 @@ import {
 } from "../shoppingCart/shoppingCartSlice";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import useLogout from "../userRegister/useLogout";
 import { getIdByName, getAllSellers } from "../sellers/sellersSlice";
 import { ReviewStars } from "../reviews/ReviewStars";
 
@@ -24,7 +23,6 @@ export const ProductDetails = React.memo(({ productPropId }) => {
   let { productId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const logoutUser = useLogout();
   productId = productId || productPropId;
   const added = useSelector((state) => checkAdded(state, productId));
   const logged = useSelector((state) => state.user.loggedIn);
@@ -66,22 +64,10 @@ export const ProductDetails = React.memo(({ productPropId }) => {
     }, 2800);
   };
 
-  const handleAddToCart = async (product) => {
-    try {
-      const res = await fetch("/api/requireAuth", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      if (res.status === 404) {
-        dispatch(addToShoppingCart(product));
-        dispatch(productUnSelected({ productId: product.id }));
-      } else {
-        await logoutUser();
-        navigate("/signup");
-      }
-    } catch (err) {
-      console.log(err);
-    }
+  const handleAddToCart = (product) => {
+    if (!logged) return;
+    dispatch(addToShoppingCart(product));
+    dispatch(productUnSelected({ productId: product.id }));
   };
 
   return (
@@ -93,7 +79,7 @@ export const ProductDetails = React.memo(({ productPropId }) => {
         <img src={product.img} alt="" className="laptop" />
         <br />
         <b className="price">{product.price / 100} $</b>
-        <ReviewStars readonly={true} />
+        <ReviewStars readonly={true} details={true} productId={productId} />
         <p className="description">{product.description}</p>
 
         <span className="addedby">

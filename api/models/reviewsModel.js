@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const Customers = new Schema({
+const Customer = new Schema({
   name: {
     type: String,
   },
@@ -20,6 +20,10 @@ const reviewsModel = new Schema({
     type: String,
     required: true,
   },
+  productName: {
+    type: String,
+    required: true,
+  },
   info: {
     reviewCount: {
       type: Number,
@@ -29,7 +33,7 @@ const reviewsModel = new Schema({
       type: Number,
       required: true,
     },
-    customers: [Customers],
+    customers: [Customer],
   },
 });
 

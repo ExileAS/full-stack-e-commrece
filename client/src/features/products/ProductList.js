@@ -62,7 +62,10 @@ export const ProductExcerpt = React.memo(
               <img src={product.img} alt="" className="laptop" />
             </div>
           </Link>
-          <ReviewStars readonly={!confirmed} productId={productId} />
+          <ReviewStars
+            readonly={!confirmed && !orderedList}
+            productId={productId}
+          />
           <p className="description">
             {product.description.length > 40
               ? `${product.description.substring(0, 40)}...`
