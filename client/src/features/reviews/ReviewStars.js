@@ -16,13 +16,14 @@ export const ReviewStars = React.memo(({ readonly, productId, details }) => {
   const info = useSelector((state) => getInfoByProductId(state, productId));
   const currRating = info?.rating;
   const customers = info?.customers || [];
+  const reviewCount = info?.reviewCount;
   const currUser = useSelector((state) => state.user.userEmail);
   let currUserReview = useSelector((state) =>
     getReviewByUser(state, currUser, productId)
   );
   // if (!currUserReview)
   //   currUserReview = localStorage.getItem(`${productId}review`) || 0;
-  const [submitted, setSubmitted] = useState(Boolean(currUserReview) || false);
+  const [submitted, setSubmitted] = useState(Boolean(currUserReview));
 
   const [rating, setRating] = useState(readonly ? currRating : currUserReview);
   const [hover, setHover] = useState(null);
@@ -99,23 +100,30 @@ export const ReviewStars = React.memo(({ readonly, productId, details }) => {
   });
 
   const customerReviews = customers.map((customer, i) => (
-    <div key={i}>
-      <li>{customer.name.substring(0, customer.name.indexOf("@"))}</li>
-      {[...Array(5)].map((_, i) => {
-        const currRating = i + 1;
-        return (
-          <label key={i}>
-            <input type="radio" name="rating" value={currRating} />
-            <FaStar
-              size={24}
-              className="star"
-              color={
-                currRating <= (hover || customer.rating) ? "#ffc107" : "#e4e5e9"
-              }
-            />
-          </label>
-        );
-      })}
+    <div key={i} className="review-container">
+      <div className="comment">
+        <li className="single-review">
+          {customer.name.substring(0, customer.name.indexOf("@"))}
+        </li>
+        {[...Array(5)].map((_, i) => {
+          const currRating = i + 1;
+          return (
+            <label key={i}>
+              <input type="radio" name="rating" value={currRating} />
+              <FaStar
+                size={24}
+                color={
+                  currRating <= (hover || customer.rating)
+                    ? "#ffc107"
+                    : "#e4e5e9"
+                }
+              />
+            </label>
+          );
+        })}
+        <br />
+        <p>{customer.comment}</p>
+      </div>
     </div>
   ));
 
@@ -135,10 +143,17 @@ export const ReviewStars = React.memo(({ readonly, productId, details }) => {
           </button>
         </div>
       )}
-      {submitted && !readonly && <h3>your review has been submitted</h3>}
+      {submitted && !readonly && <h3>your review has been submitted!</h3>}
+      {readonly && !details && (
+        <h3 className="NO-reviews">
+          {reviewCount === 1 ? "1 review" : `${reviewCount || 0} reviews`}
+        </h3>
+      )}
       {details && (
         <div>
-          {customers.length > 0 && <h3>Customer reviews:</h3>}
+          {customers.length > 0 && (
+            <h3 className="customer-reviews">Customer reviews:</h3>
+          )}
           {customerReviews}
         </div>
       )}

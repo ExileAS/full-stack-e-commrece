@@ -119,14 +119,14 @@ const OrderedProductsList = ({ confirmed }) => {
       <div>
         {totalCost > 0 ? (
           <div>
-            <b>total cost: {totalCost / 100} $</b>
+            <b className="cost">total cost: {totalCost / 100} $</b>
             <br />
-            <b>shipping Fee: {shippingFee / 100} $</b>
+            <b className="fee">shipping Fee: {shippingFee / 100} $</b>
             <br />
-            <b>discount% : {discountRatio}%</b>
+            <b className="discount">discount% : {discountRatio}%</b>
             <br />
-            <b>
-              total after discount {(costAfterDiscount + shippingFee) / 100} $
+            <b className="total-with-discount">
+              total after discount: {(costAfterDiscount + shippingFee) / 100} $
             </b>
           </div>
         ) : (
@@ -140,7 +140,7 @@ const OrderedProductsList = ({ confirmed }) => {
       </div>
       {totalCost > 0 && (
         <div className="order-info">
-          <h3>
+          <h2 className="info">
             ordered by {customerInfo.firstName} {customerInfo.lastName}.
             shipping to{" "}
             {!confirmed ? (
@@ -148,7 +148,7 @@ const OrderedProductsList = ({ confirmed }) => {
             ) : (
               <b>{customerInfo.adress}</b>
             )}
-          </h3>
+          </h2>
           {!confirmed && (
             <div>
               <div>

@@ -2234,3 +2234,55 @@ input[type="radio"] {
 .button-79:not(:disabled):active {
   transform: translateY(0.125rem);
 }
+
+.NO-reviews {
+  color: #274376;
+}
+
+.customer-reviews {
+  color: #0c259f;
+}
+
+.single-review {
+  color: #7403a9;
+  font-size: 18px;
+}
+
+.review-container {
+  margin: 4px;
+}
+
+.comment {
+  width: 30%;
+  height: 100px;
+  padding: 10px;
+  background-color: rgb(241, 244, 246);
+  border-radius: 12px;
+}
+
+.payment-confirm {
+  font-size: large;
+  margin: 6px;
+  color: #116627;
+}
+
+.total-with-discount {
+  color: #0c501e;
+  font-size: larger;
+}
+
+.cost,
+.fee,
+.discount {
+  color: #108614;
+  font-size: large;
+}
+
+.cost {
+  font-size: larger;
+  font-weight: bolder;
+}
+
+.info {
+  color: #108614;
+}

@@ -1,4 +1,3 @@
-const { info } = require("winston");
 const ReviewsModel = require("../models/reviewsModel");
 
 module.exports.get_reviews = async (req, res) => {
@@ -42,7 +41,12 @@ module.exports.edit_review = async (req, res) => {
       );
       const updatedUserReview = await ReviewsModel.findOneAndUpdate(
         { productId: id, "info.customers.name": email },
-        { $set: { "info.customers.$[someUser].rating": review } },
+        {
+          $set: {
+            "info.customers.$[someUser].rating": review,
+            "info.customers.$[someUser].comment": comment,
+          },
+        },
         { arrayFilters: [{ "someUser.name": email }] }
       );
     } else {
