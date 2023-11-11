@@ -66,16 +66,6 @@ export const reviewSlice = createSlice({
   initialState,
   name: "review",
   reducers: {
-    addReview(state, action) {
-      // const product = state.products.find(
-      //   (product) => product.productId === action.payload.id
-      // );
-      // const userReview = product?.info.customers.find(
-      //   (customer) => customer.name === action.payload.user
-      // );
-
-      return state;
-    },
     setStatus(state, action) {
       state.status = "idle";
     },
@@ -93,7 +83,7 @@ export const reviewSlice = createSlice({
   },
 });
 
-export const { addReview, setStatus } = reviewSlice.actions;
+export const { setStatus } = reviewSlice.actions;
 export default reviewSlice.reducer;
 
 export const getInfoByProductId = (state, id) =>
