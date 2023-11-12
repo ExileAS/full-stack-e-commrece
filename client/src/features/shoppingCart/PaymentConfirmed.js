@@ -33,8 +33,8 @@ const PaymentConfirmed = () => {
   return (
     <div>
       <OrderedProductsList confirmed={true} />
-      <h2 className="confirmed">Payment confirmed</h2>
-      <b className="confirmed">Order Id: {confirmId}</b>
+      <h2 className="payment-confirm">Payment confirmed</h2>
+      <b className="payment-confirm">Order Id: {confirmId}</b>
     </div>
   );
 };

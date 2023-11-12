@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Navbar from "./app/Navbar";
-import { ProductsList } from "./features/products/ProductList";
+import ProductsList from "./features/products/ProductList";
 import { ProductDetails } from "./features/products/ProductDetails";
 import { AddNewProduct } from "./features/products/AddNewProduct";
 import { SellerList } from "./features/sellers/SellerList";
