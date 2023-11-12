@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { ProductExcerpt } from "../products/ProductList";
+import ProductExcerpt from "../products/ProductExcerpt";
 import { useSelector } from "react-redux";
 import { selectAllInCart } from "../shoppingCart/shoppingCartSlice";
 import SortOptions from "../sortingList/SortOptions";

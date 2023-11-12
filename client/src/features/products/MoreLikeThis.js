@@ -5,7 +5,8 @@ import { selectProductById } from "./productsSlice";
 import TimeAgo from "./TimeAgo";
 import { Link } from "react-router-dom";
 import { selectAllInCart } from "../shoppingCart/shoppingCartSlice";
-import { useMemo } from "react";
+
+// Needs fixing!!!
 
 const MoreLikeThis = () => {
   const { productId } = useParams();
@@ -13,12 +14,8 @@ const MoreLikeThis = () => {
   const productName = product !== undefined && product.name;
   const productsInCart = useSelector(selectAllInCart);
   const allProducts = useSelector(selectAllProducts);
-  const outOfCart = useMemo(
-    () =>
-      allProducts.filter(({ id }) =>
-        productsInCart.every((product) => product.id !== id)
-      ),
-    [productsInCart, allProducts]
+  const outOfCart = allProducts.filter(({ id }) =>
+    productsInCart.every((product) => product.id !== id)
   );
 
   const simillarProducts = outOfCart.filter(

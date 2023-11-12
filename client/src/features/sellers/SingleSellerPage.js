@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { getAllSellers, selectSellerById } from "./sellersSlice";
 import { fetchProducts, selectProductsByUser } from "../products/productsSlice";
 import { useEffect } from "react";
-import { ProductExcerpt } from "../products/ProductList";
+import ProductExcerpt from "../products/ProductExcerpt";
 import { Spinner } from "../../components/Spinner";
 
 export const SingleSellerPage = () => {

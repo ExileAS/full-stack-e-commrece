@@ -9,7 +9,7 @@ import {
   updateOrder,
   selectAllConfirmed,
 } from "./shoppingCartSlice";
-import { ProductExcerpt } from "../products/ProductList";
+import ProductExcerpt from "../products/ProductExcerpt";
 import { useLayoutEffect, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchProducts } from "../products/productsSlice";
