@@ -19,7 +19,6 @@ const ConfirmOrderForm = () => {
   const userEmail = useSelector((state) => state.user.userEmail);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const emptyForm = {
     firstName: "",
     lastName: "",
@@ -54,7 +53,7 @@ const ConfirmOrderForm = () => {
       userEmail,
     ].every(Boolean) && Number(formState.phoneNumber);
 
-  const handleSubmitInfo = async () => {
+  const handleSubmitInfo = () => {
     if (canSumbit) {
       dispatch(
         productsOrdered({
@@ -67,7 +66,7 @@ const ConfirmOrderForm = () => {
       if (currentOrdered.length === 0) {
         dispatch(postOrdered());
       } else {
-        dispatch(updateOrder());
+        dispatch(updateOrder(false));
       }
     }
   };

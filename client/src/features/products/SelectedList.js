@@ -19,7 +19,7 @@ const SelectedList = () => {
   const selectedList = useSelector(getAllSelected);
   const content = selectedList.map((product) => (
     <div key={product.id} className="details-container">
-      <ProductDetails productPropId={product.id} />
+      <ProductDetails productPropId={product.id} selectedDetails={true} />
       <button
         className="button-42"
         onClick={() => {

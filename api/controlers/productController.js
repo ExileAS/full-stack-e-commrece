@@ -37,7 +37,6 @@ const handleDeleteRedundant = async (info, list, confirmId) => {
     });
     if (!existingOrder) return;
     if (existingOrder.confirmId === confirmId) {
-      console.log("wrong");
       return;
     }
     const existingList = existingOrder.list;
@@ -51,7 +50,6 @@ const handleDeleteRedundant = async (info, list, confirmId) => {
     if (count === existingList.length) {
       //console.log("deleted");
       const res = await OrderedProducts.deleteOne({ _id: existingId });
-      console.log("redundant delete result:" + res);
     }
   } catch (error) {
     console.log(error);
@@ -169,10 +167,11 @@ module.exports.retreive_ordered_post = async (req, res) => {
 };
 
 module.exports.update_order_patch = async (req, res, next) => {
-  const { confirmId, list, customerInfo, payedOrder, isSplit } = req.body;
+  const { confirmId, list, customerInfo, payedOrder } = req.body;
+  console.log(payedOrder);
   const orderUpdates = { list, customerInfo, customerPayed: payedOrder };
   const updates = {};
-  console.log("order patch updates: " + orderUpdates.payedOrder);
+  // console.log("order patch updates: " + orderUpdates.payedOrder);
   try {
     const orderedByUser = await OrderedProducts.findOne({
       confirmId: confirmId,
