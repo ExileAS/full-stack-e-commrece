@@ -16,7 +16,6 @@ import { Link } from "react-router-dom";
 
 const ProductExcerpt = React.memo(
   ({ productId, count, orderedList, mainPage, confirmed }) => {
-    console.log("PRODUCT RENDERED");
     const logged = useSelector((state) => state.user.userEmail);
     const dispatch = useDispatch();
     const product = useSelector((state) => selectProductById(state, productId));
