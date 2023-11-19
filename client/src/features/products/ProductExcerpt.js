@@ -19,7 +19,7 @@ const ProductExcerpt = React.memo(
     const logged = useSelector((state) => state.user.userEmail);
     const dispatch = useDispatch();
     const product = useSelector((state) => selectProductById(state, productId));
-    let sellerId = useSelector((state) => getIdByName(state, product.seller));
+    let sellerId = useSelector((state) => getIdByName(state, product?.seller));
     if (sellerId) localStorage.setItem(productId, sellerId);
     else sellerId = localStorage.getItem(productId);
     const selected = useSelector((state) => checkSelected(state, productId));

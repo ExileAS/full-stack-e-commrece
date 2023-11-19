@@ -3,9 +3,11 @@ import { useDispatch } from "react-redux";
 import { googleLogin } from "../userRegister/userSlice";
 import { jwtDecode } from "jwt-decode";
 import { retrieveOrderedList } from "../shoppingCart/shoppingCartSlice";
+import { useNavigate } from "react-router-dom";
 
 const GoogleReg = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleGoogleLogin = async (response) => {
     try {
       const { sub, email_verified, email } = jwtDecode(response.credential);
@@ -17,7 +19,7 @@ const GoogleReg = () => {
       const data = await res.json();
       dispatch(googleLogin(response.credential));
       if (data.user) {
-        window.history.go(-1);
+        navigate("/products");
         dispatch(retrieveOrderedList(email));
       }
     } catch (err) {

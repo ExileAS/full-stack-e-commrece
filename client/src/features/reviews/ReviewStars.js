@@ -11,7 +11,7 @@ import {
 import { selectProductById } from "../products/productsSlice";
 
 export const ReviewStars = React.memo(
-  ({ readonly, productId, details, selectedDetails }) => {
+  ({ readonly, productId, details, selectedDetails, savedRating }) => {
     const product = useSelector((state) => selectProductById(state, productId));
     const info = useSelector((state) => getInfoByProductId(state, productId));
     const currRating = info?.rating;
@@ -21,8 +21,7 @@ export const ReviewStars = React.memo(
     let currUserReview = useSelector((state) =>
       getReviewByUser(state, currUser, productId)
     );
-    // if (!currUserReview)
-    //   currUserReview = localStorage.getItem(`${productId}review`) || 0;
+
     const [submitted, setSubmitted] = useState(Boolean(currUserReview));
 
     const [rating, setRating] = useState(
@@ -37,14 +36,8 @@ export const ReviewStars = React.memo(
     useEffect(() => {
       if (status === "idle") {
         dispatch(fetchReviews());
-        console.log("DISPATCHED");
       }
     }, [status, dispatch]);
-
-    // useEffect(() => {
-    //   if (submitted) localStorage.setItem(`${productId}review`, rating);
-    //   // console.log(localStorage.getItem(`${productId}review`), rating, submitted);
-    // }, [rating, productId, submitted]);
 
     const handleReview = (curr) => {
       setRating(curr);
