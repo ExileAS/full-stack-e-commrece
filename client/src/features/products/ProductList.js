@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { selectAllProducts } from "./productsSlice";
+import { attatchReviews, selectAllProducts } from "./productsSlice";
 import SearchBar from "../search/SearchBar";
 import { fetchProducts } from "./productsSlice";
 import React, { useContext, useEffect, useRef } from "react";
@@ -19,8 +19,7 @@ const ProductsList = () => {
   const logged = useSelector((state) => state.user.loggedIn);
   const reviewStatus = useSelector((state) => state.review.status);
   const reviews = useSelector(getAllReviews);
-  const loadingRef = useRef(reviewStatus);
-
+  const loadedRef = useRef(false);
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchProducts());
@@ -29,14 +28,11 @@ const ProductsList = () => {
     if (reviewStatus === "idle") {
       dispatch(fetchReviews());
     }
-    // if (loadingRef.current === "loading") {
-    //   console.log("loading");
-    // }
-
-    // if (reviewStatus === "loading") {
-    //   console.log("loaded");
-    // }
-  }, [dispatch, status, reviewStatus]);
+    if (reviewStatus === "loading") loadedRef.current = true;
+    if (loadedRef.current && reviewStatus === "success") {
+      dispatch(attatchReviews(reviews));
+    }
+  }, [dispatch, status, reviewStatus, reviews]);
 
   const products = useSelector(selectAllProducts);
   const error = useSelector((state) => state.products.error);
