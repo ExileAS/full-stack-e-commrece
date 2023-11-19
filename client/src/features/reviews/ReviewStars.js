@@ -7,7 +7,6 @@ import {
   fetchReviews,
   getInfoByProductId,
   getReviewByUser,
-  setStatus,
 } from "./reviewSlice";
 import { selectProductById } from "../products/productsSlice";
 
@@ -34,7 +33,6 @@ export const ReviewStars = React.memo(
     const [comment, setComment] = useState("");
     const dispatch = useDispatch();
     const status = useSelector((state) => state.review.status);
-    console.log(status);
 
     useEffect(() => {
       if (status === "idle") {
@@ -57,7 +55,6 @@ export const ReviewStars = React.memo(
     const handleSubmit = () => {
       if (!comment || !rating) return;
       setSubmitted(true);
-      dispatch(setStatus());
       if (!info) {
         dispatch(
           addReviewDb({

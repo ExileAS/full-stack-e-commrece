@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 import { selectAllProducts } from "./productsSlice";
 import SearchBar from "../search/SearchBar";
 import { fetchProducts } from "./productsSlice";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { getAllSellers } from "../sellers/sellersSlice";
 import "transition-style";
 import bagSrc from "../../components/shoppingBag.jpg";
 import { CategoriesContext } from "../../contexts/categories-context";
 import Loader from "../../components/Loader";
-import { fetchReviews, setStatus } from "../reviews/reviewSlice";
+import { fetchReviews, getAllReviews } from "../reviews/reviewSlice";
 import ProductExcerpt from "./ProductExcerpt";
 
 const ProductsList = () => {
@@ -18,26 +18,32 @@ const ProductsList = () => {
   const status = useSelector((state) => state.products.status);
   const logged = useSelector((state) => state.user.loggedIn);
   const reviewStatus = useSelector((state) => state.review.status);
+  const reviews = useSelector(getAllReviews);
+  const loadingRef = useRef(reviewStatus);
+
   useEffect(() => {
     if (status === "idle") {
-      dispatch(setStatus());
       dispatch(fetchProducts());
       dispatch(getAllSellers());
     }
-  }, [dispatch, status]);
-
-  useEffect(() => {
     if (reviewStatus === "idle") {
       dispatch(fetchReviews());
     }
-  }, [dispatch, reviewStatus]);
+    // if (loadingRef.current === "loading") {
+    //   console.log("loading");
+    // }
+
+    // if (reviewStatus === "loading") {
+    //   console.log("loaded");
+    // }
+  }, [dispatch, status, reviewStatus]);
 
   const products = useSelector(selectAllProducts);
-  const error = useSelector((state) => state.error);
+  const error = useSelector((state) => state.products.error);
 
   let content;
   if (status === "loading" || reviewStatus === "loading") content = <Loader />;
-  if (status === "success") {
+  if (status === "success" && reviewStatus === "success") {
     const filtered = products.filter(
       (product) =>
         category.length === 0 ||

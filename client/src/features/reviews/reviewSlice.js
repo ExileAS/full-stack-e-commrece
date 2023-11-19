@@ -65,11 +65,7 @@ export const editReviewDb = createAsyncThunk(
 export const reviewSlice = createSlice({
   initialState,
   name: "review",
-  reducers: {
-    setStatus(state, action) {
-      state.status = "idle";
-    },
-  },
+  reducers: {},
   extraReducers(builder) {
     builder
       .addCase(fetchReviews.fulfilled, (state, action) => {
@@ -83,8 +79,9 @@ export const reviewSlice = createSlice({
   },
 });
 
-export const { setStatus } = reviewSlice.actions;
 export default reviewSlice.reducer;
+
+export const getAllReviews = (state) => state.review.products || [];
 
 export const getInfoByProductId = (state, id) =>
   state.review.products.find((product) => product.productId === id)?.info;
