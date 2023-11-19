@@ -11,6 +11,7 @@ const Categories = () => {
       <select
         onChange={(e) => setCategory(e.target.value)}
         className="select-category"
+        name="selectCategory"
       >
         <option value="" key="0" className="">
           All

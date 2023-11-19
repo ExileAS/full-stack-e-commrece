@@ -19,9 +19,7 @@ const SortOptions = ({ products }) => {
 
   return (
     <div className="sort-container">
-      <label htmlFor="sortOptions" className="sortby">
-        SortBy:
-      </label>
+      <label className="sortby">SortBy:</label>
       <select
         name="sortOptins"
         id="sortoptions"

@@ -164,9 +164,7 @@ export const AddNewProduct = () => {
               <div className="underline"></div>
             </div>
             <div className="input-data">
-              <label className="amount-input" htmlFor="imgform">
-                Image:
-              </label>
+              <label className="amount-input">Image:</label>
               <input
                 type="file"
                 name="img"
