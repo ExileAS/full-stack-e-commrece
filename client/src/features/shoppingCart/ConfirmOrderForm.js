@@ -53,8 +53,19 @@ const ConfirmOrderForm = () => {
       userEmail,
     ].every(Boolean) && Number(formState.phoneNumber);
 
-  const handleSubmitInfo = () => {
+  const handleSubmitInfo = async () => {
     if (canSumbit) {
+      const res = await fetch("/api/confirmAvailable", {
+        method: "POST",
+        body: JSON.stringify(orderedInCart),
+        headers: { "Content-Type": "application/json" },
+      });
+      const info = await res.json();
+      console.log(info);
+      if (info.err) {
+        navigate(`/shoppingCart/${info.err}`);
+        return;
+      }
       dispatch(
         productsOrdered({
           userInfo: { ...formState, userEmail },

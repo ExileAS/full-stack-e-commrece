@@ -61,6 +61,11 @@ function App() {
             <Route exact path="/shoppingCart" element={<ShoppingCartPage />} />
             <Route
               exact
+              path="/shoppingCart/:err"
+              element={<ShoppingCartPage />}
+            />
+            <Route
+              exact
               path="/moreProducts/:productId"
               element={<MoreLikeThis />}
             />

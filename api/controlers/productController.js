@@ -1,8 +1,7 @@
 const Product = require("../models/productModel");
 const OrderedProducts = require("../models/oderedProductsModel");
 const crypto = require("crypto");
-const path = require("path");
-const { detectExplicit } = require("../services/EdenAi");
+const ProductModel = require("../models/productModel");
 
 const handleAddMain = (updates) => {
   for (let id in updates) {
@@ -62,30 +61,6 @@ module.exports.product_get = async (req, res) => {
     res.status(200).json({ result });
   } catch (err) {
     console.log(err);
-    res.status(400).json({ error: err.message });
-  }
-};
-
-module.exports.product_post = async (req, res) => {
-  const productDetails = req.body;
-  const { img } = req.files;
-  const imgPath = path.join(__dirname, "..", "images" + "/" + img.name);
-  img.mv(imgPath);
-  const edenResSafe = await detectExplicit(imgPath, req.body.seller);
-  if (!edenResSafe) {
-    res.status(400).json({ explicit: true });
-    return;
-  }
-  try {
-    const date = new Date().toISOString();
-    const product = await Product.create({
-      ...productDetails,
-      date,
-      img: img.name,
-    });
-    await product.save();
-    res.status(200).json({});
-  } catch (err) {
     res.status(400).json({ error: err.message });
   }
 };
@@ -221,5 +196,25 @@ module.exports.order_delete = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
+  }
+};
+
+module.exports.confirm_available = async (req, res) => {
+  const list = req.body;
+  const ids = list.map(({ id }) => id);
+
+  try {
+    const order = await ProductModel.find({ id: { $in: ids } });
+    const outOfStockIds = order
+      .filter((product) => product.onhand <= 0)
+      .map(({ id }) => id);
+
+    if (outOfStockIds.length) {
+      res.status(404).json({ err: outOfStockIds });
+    } else {
+      res.status(200).json({});
+    }
+  } catch (error) {
+    console.log(error);
   }
 };
