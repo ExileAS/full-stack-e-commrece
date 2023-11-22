@@ -18,15 +18,40 @@ const userSchema = new Schema({
   },
   verified: {
     type: Boolean,
+    default: false,
   },
   verifyURL: {
-    type: String,
+    url: {
+      type: String,
+      required: true,
+    },
+    expireAt: {
+      type: Date,
+      required: true,
+      default: function () {
+        return Date.now() + 1000 * 60 * 5;
+      },
+    },
   },
   OTP: {
-    type: Number,
+    otp: {
+      type: Number,
+      required: true,
+    },
+    expireAt: {
+      type: Date,
+      required: true,
+      default: function () {
+        return Date.now() + 1000 * 60 * 5;
+      },
+    },
   },
-  unverifiedExpiresIn: {
+  expireAt: {
     type: Date,
+    required: true,
+    default: function () {
+      return Date.now() + 1000 * 60 * 60 * 3;
+    },
   },
 });
 

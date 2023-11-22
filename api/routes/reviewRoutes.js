@@ -6,7 +6,6 @@ const {
   add_review,
   edit_review,
 } = require("../controlers/reviewController");
-const { requireAuth } = require("../middleware/authMiddleware");
 
 router.get("/api/reviews", get_reviews);
 router.post("/api/addReview", add_review);

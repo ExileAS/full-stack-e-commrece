@@ -28,7 +28,7 @@ const SignUp = () => {
         setPasswordErr(data.errors.password);
       }
       if (data.user) {
-        navigate("/login");
+        navigate(`/login/${data.verifyId}`);
       }
     } catch (err) {
       console.log(err);
@@ -56,12 +56,12 @@ const SignUp = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
             <label htmlFor="password">Password</label>
+            <p className="error">{passwordErr}</p>
           </div>
           <button className="button-17" onClick={handleSignup}>
             Signup
           </button>
           <GoogleReg />
-          <p className="error">{passwordErr}</p>
         </form>
       </div>
     </div>
