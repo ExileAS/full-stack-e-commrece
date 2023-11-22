@@ -16,6 +16,18 @@ const userSchema = new Schema({
     required: [true, "please enter a password"],
     minlength: [8, "minimum password length is 8"],
   },
+  verified: {
+    type: Boolean,
+  },
+  verifyURL: {
+    type: String,
+  },
+  OTP: {
+    type: Number,
+  },
+  unverifiedExpiresIn: {
+    type: Date,
+  },
 });
 
 userSchema.pre("save", async function (next) {

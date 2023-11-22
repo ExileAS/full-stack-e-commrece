@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { login } from "./userSlice";
 import { clearCustomerInfo } from "../shoppingCart/shoppingCartSlice";
 import GoogleReg from "./GoogleReg";
 import { useNavigate } from "react-router-dom";
@@ -29,8 +28,7 @@ const SignUp = () => {
         setPasswordErr(data.errors.password);
       }
       if (data.user) {
-        dispatch(login(data.user));
-        navigate("/products");
+        navigate("/login");
       }
     } catch (err) {
       console.log(err);
