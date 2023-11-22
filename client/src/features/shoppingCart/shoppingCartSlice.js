@@ -67,7 +67,7 @@ export const retrieveOrderedList = createAsyncThunk(
 
 export const updateOrder = createAsyncThunk(
   "shoppingCart/updateOrder",
-  async (_, { getState }) => {
+  async (isPaid, { getState }) => {
     const state = getState();
     const listUpdates = state.shoppingCart.ordered.length
       ? state.shoppingCart.ordered
@@ -79,7 +79,7 @@ export const updateOrder = createAsyncThunk(
           customerInfo: state.shoppingCart.customerInfo,
           list: listUpdates,
           confirmId: state.shoppingCart.confirmId,
-          payedOrder: state.shoppingCart.payment,
+          payedOrder: isPaid,
           isSplit: state.shoppingCart.isSplit,
         }),
         headers: { "Content-Type": "application/json" },
@@ -192,6 +192,7 @@ const shoppingCartSlice = createSlice({
       return state;
     },
     confirmPayment(state, action) {
+      console.log("CONFIRM ACTION WORKED!");
       state.payment = true;
       const order = [...state.payedOrder, ...state.ordered];
       if (!state.payedOrder.length) {

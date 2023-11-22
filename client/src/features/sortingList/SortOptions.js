@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import useSortBy from "./useSortBy";
+import { useEffect, useMemo, useState } from "react";
+import sortList from "./sortList";
 import { useDispatch } from "react-redux";
 import { setProductState } from "../products/productsSlice";
 
@@ -7,7 +7,10 @@ const SortOptions = ({ products }) => {
   const [sortBy, setSortBy] = useState("");
   const [order, setOrder] = useState("up");
   const dispatch = useDispatch();
-  const sorted = useSortBy(products, sortBy, order);
+  const sorted = useMemo(
+    () => sortList(products, sortBy, order),
+    [order, products, sortBy]
+  );
 
   useEffect(() => {
     dispatch(setProductState(sorted));
@@ -16,9 +19,7 @@ const SortOptions = ({ products }) => {
 
   return (
     <div className="sort-container">
-      <label htmlFor="sortOptions" className="sortby">
-        SortBy:
-      </label>
+      <label className="sortby">SortBy:</label>
       <select
         name="sortOptins"
         id="sortoptions"
@@ -34,6 +35,9 @@ const SortOptions = ({ products }) => {
         <option value="price" className="sort">
           Price
         </option>
+        <option value="rating" className="sort">
+          rating
+        </option>
       </select>
       <select
         name="order"
@@ -42,10 +46,10 @@ const SortOptions = ({ products }) => {
         onChange={(e) => setOrder(e.target.value)}
       >
         <option value="up" className="sort">
-          {sortBy === "price" ? "Ascending" : " newest"}
+          {sortBy === "price" || sortBy === "rating" ? "lowest" : " newest"}
         </option>
         <option value="down" className="sort">
-          {sortBy === "price" ? "Descending" : "oldest"}
+          {sortBy === "price" || sortBy === "rating" ? "highest" : "oldest"}
         </option>
       </select>
     </div>

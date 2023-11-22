@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { login } from "./userSlice";
 import { clearCustomerInfo } from "../shoppingCart/shoppingCartSlice";
 import GoogleReg from "./GoogleReg";
 import { useNavigate } from "react-router-dom";
@@ -8,14 +7,14 @@ import { useNavigate } from "react-router-dom";
 const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [emailErr, setEmailError] = useState("");
+  const [emailErr, setEmailErr] = useState("");
   const [passwordErr, setPasswordErr] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSignup = async () => {
     dispatch(clearCustomerInfo());
-    setEmailError("");
+    setEmailErr("");
     setPasswordErr("");
     try {
       const res = await fetch("/api/signup", {
@@ -25,12 +24,11 @@ const SignUp = () => {
       });
       const data = await res.json();
       if (data.errors) {
-        setEmailError(data.errors.email);
+        setEmailErr(data.errors.email);
         setPasswordErr(data.errors.password);
       }
       if (data.user) {
-        dispatch(login(data.user));
-        navigate("/products");
+        navigate("/login");
       }
     } catch (err) {
       console.log(err);

@@ -2,52 +2,67 @@ import { useSelector } from "react-redux";
 import { selectAllProducts } from "./productsSlice";
 import { useParams } from "react-router-dom";
 import { selectProductById } from "./productsSlice";
-import TimeAgo from "./TimeAgo";
-import { Link } from "react-router-dom";
-import { selectAllInCart } from "../shoppingCart/shoppingCartSlice";
 
-// Needs fixing!!!
+import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import sortByRelevance from "../search/sortBySearchTerm";
 
 const MoreLikeThis = () => {
   const { productId } = useParams();
-  const product = useSelector((state) => selectProductById(state, productId));
-  const productName = product !== undefined && product.name;
-  const productsInCart = useSelector(selectAllInCart);
+  const currProduct = useSelector((state) =>
+    selectProductById(state, productId)
+  );
   const allProducts = useSelector(selectAllProducts);
-  const outOfCart = allProducts.filter(({ id }) =>
-    productsInCart.every((product) => product.id !== id)
-  );
 
-  const simillarProducts = outOfCart.filter(
-    (product) =>
-      product.id !== productId &&
-      !product.selected &&
-      (product.name.toLowerCase().includes(productName.toLowerCase()) ||
-        productName.toLowerCase().includes(product.name.toLowerCase()))
-  );
+  let simillarProducts = allProducts
+    .filter(
+      (product) =>
+        product.id !== productId &&
+        product.category === currProduct.category &&
+        product.category !== "others"
+    )
+    .sort(sortByRelevance(currProduct?.name || ""));
 
-  const content = simillarProducts.map((product) => (
-    <div>
-      <h2>
-        <Link to={"/products/" + product.id}>{product.name}</Link>
-      </h2>
+  useEffect(() => {
+    if (simillarProducts?.length > 0) {
+      localStorage.setItem(
+        `${productId}similarProducts`,
+        JSON.stringify([...simillarProducts])
+      );
+    }
+  }, [simillarProducts, productId]);
+
+  if (!simillarProducts.length)
+    simillarProducts = JSON.parse(
+      localStorage.getItem(`${productId}similarProducts`)
+    );
+
+  const content = simillarProducts?.map((product) => (
+    <div key={product.id} className="item-product">
+      <Link to={"/products/" + product.id} className="product-title">
+        <h2>{product.name}</h2>
+      </Link>
+      <img src={product.img} alt="" className="laptop" />
       <br />
-      <b>Price: {product.price}</b>
-      <br />
-      <p>{product.description}</p>
-      <br />
-      <TimeAgo timestamp={product.date} />
-      <br />
-      <b>added by {product.seller}</b>
-      <br />
+      <b className="price">{product.price} $</b>
+      <p className="description">
+        {product.description.length > 40
+          ? `${product.description.substring(0, 40)}...`
+          : `${product.description}`}
+      </p>
     </div>
   ));
-  const exist = content.length > 0;
 
   return (
-    <section className="product-card">
-      {exist ? content : <div>Currently No Similar Products</div>}
-    </section>
+    <>
+      {content?.length > 0 ? (
+        <section className="grid">{content}</section>
+      ) : (
+        <div className="title">
+          <b>Currently No Simillar Products</b>
+        </div>
+      )}
+    </>
   );
 };
 

@@ -72,7 +72,7 @@ const OrderedProductsList = ({ confirmed }) => {
               className="button-24"
               onClick={() => {
                 dispatch(decrementInOrdered(product.id));
-                dispatch(updateOrder());
+                dispatch(updateOrder(false));
               }}
             >
               -
@@ -81,7 +81,7 @@ const OrderedProductsList = ({ confirmed }) => {
               className="button-24"
               onClick={() => {
                 dispatch(removeOrder(product.id));
-                dispatch(updateOrder());
+                dispatch(updateOrder(false));
               }}
             >
               Cancel Order

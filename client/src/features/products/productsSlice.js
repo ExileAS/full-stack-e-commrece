@@ -58,6 +58,18 @@ const productsSlice = createSlice({
     setProductState(state, action) {
       state.products = action.payload;
     },
+    attatchReviews(state, action) {
+      state.products = state.products.map((product) => {
+        const current = action.payload.find(
+          ({ productId }) => productId === product.id
+        );
+        return {
+          ...product,
+          rating: current ? current.info.rating : 0,
+        };
+      });
+      return state;
+    },
   },
   extraReducers(builder) {
     builder
@@ -88,6 +100,7 @@ export const {
   removeProduct,
   setProductState,
   countNewOnhand,
+  attatchReviews,
 } = productsSlice.actions;
 
 export default productsSlice.reducer;

@@ -7,16 +7,26 @@ import {
   clearShoppingCart,
 } from "./shoppingCartSlice";
 import TimeAgo from "../products/TimeAgo";
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const ShoppingCartPage = () => {
+  const { err } = useParams();
+  let errors;
+  if (err?.length) errors = err.split(",");
   const productsInCart = useSelector(selectAllInCart);
   const totalCost = useSelector(getTotalCost);
   const [totalPrice, setTotalPrice] = useState(totalCost);
+  const [unavailbleErr, setUnavailableErr] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [amountExceeded, setAmountExceeded] = useState(false);
+
+  useEffect(() => {
+    if (errors?.length) {
+      setUnavailableErr("this product is out of stock!");
+    }
+  }, [errors]);
 
   const handleIncrement = (product) => {
     dispatch(incrementInCart(product));
@@ -60,6 +70,11 @@ const ShoppingCartPage = () => {
         >
           -
         </button>
+        {errors?.includes(product.id) && (
+          <div className="soldout">
+            <b>{unavailbleErr}</b>
+          </div>
+        )}
       </div>
     );
   });

@@ -14,9 +14,9 @@ const PaymentConfirmed = () => {
 
   useEffect(() => {
     if (orderId === id) {
-      console.log("confirmed");
       dispatch(confirmPayment());
-      dispatch(updateOrder());
+      console.log("PAYMENT CONFIRMED!!");
+      dispatch(updateOrder(true));
       fetch("/api/confirmPayment", {
         method: "POST",
         body: JSON.stringify({ confirmId }),
@@ -26,7 +26,7 @@ const PaymentConfirmed = () => {
           dispatch(setOrderId(null));
           return res.json();
         })
-        .then((res) => console.log("Approved"));
+        .then((res) => console.log("Confirmed"));
     }
   }, [dispatch, confirmId, id, orderId]);
 

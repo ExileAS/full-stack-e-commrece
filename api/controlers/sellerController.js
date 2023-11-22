@@ -14,6 +14,30 @@ module.exports.get_all_sellers = async (req, res) => {
   }
 };
 
+module.exports.product_post = async (req, res) => {
+  const productDetails = req.body;
+  const { img } = req.files;
+  const imgPath = path.join(__dirname, "..", "images" + "/" + img.name);
+  img.mv(imgPath);
+  const edenResSafe = await detectExplicit(imgPath, req.body.seller);
+  if (!edenResSafe) {
+    res.status(400).json({ explicit: true });
+    return;
+  }
+  try {
+    const date = new Date().toISOString();
+    const product = await Product.create({
+      ...productDetails,
+      date,
+      img: img.name,
+    });
+    await product.save();
+    res.status(200).json({});
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
 module.exports.edit_product = async (req, res) => {
   const { name, description, price, onhand, id, seller, category } = req.body;
   const { img } = req.files;
