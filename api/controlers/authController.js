@@ -65,7 +65,10 @@ module.exports.signup_post = async (req, res) => {
       sendToUser({
         ...mailOptions,
         to: email,
-        text: `verify your account using this url: \n ${url} \n or with otp: \n ${otp}`,
+        text: `welcome ${email.substring(
+          0,
+          email.indexOf("@")
+        )}, verify your account using this url:\n ${url} \n or with otp:\n ${otp}`,
       });
     } else if (sub && email_verified) {
       token = createToken(sub);
