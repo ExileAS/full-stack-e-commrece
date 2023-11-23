@@ -1,69 +1,10 @@
-const Product = require("../models/productModel");
 const OrderedProducts = require("../models/oderedProductsModel");
 const crypto = require("crypto");
-const ProductModel = require("../models/productModel");
-
-const handleAddMain = (updates) => {
-  for (let id in updates) {
-    async function update() {
-      const result = await Product.findOneAndUpdate(
-        { id: id },
-        { onhand: updates[id] }
-      );
-      //console.log(result);
-    }
-    update();
-  }
-};
-
-const handlePatchDeleteMain = async (updates) => {
-  for (let id in updates) {
-    async function update() {
-      const result = await Product.findOneAndUpdate(
-        { id: id },
-        { $inc: { onhand: updates[id] } }
-      );
-    }
-    update();
-  }
-};
-
-const handleDeleteRedundant = async (info, list, confirmId) => {
-  const { userEmail } = info;
-  try {
-    const existingOrder = await OrderedProducts.findOne({
-      "customerInfo.userEmail": userEmail,
-    });
-    if (!existingOrder) return;
-    if (existingOrder.confirmId === confirmId) {
-      return;
-    }
-    const existingList = existingOrder.list;
-    const existingId = existingOrder._id;
-    let count = 0;
-    for (let p of existingList) {
-      let redundant = list.find(({ id }) => p.id === id);
-      if (redundant) count++;
-    }
-
-    if (count === existingList.length) {
-      //console.log("deleted");
-      const res = await OrderedProducts.deleteOne({ _id: existingId });
-    }
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-module.exports.product_get = async (req, res) => {
-  try {
-    const result = await Product.find().sort({ createdAt: -1 });
-    res.status(200).json({ result });
-  } catch (err) {
-    console.log(err);
-    res.status(400).json({ error: err.message });
-  }
-};
+const {
+  handleAddMain,
+  handlePatchDeleteMain,
+} = require("../utils/mainProductsUpdates");
+const { handleDeleteRedundant } = require("../utils/deleteRedundantOrders");
 
 module.exports.ordered_post = async (req, res) => {
   const { list, customerInfo } = req.body;
@@ -135,18 +76,16 @@ module.exports.retreive_ordered_post = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    res.status(400).json({
+    res.status(404).json({
       error: "error finding order",
     });
   }
 };
 
-module.exports.update_order_patch = async (req, res, next) => {
+module.exports.update_order_patch = async (req, res) => {
   const { confirmId, list, customerInfo, payedOrder } = req.body;
-  console.log(payedOrder);
   const orderUpdates = { list, customerInfo, customerPayed: payedOrder };
   const updates = {};
-  // console.log("order patch updates: " + orderUpdates.payedOrder);
   try {
     const orderedByUser = await OrderedProducts.findOne({
       confirmId: confirmId,
@@ -159,7 +98,6 @@ module.exports.update_order_patch = async (req, res, next) => {
       list.forEach(({ id, count }) => {
         updates[id] = updates[id] ? updates[id] - count : -count;
       });
-      //console.log(updates);
       if (!payedOrder) handlePatchDeleteMain(updates);
       const res = await OrderedProducts.findOneAndUpdate(
         { confirmId: confirmId },
@@ -188,7 +126,6 @@ module.exports.order_delete = async (req, res) => {
       orderedByUser.list.forEach(({ id, count }) => {
         updates[id] = count;
       });
-      //console.log(updates);
       handlePatchDeleteMain(updates);
       const res = await OrderedProducts.deleteOne({ confirmId: confirmId });
     } else {
@@ -196,25 +133,5 @@ module.exports.order_delete = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-  }
-};
-
-module.exports.confirm_available = async (req, res) => {
-  const list = req.body;
-  const ids = list.map(({ id }) => id);
-
-  try {
-    const order = await ProductModel.find({ id: { $in: ids } });
-    const outOfStockIds = order
-      .filter((product) => product.onhand <= 0)
-      .map(({ id }) => id);
-
-    if (outOfStockIds.length) {
-      res.status(404).json({ err: outOfStockIds });
-    } else {
-      res.status(200).json({});
-    }
-  } catch (error) {
-    console.log(error);
   }
 };
