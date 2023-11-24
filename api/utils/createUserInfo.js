@@ -3,7 +3,6 @@ const generateUniqueId = require("generate-unique-id");
 require("dotenv").config();
 
 const createSignupInfo = (email, password) => {
-  if (!email || !password) return { info: "", verifyId: "" };
   const verifyId = generateUniqueId({
     length: 40,
   });

@@ -7,6 +7,7 @@ const initialState = {
   userOrderId: null,
   google: false,
   userName: null,
+  userStatus: "unregistered",
 };
 
 export const checkUser = createAsyncThunk("user/checkUser", async () => {
@@ -69,6 +70,11 @@ const userSlice = createSlice({
           state.loggedIn = false;
           state.userEmail = null;
           state.google = false;
+          state.userStatus = "unregistered";
+        } else if (action.payload.verifying) {
+          state.userStatus = "verifying";
+        } else if (action.payload.valid) {
+          state.userStatus = "logged";
         }
         return state;
       });

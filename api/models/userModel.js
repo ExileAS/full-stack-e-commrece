@@ -33,6 +33,9 @@ const userSchema = new Schema({
       },
     },
   },
+  verifiedAt: {
+    type: Date,
+  },
   OTP: {
     otp: {
       type: Number,

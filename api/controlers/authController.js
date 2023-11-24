@@ -1,6 +1,6 @@
 const userModel = require("../models/userModel");
 require("dotenv").config();
-const { createToken } = require("../utils/tokens");
+const { createToken, createTempToken } = require("../utils/tokens");
 const { handleErrors } = require("../utils/userRegisterErrors");
 const { createSignupInfo } = require("../utils/createUserInfo");
 
@@ -9,21 +9,23 @@ module.exports.signup_post = async (req, res) => {
 
   try {
     let user, token;
-    const { info, verifyId } = createSignupInfo(email, password);
     if (email && password) {
+      const { info, verifyId } = createSignupInfo(email, password);
       user = await userModel.create(info);
-      token = createToken(user._id);
+      token = createTempToken(user._id);
+      res.cookie("jwtTemp", token, {
+        maxAge: 1000 * 60 * 60 * 2,
+        httpOnly: true,
+      });
+      res.status(201).json({ user: user.email, verifyId });
     } else if (sub && email_verified) {
-      user = {
-        email: email,
-      };
       token = createToken(sub);
+      res.cookie("jwt", token, {
+        maxAge: 1000 * 60 * 60 * 24 * 2,
+        httpOnly: true,
+      });
+      res.status(201).json({ user: email });
     }
-    res.cookie("jwt", token, {
-      maxAge: 1000 * 60 * 60 * 24 * 2,
-      httpOnly: true,
-    });
-    res.status(201).json({ user: user.email, verifyId });
   } catch (err) {
     const errors = handleErrors(err);
     res.status(400).json({ errors });
@@ -34,24 +36,69 @@ module.exports.login_post = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await userModel.login(email, password);
-    const token = createToken(user._id);
-    res.cookie("jwt", token, {
-      maxAge: 1000 * 60 * 60 * 24 * 2,
-      httpOnly: true,
-    });
-    res.status(200).json({ user: user.email });
+    if (user.verified) {
+      const token = createToken(user._id);
+      res.cookie("jwt", token, {
+        maxAge: 1000 * 60 * 60 * 24 * 2,
+        httpOnly: true,
+      });
+      res.cookie("jwtTemp", "", { maxAge: 1 });
+      res.status(200).json({ user: user.email });
+    } else {
+      res.status(401).json({ unverified: true });
+    }
   } catch (err) {
     const errors = handleErrors(err);
     res.status(400).json({ errors });
   }
 };
 
+module.exports.verify_user_url = async (req, res) => {
+  const { verifyId } = req.params;
+  const url = `${process.env.SERVER_URI}/shoppingBag/verifyUser/${verifyId}`;
+  const user = await userModel.findOne({ "verifyURL.url": url });
+  if (user.verified) {
+    res.status(409).send("<h2>Already Verified</h2>");
+    return;
+  }
+  const now = Date.now();
+  const valid = user && user.expireAt > now && user.verifyURL.expireAt > now;
+  if (valid) {
+    const verifiedUser = await userModel.findByIdAndUpdate(
+      { _id: user._id },
+      {
+        $set: { verified: true, verifiedAt: Date.now() },
+      }
+    );
+    res.send("<h2>Verified Succesfully</h2>");
+  } else {
+    res.status(400).json({ err: "invalid user status" });
+  }
+};
+
+module.exports.verify_user_otp = async (req, res) => {
+  const { otp, email } = req.body;
+  const user = await userModel.findOne({ email: email, "OTP.otp": otp });
+  if (user.verified) {
+    res.status(409).json({ status: "already verified" });
+    return;
+  }
+  const now = Date.now();
+  const valid = user && user.expireAt > now && user.OTP.expireAt > now;
+  if (valid) {
+    const verifiedUser = await userModel.findByIdAndUpdate(
+      { _id: user._id },
+      {
+        $set: { verified: true, verifiedAt: Date.now() },
+      }
+    );
+    res.status(200).json({ verifiedSuccessfuly: true });
+  } else {
+    res.status(400).json({ err: "invalid user status" });
+  }
+};
+
 module.exports.logout_get = (req, res) => {
   res.cookie("jwt", "", { maxAge: 1 });
   res.redirect("/");
-};
-
-module.exports.verify_user = (req, res) => {
-  const { verifyId } = req.params;
-  console.log(verifyId);
 };

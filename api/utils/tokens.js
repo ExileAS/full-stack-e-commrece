@@ -6,4 +6,10 @@ const createToken = (id) => {
   });
 };
 
-module.exports = { createToken };
+const createTempToken = (id) => {
+  return jwt.sign({ id }, process.env.TEMP_KEY, {
+    expiresIn: 60 * 60 * 2,
+  });
+};
+
+module.exports = { createToken, createTempToken };

@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { login } from "./userSlice";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { checkUser, login } from "./userSlice";
 import {
   clearCustomerInfo,
   retrieveOrderedList,
@@ -13,8 +13,15 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [emailErr, setEmailError] = useState("");
   const [passwordErr, setPasswordErr] = useState("");
+
+  const [verifiedErr, setVerifiedErr] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const userStatus = useSelector((state) => state.user.userStatus);
+
+  useEffect(() => {
+    dispatch(checkUser());
+  }, [dispatch]);
 
   const handleLogin = async () => {
     dispatch(clearCustomerInfo());
@@ -32,6 +39,9 @@ const Login = () => {
         if (data.errors) {
           setEmailError(data.errors.email);
           setPasswordErr(data.errors.password);
+        }
+        if (data.unverified) {
+          setVerifiedErr("please verify your account");
         }
         if (data.user) {
           dispatch(login(data.user));
@@ -72,6 +82,20 @@ const Login = () => {
           <GoogleReg />
           <p className="error">{passwordErr}</p>
         </form>
+        <br />
+        <div>
+          {userStatus === "verifying" && (
+            <div className="otp-container">
+              <label htmlFor="" className="title">
+                OTP:
+              </label>
+              <br />
+              <input type="number" maxLength={6} className="input-price" />
+            </div>
+          )}
+          <br />
+          <h3 className="error">{verifiedErr}</h3>
+        </div>
       </div>
     </div>
   );
