@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { clearCustomerInfo } from "../shoppingCart/shoppingCartSlice";
 import GoogleReg from "./GoogleReg";
 import { useNavigate } from "react-router-dom";
+import { setTempStatus } from "./userSlice";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -28,7 +29,8 @@ const SignUp = () => {
         setPasswordErr(data.errors.password);
       }
       if (data.user) {
-        navigate(`/login/${data.verifyId}`);
+        dispatch(setTempStatus({ email: data.user, status: "verifying" }));
+        navigate("/login");
       }
     } catch (err) {
       console.log(err);

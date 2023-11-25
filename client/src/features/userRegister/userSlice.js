@@ -8,6 +8,7 @@ const initialState = {
   google: false,
   userName: null,
   userStatus: "unregistered",
+  tempEmail: null,
 };
 
 export const checkUser = createAsyncThunk("user/checkUser", async () => {
@@ -32,6 +33,7 @@ const userSlice = createSlice({
     },
     login(state, action) {
       state.loggedIn = true;
+      state.tempId = "";
       state.userEmail = action.payload;
       state.userName = state.userEmail.substring(
         0,
@@ -56,6 +58,12 @@ const userSlice = createSlice({
       }
       return state;
     },
+    setTempStatus(state, action) {
+      console.log(action.payload);
+      state.tempEmail = action.payload.email;
+      state.userStatus = action.payload.status || "unregistered";
+      return state;
+    },
   },
   extraReducers(builder) {
     builder
@@ -63,6 +71,7 @@ const userSlice = createSlice({
         state.loggedIn = false;
         state.userEmail = null;
         state.google = false;
+        state.userStatus = "unregistered";
         return state;
       })
       .addCase(checkUser.fulfilled, (state, action) => {
@@ -81,7 +90,13 @@ const userSlice = createSlice({
   },
 });
 
-export const { logout, login, setOrderId, googleLogin, isGoogle } =
-  userSlice.actions;
+export const {
+  logout,
+  login,
+  setOrderId,
+  googleLogin,
+  isGoogle,
+  setTempStatus,
+} = userSlice.actions;
 
 export default userSlice.reducer;

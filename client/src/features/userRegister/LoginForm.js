@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { checkUser, login } from "./userSlice";
+import { checkUser, login, setTempStatus } from "./userSlice";
 import {
   clearCustomerInfo,
   retrieveOrderedList,
@@ -13,15 +13,26 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [emailErr, setEmailError] = useState("");
   const [passwordErr, setPasswordErr] = useState("");
-
   const [verifiedErr, setVerifiedErr] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [response, setResponse] = useState("");
+  const otpRef = useRef({});
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const currUser = useSelector((state) => state.user.tempEmail);
+
+  useEffect(() => {
+    if (currUser) {
+      dispatch(checkUser());
+    }
+  }, [dispatch, currUser]);
+
   const userStatus = useSelector((state) => state.user.userStatus);
 
   useEffect(() => {
-    dispatch(checkUser());
-  }, [dispatch]);
+    if (userStatus === "unregistered" && currUser)
+      dispatch(setTempStatus({ email: null }));
+  }, [userStatus, currUser, dispatch]);
 
   const handleLogin = async () => {
     dispatch(clearCustomerInfo());
@@ -44,12 +55,39 @@ const Login = () => {
           setVerifiedErr("please verify your account");
         }
         if (data.user) {
+          if (currUser)
+            dispatch(setTempStatus({ email: null, status: "logged" }));
           dispatch(login(data.user));
           navigate("/products");
           dispatch(retrieveOrderedList(data.user));
         }
       } catch (err) {
         console.log(err);
+      }
+    }
+  };
+
+  const handleOTP = async (e) => {
+    if (otpRef.current.value.length === 6) {
+      setLoading(true);
+      const res = await fetch("/api/verifyOTP", {
+        method: "POST",
+        body: JSON.stringify({ email: currUser, otp: otpRef.current?.value }),
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await res.json();
+      setLoading(false);
+      if (data.status) {
+        setResponse(data.status);
+        if (
+          data.status === "verified successfully!" ||
+          data.status === "already verified"
+        ) {
+          dispatch(setTempStatus({ email: null, status: "logged" }));
+        }
+      }
+      if (data.err) {
+        setResponse(data.err);
       }
     }
   };
@@ -83,19 +121,23 @@ const Login = () => {
           <p className="error">{passwordErr}</p>
         </form>
         <br />
-        <div>
-          {userStatus === "verifying" && (
-            <div className="otp-container">
-              <label htmlFor="" className="title">
-                OTP:
-              </label>
-              <br />
-              <input type="number" maxLength={6} className="input-price" />
-            </div>
-          )}
-          <br />
-          <h3 className="error">{verifiedErr}</h3>
-        </div>
+        {currUser && (
+          <div className="otp-container">
+            {loading && <h2 className="sent">Loading...</h2>}
+            {!loading && userStatus !== "logged" && (
+              <input
+                type="text"
+                placeholder="type your otp..."
+                className="input-price"
+                maxLength="6"
+                onChange={handleOTP}
+                ref={otpRef}
+              />
+            )}
+            <p className="error">{verifiedErr}</p>
+            <div className="error">{response}</div>
+          </div>
+        )}
       </div>
     </div>
   );

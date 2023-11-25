@@ -13,7 +13,7 @@ const createSignupInfo = (email, password) => {
     length: 6,
     useLetters: false,
   });
-  const url = `${process.env.SERVER_URI}/shoppingBag/verifyUser/${URLID}`;
+  const url = `${process.env.SERVER_URI}/shoppingBag/verifyUser/${URLID}&${email}`;
   const info = {
     email,
     password,
@@ -33,10 +33,7 @@ const createSignupInfo = (email, password) => {
       email.indexOf("@")
     )}, verify your account using this url:\n${url}\nor with otp:\n${otp}`,
   });
-  return {
-    info,
-    verifyId,
-  };
+  return { info, verifyId };
 };
 
 module.exports = { createSignupInfo };

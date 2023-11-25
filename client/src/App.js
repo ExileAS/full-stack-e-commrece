@@ -82,7 +82,6 @@ function App() {
             />
             <Route exact path="/signup" element={<SignUp />} />
             <Route exact path="/login" element={<Login />} />
-            <Route exact path="/login/:verifyId" element={<Login />} />
             <Route exact path="/products/selected" element={<SelectedList />} />
           </Routes>
         </div>

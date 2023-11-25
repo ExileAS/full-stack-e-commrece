@@ -3,7 +3,7 @@ const app = express();
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const authRouter = require("./routes/authRoutes");
-const { checkUser, requireAuth } = require("./middleware/authMiddleware");
+const { checkUser } = require("./middleware/authMiddleware");
 const productRouter = require("./routes/productsRoutes");
 const orderedProductsRouter = require("./routes/orderedProductsRoutes");
 const reviewRouter = require("./routes/reviewRoutes");
@@ -38,7 +38,6 @@ mongoose
 
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/api/requireAuth", requireAuth);
 app.get("/api/auth", checkUser);
 
 app.use(productRouter);

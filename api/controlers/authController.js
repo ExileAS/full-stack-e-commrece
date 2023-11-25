@@ -54,9 +54,13 @@ module.exports.login_post = async (req, res) => {
 };
 
 module.exports.verify_user_url = async (req, res) => {
-  const { verifyId } = req.params;
+  const { verifyId, email } = req.params;
   const url = `${process.env.SERVER_URI}/shoppingBag/verifyUser/${verifyId}`;
-  const user = await userModel.findOne({ "verifyURL.url": url });
+  const user = await userModel.findOne({ email: email });
+  if (!user) {
+    res.status(404).send("<h2>user not found<h2>");
+    return;
+  }
   if (user.verified) {
     res.status(409).send("<h2>Already Verified</h2>");
     return;
@@ -64,21 +68,27 @@ module.exports.verify_user_url = async (req, res) => {
   const now = Date.now();
   const valid = user && user.expireAt > now && user.verifyURL.expireAt > now;
   if (valid) {
-    const verifiedUser = await userModel.findByIdAndUpdate(
-      { _id: user._id },
+    const verifiedUser = await userModel.findOneAndUpdate(
+      { _id: user._id, "verifyURL.url": url },
       {
         $set: { verified: true, verifiedAt: Date.now() },
       }
     );
-    res.send("<h2>Verified Succesfully</h2>");
+    verifiedUser
+      ? res.send("<h2>Verified Succesfully</h2>")
+      : res.send("<h2>Verification link incorrect</h2>");
   } else {
-    res.status(400).json({ err: "invalid user status" });
+    res.status(400).send("<h2>Expired!</h2>");
   }
 };
 
 module.exports.verify_user_otp = async (req, res) => {
   const { otp, email } = req.body;
-  const user = await userModel.findOne({ email: email, "OTP.otp": otp });
+  const user = await userModel.findOne({ email: email });
+  if (!user) {
+    res.status(404).json({ status: "user not found" });
+    return;
+  }
   if (user.verified) {
     res.status(409).json({ status: "already verified" });
     return;
@@ -86,13 +96,15 @@ module.exports.verify_user_otp = async (req, res) => {
   const now = Date.now();
   const valid = user && user.expireAt > now && user.OTP.expireAt > now;
   if (valid) {
-    const verifiedUser = await userModel.findByIdAndUpdate(
-      { _id: user._id },
+    const verifiedUser = await userModel.findOneAndUpdate(
+      { _id: user._id, "OTP.otp": otp },
       {
         $set: { verified: true, verifiedAt: Date.now() },
       }
     );
-    res.status(200).json({ verifiedSuccessfuly: true });
+    verifiedUser
+      ? res.status(200).json({ status: "verified successfully!" })
+      : res.status(400).json({ status: "wrong otp" });
   } else {
     res.status(400).json({ err: "invalid user status" });
   }

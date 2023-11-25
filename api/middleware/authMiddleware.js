@@ -32,10 +32,10 @@ const checkUser = (req, res, next) => {
 };
 
 const requireAuth = (req, res, next) => {
-  const token = req.cookies.jwt;
+  const tempToken = req.cookies.jwtTemp;
 
-  if (token) {
-    jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
+  if (tempToken) {
+    jwt.verify(tempToken, process.env.TEMP_KEY, async (err, decodedToken) => {
       if (err) {
         res.status(400).json({ err: "invalid token" });
       } else {

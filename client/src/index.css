@@ -2290,3 +2290,13 @@ input[type="radio"] {
   text-align: center;
   margin-left: -17px;
 }
+
+.input-otp {
+  color: white;
+  background-color: white;
+}
+
+.sent {
+  color: #178033;
+  margin-bottom: 8px;
+}
