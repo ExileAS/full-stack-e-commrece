@@ -24,6 +24,7 @@ const SignUp = () => {
         headers: { "Content-Type": "application/json" },
       });
       const data = await res.json();
+      console.log(data);
       if (data.errors) {
         setEmailErr(data.errors.email);
         setPasswordErr(data.errors.password);

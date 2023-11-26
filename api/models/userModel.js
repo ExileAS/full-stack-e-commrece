@@ -29,7 +29,7 @@ const userSchema = new Schema({
       type: Date,
       required: true,
       default: function () {
-        return Date.now() + 1000 * 60 * 5;
+        return Date.now() + 1000 * 60 * 60 * 12;
       },
     },
   },
@@ -45,7 +45,7 @@ const userSchema = new Schema({
       type: Date,
       required: true,
       default: function () {
-        return Date.now() + 1000 * 60 * 5;
+        return Date.now() + 1000 * 60 * 10;
       },
     },
   },
@@ -53,8 +53,16 @@ const userSchema = new Schema({
     type: Date,
     required: true,
     default: function () {
-      return Date.now() + 1000 * 60 * 60 * 3;
+      return Date.now() + 1000 * 60 * 60 * 24 * 2;
     },
+  },
+  verifyAttempts: {
+    type: Number,
+    default: 0,
+  },
+  resendAttempts: {
+    type: Number,
+    default: 1,
   },
 });
 
