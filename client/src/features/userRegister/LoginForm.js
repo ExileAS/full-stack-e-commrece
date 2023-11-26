@@ -7,6 +7,7 @@ import {
 } from "../shoppingCart/shoppingCartSlice";
 import GoogleReg from "./GoogleReg";
 import { useNavigate } from "react-router-dom";
+import Timer from "../../components/timer";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -16,10 +17,12 @@ const Login = () => {
   const [verifiedErr, setVerifiedErr] = useState("");
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState("");
+  const [timer, setTimer] = useState("15");
   const otpRef = useRef({});
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const currUser = useSelector((state) => state.user.tempEmail);
+  console.log(currUser);
 
   useEffect(() => {
     if (currUser) {
@@ -55,8 +58,9 @@ const Login = () => {
           setVerifiedErr("please verify your account");
         }
         if (data.user) {
-          if (currUser)
+          if (currUser) {
             dispatch(setTempStatus({ email: null, status: "logged" }));
+          }
           dispatch(login(data.user));
           navigate("/products");
           dispatch(retrieveOrderedList(data.user));
@@ -79,16 +83,28 @@ const Login = () => {
       setLoading(false);
       if (data.status) {
         setResponse(data.status);
-        if (
-          data.status === "verified successfully!" ||
-          data.status === "already verified"
-        ) {
-          dispatch(setTempStatus({ email: null, status: "logged" }));
-        }
+        if (data.status !== "wrong otp")
+          dispatch(setTempStatus({ email: null }));
       }
       if (data.err) {
-        setResponse(data.err);
+        setVerifiedErr(data.err);
       }
+    }
+  };
+  const handleResend = async () => {
+    setTimer("15");
+    const res = await fetch("/api/resend", {
+      method: "POST",
+      body: JSON.stringify({ email: currUser }),
+      headers: { "Content-Type": "application/json" },
+    });
+    const data = await res.json();
+    if (data.status) {
+      setVerifiedErr(data.status);
+      dispatch(setTempStatus({ email: null }));
+    }
+    if (data.success) {
+      setResponse(data.success);
     }
   };
 
@@ -135,7 +151,32 @@ const Login = () => {
               />
             )}
             <p className="error">{verifiedErr}</p>
-            <div className="error">{response}</div>
+            <div className="confirmed">{response}</div>
+          </div>
+        )}
+        {userStatus !== "unregistered" && (
+          <div>
+            <br />
+            <h1 className="timer-title">verification sent</h1>
+            {currUser && Number(timer) > 0 && (
+              <Timer
+                start={Boolean(currUser)}
+                timer={timer}
+                setTimer={setTimer}
+              />
+            )}
+            {(timer === "00" || !timer) && (
+              <button
+                style={{
+                  textAlign: "center",
+                  marginLeft: "24px",
+                }}
+                className="button-81"
+                onClick={handleResend}
+              >
+                Resend
+              </button>
+            )}
           </div>
         )}
       </div>

@@ -93,7 +93,7 @@ module.exports.verify_user_otp = async (req, res) => {
     res.status(409).json({ status: "already verified" });
     return;
   }
-  if (user.verifyAttempts > 10) {
+  if (user.verifyAttempts > 4) {
     res.status(403).json({ status: "too many attempts!" });
     return;
   }
@@ -103,12 +103,19 @@ module.exports.verify_user_otp = async (req, res) => {
       { _id: user._id, "OTP.otp": otp },
       {
         $set: { verified: true, verifiedAt: Date.now(), expireAt: null },
-        $inc: { verifyAttempts: 1 },
       }
     );
-    verifiedUser
-      ? res.status(200).json({ status: "verified successfully!" })
-      : res.status(400).json({ status: "wrong otp" });
+    if (verifiedUser) {
+      res.status(200).json({ status: "verified successfully!" });
+    } else {
+      const failedVerify = await userModel.findOneAndUpdate(
+        { email: email },
+        {
+          $inc: { verifyAttempts: 1 },
+        }
+      );
+      res.status(400).json({ status: "wrong otp" });
+    }
   } else {
     res.status(400).json({ err: "invalid user status" });
   }
@@ -125,7 +132,7 @@ module.exports.resend_msg = async (req, res) => {
     res.status(409).json({ status: "already verified" });
     return;
   }
-  if (user.resendAttempts > 10) {
+  if (user.resendAttempts > 5) {
     res.status(403).json({ status: "too many resend attempts!" });
     return;
   }
@@ -146,7 +153,7 @@ module.exports.resend_msg = async (req, res) => {
     );
     if (existingUser) {
       send();
-      res.status(200).json({ status: "verification resent" });
+      res.status(200).json({ success: "verification resent" });
     } else {
       res
         .status(404)

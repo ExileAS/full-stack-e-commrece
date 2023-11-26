@@ -2300,3 +2300,17 @@ input[type="radio"] {
   color: #178033;
   margin-bottom: 8px;
 }
+
+.timer {
+  text-align: center;
+  color: aliceblue;
+  margin-left: -17px;
+  font-size: 20px;
+}
+
+.timer-title {
+  text-align: center;
+  color: aliceblue;
+  margin-left: -17px;
+  font-size: 20px;
+}
