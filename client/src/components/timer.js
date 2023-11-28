@@ -42,8 +42,7 @@ const Timer = ({ start, timer, setTimer }) => {
 
   return (
     <div>
-      <h1 className="timer-title">resend in:</h1>
-      <h2 className="timer">{timer}</h2>
+      <h2 className="timer">Resend in: {timer}</h2>
     </div>
   );
 };

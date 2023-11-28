@@ -4,7 +4,7 @@ require("dotenv").config();
 
 const createSignupInfo = (email) => {
   const URLID = generateUniqueId({
-    length: 60,
+    length: 80,
   });
   const otp = generateUniqueId({
     length: 6,

@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { checkUser, login, setTempStatus } from "./userSlice";
+import { login, setTempEmail } from "./userSlice";
 import {
   clearCustomerInfo,
   retrieveOrderedList,
@@ -14,7 +14,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [emailErr, setEmailError] = useState("");
   const [passwordErr, setPasswordErr] = useState("");
-  const [verifiedErr, setVerifiedErr] = useState("");
+  const [verifyErr, setVerifyErr] = useState("");
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState("");
   const [timer, setTimer] = useState("15");
@@ -22,25 +22,12 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const currUser = useSelector((state) => state.user.tempEmail);
-  console.log(currUser);
-
-  useEffect(() => {
-    if (currUser) {
-      dispatch(checkUser());
-    }
-  }, [dispatch, currUser]);
-
-  const userStatus = useSelector((state) => state.user.userStatus);
-
-  useEffect(() => {
-    if (userStatus === "unregistered" && currUser)
-      dispatch(setTempStatus({ email: null }));
-  }, [userStatus, currUser, dispatch]);
 
   const handleLogin = async () => {
     dispatch(clearCustomerInfo());
     setEmailError("");
     setPasswordErr("");
+    dispatch(setTempEmail(null));
     if (email.length > 0 && password.length > 0) {
       try {
         const res = await fetch("/api/login", {
@@ -54,13 +41,11 @@ const Login = () => {
           setEmailError(data.errors.email);
           setPasswordErr(data.errors.password);
         }
-        if (data.unverified) {
-          setVerifiedErr("please verify your account");
+        if (data.unverifiedEmail) {
+          setVerifyErr("please verify your account");
+          dispatch(setTempEmail(data.unverifiedEmail));
         }
         if (data.user) {
-          if (currUser) {
-            dispatch(setTempStatus({ email: null, status: "logged" }));
-          }
           dispatch(login(data.user));
           navigate("/products");
           dispatch(retrieveOrderedList(data.user));
@@ -71,7 +56,7 @@ const Login = () => {
     }
   };
 
-  const handleOTP = async (e) => {
+  const handleOTP = async () => {
     if (otpRef.current.value.length === 6) {
       setLoading(true);
       const res = await fetch("/api/verifyOTP", {
@@ -81,13 +66,15 @@ const Login = () => {
       });
       const data = await res.json();
       setLoading(false);
-      if (data.status) {
-        setResponse(data.status);
-        if (data.status !== "wrong otp")
-          dispatch(setTempStatus({ email: null }));
+      if (data.success) {
+        setResponse(data.success);
+        dispatch(setTempEmail(null));
       }
       if (data.err) {
-        setVerifiedErr(data.err);
+        setVerifyErr(data.err);
+        if (data.err !== "wrong otp") {
+          dispatch(setTempEmail(null));
+        }
       }
     }
   };
@@ -99,9 +86,9 @@ const Login = () => {
       headers: { "Content-Type": "application/json" },
     });
     const data = await res.json();
-    if (data.status) {
-      setVerifiedErr(data.status);
-      dispatch(setTempStatus({ email: null }));
+    if (data.err) {
+      setVerifyErr(data.err);
+      dispatch(setTempEmail(null));
     }
     if (data.success) {
       setResponse(data.success);
@@ -137,27 +124,33 @@ const Login = () => {
           <p className="error">{passwordErr}</p>
         </form>
         <br />
+        <div className="otp-container">
+          {currUser && (
+            <>
+              {loading && <h2 className="sent">Loading...</h2>}
+              {!loading && currUser && (
+                <input
+                  type="text"
+                  placeholder="type your otp..."
+                  className="input-price"
+                  maxLength="6"
+                  onChange={handleOTP}
+                  ref={otpRef}
+                />
+              )}
+            </>
+          )}
+          <div className="confirmed">{response}</div>
+          <p className="error">{verifyErr}</p>
+        </div>
         {currUser && (
-          <div className="otp-container">
-            {loading && <h2 className="sent">Loading...</h2>}
-            {!loading && userStatus !== "logged" && (
-              <input
-                type="text"
-                placeholder="type your otp..."
-                className="input-price"
-                maxLength="6"
-                onChange={handleOTP}
-                ref={otpRef}
-              />
-            )}
-            <p className="error">{verifiedErr}</p>
-            <div className="confirmed">{response}</div>
-          </div>
-        )}
-        {userStatus !== "unregistered" && (
           <div>
             <br />
-            <h1 className="timer-title">verification sent</h1>
+            <h2 className="timer-title">verification sent to </h2>
+            <p className="confirmed">
+              ******{currUser.substring(currUser.indexOf("@") - 3)}
+            </p>
+            <br />
             {currUser && Number(timer) > 0 && (
               <Timer
                 start={Boolean(currUser)}
@@ -171,7 +164,7 @@ const Login = () => {
                   textAlign: "center",
                   marginLeft: "24px",
                 }}
-                className="button-81"
+                className="button-7"
                 onClick={handleResend}
               >
                 Resend

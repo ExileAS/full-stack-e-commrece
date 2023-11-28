@@ -184,7 +184,7 @@ const shoppingCartSlice = createSlice({
       product.count--;
     },
     clearCustomerInfo(state, action) {
-      state.customerInfo = [];
+      state.customerInfo = {};
       return state;
     },
     createOrderedList(state, action) {
@@ -192,7 +192,6 @@ const shoppingCartSlice = createSlice({
       return state;
     },
     confirmPayment(state, action) {
-      console.log("CONFIRM ACTION WORKED!");
       state.payment = true;
       const order = [...state.payedOrder, ...state.ordered];
       if (!state.payedOrder.length) {

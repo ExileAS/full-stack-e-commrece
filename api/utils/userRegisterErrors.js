@@ -21,4 +21,24 @@ const handleErrors = (err) => {
   return errors;
 };
 
-module.exports = { handleErrors };
+const handleVerifyErrors = (user, verifyMethod, resend = false) => {
+  if (!user) {
+    throw new Error("user not found!");
+  }
+  const validUser = user.expireAt === null || user.expireAt > Date.now();
+  const validOtp =
+    resend || user.OTP.expireAt > Date.now() || verifyMethod === "url";
+  const validUrl =
+    resend || user.verifyURL.expireAt > Date.now() || verifyMethod === "otp";
+  if (!validUser || !validOtp || !validUrl) {
+    throw new Error("invalid user status");
+  }
+  if (user.verified) {
+    throw new Error("already verified");
+  }
+  if (user.verifyAttempts > 4 || user.resendAttempts > 4) {
+    throw new Error("too many attempts!");
+  }
+};
+
+module.exports = { handleErrors, handleVerifyErrors };

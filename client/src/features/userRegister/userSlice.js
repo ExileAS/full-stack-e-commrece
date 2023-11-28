@@ -7,7 +7,6 @@ const initialState = {
   userOrderId: null,
   google: false,
   userName: null,
-  userStatus: "unregistered",
   tempEmail: null,
 };
 
@@ -58,10 +57,8 @@ const userSlice = createSlice({
       }
       return state;
     },
-    setTempStatus(state, action) {
-      console.log(action.payload);
-      state.tempEmail = action.payload.email;
-      state.userStatus = action.payload.status || "unregistered";
+    setTempEmail(state, action) {
+      state.tempEmail = action.payload;
       return state;
     },
   },
@@ -71,7 +68,6 @@ const userSlice = createSlice({
         state.loggedIn = false;
         state.userEmail = null;
         state.google = false;
-        state.userStatus = "unregistered";
         return state;
       })
       .addCase(checkUser.fulfilled, (state, action) => {
@@ -79,11 +75,6 @@ const userSlice = createSlice({
           state.loggedIn = false;
           state.userEmail = null;
           state.google = false;
-          state.userStatus = "unregistered";
-        } else if (action.payload.verifying) {
-          state.userStatus = "verifying";
-        } else if (action.payload.valid) {
-          state.userStatus = "logged";
         }
         return state;
       });
@@ -96,7 +87,7 @@ export const {
   setOrderId,
   googleLogin,
   isGoogle,
-  setTempStatus,
+  setTempEmail,
 } = userSlice.actions;
 
 export default userSlice.reducer;

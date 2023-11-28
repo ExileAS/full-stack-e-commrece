@@ -29,7 +29,7 @@ const userSchema = new Schema({
       type: Date,
       required: true,
       default: function () {
-        return Date.now() + 1000 * 60 * 60 * 12;
+        return Date.now() + 1000 * 60 * 60 * 3;
       },
     },
   },
