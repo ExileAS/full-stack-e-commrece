@@ -11,18 +11,6 @@ const initialState = {
   isSplit: false,
 };
 
-export const checkUserCart = createAsyncThunk(
-  "shoppingCart/checkUser",
-  async () => {
-    const res = await fetch("/api/auth", {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
-    const data = await res.json();
-    return data;
-  }
-);
-
 export const postOrdered = createAsyncThunk(
   "shoppingCart/postOrdered",
   async (_, { getState }) => {
@@ -159,7 +147,7 @@ const shoppingCartSlice = createSlice({
               exists = true;
             }
           });
-          !exists && state.ordered.push(product);
+          if (!exists) state.ordered.push(product);
         });
         state.customerInfo = action.payload.userInfo;
         state.cart = [];
@@ -245,24 +233,6 @@ const shoppingCartSlice = createSlice({
         } else {
           state.ordered = action.payload.ordered;
           state.isSplit = false;
-        }
-        return state;
-      })
-      .addCase(checkUserCart.rejected, (state, action) => {
-        state.ordered = [];
-        state.cart = [];
-        state.confirmId = null;
-        state.customerInfo = {};
-        state.payedOrder = [];
-        return state;
-      })
-      .addCase(checkUserCart.fulfilled, (state, action) => {
-        if (action.payload.err) {
-          state.ordered = [];
-          state.cart = [];
-          state.confirmId = null;
-          state.customerInfo = {};
-          state.payedOrder = [];
         }
         return state;
       });

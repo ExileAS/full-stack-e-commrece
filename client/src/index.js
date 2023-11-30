@@ -6,13 +6,7 @@ import { Provider } from "react-redux";
 import store, { persistor } from "./app/store";
 import { PersistGate } from "redux-persist/integration/react";
 
-import { checkUser } from "./features/userRegister/userSlice";
-import { checkUserCart } from "./features/shoppingCart/shoppingCartSlice";
-
 const root = ReactDOM.createRoot(document.getElementById("root"));
-
-store.dispatch(checkUser());
-store.dispatch(checkUserCart());
 
 root.render(
   <Provider store={store}>

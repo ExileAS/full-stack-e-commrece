@@ -15,7 +15,7 @@ const fileUpload = require("express-fileupload");
 const morgan = require("morgan");
 
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: process.env.CLIENT_URI_DEV,
   methods: ["GET", "PUT", "POST", "PATCH", "DELETE"],
   credentials: true,
 };
@@ -37,8 +37,6 @@ mongoose
   .catch((err) => console.log(err));
 
 app.use(express.urlencoded({ extended: true }));
-
-app.get("/api/auth", checkUser);
 
 app.use(productRouter);
 app.use(orderedProductsRouter);

@@ -18,8 +18,13 @@ import PaymentConfirmed from "./features/shoppingCart/PaymentConfirmed";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import CategoriesContextProvider from "./contexts/categories-context";
 import Categories from "./features/search/Categories";
+import { useEffect } from "react";
 
 function App() {
+  useEffect(() => {
+    console.log("might check valid token or logout user if invalid here");
+  }, []);
+
   return (
     <GoogleOAuthProvider clientId="638833864743-4ph4ulasbrnnfq3r6u5l0nq833h6ajqi.apps.googleusercontent.com">
       <Router>

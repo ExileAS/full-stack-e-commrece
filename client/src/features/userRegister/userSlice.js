@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { jwtDecode } from "jwt-decode";
 
 const initialState = {
@@ -9,15 +9,6 @@ const initialState = {
   userName: null,
   tempEmail: null,
 };
-
-export const checkUser = createAsyncThunk("user/checkUser", async () => {
-  const res = await fetch("/api/auth", {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  });
-  const data = await res.json();
-  return data;
-});
 
 const userSlice = createSlice({
   initialState,
@@ -61,23 +52,6 @@ const userSlice = createSlice({
       state.tempEmail = action.payload;
       return state;
     },
-  },
-  extraReducers(builder) {
-    builder
-      .addCase(checkUser.rejected, (state, action) => {
-        state.loggedIn = false;
-        state.userEmail = null;
-        state.google = false;
-        return state;
-      })
-      .addCase(checkUser.fulfilled, (state, action) => {
-        if (action.payload.err) {
-          state.loggedIn = false;
-          state.userEmail = null;
-          state.google = false;
-        }
-        return state;
-      });
   },
 });
 

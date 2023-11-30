@@ -5,12 +5,13 @@ const {
   update_order_patch,
   order_delete,
 } = require("../controlers/orderedProductsController");
+const { checkUser } = require("../middleware/authMiddleware");
 
 const router = Router();
 
-router.post("/api/post-ordered", ordered_post);
-router.post("/api/retrieveOrdered", retreive_ordered_post);
-router.patch("/api/updateOrder", update_order_patch);
-router.delete("/api/deleteOrder", order_delete);
+router.post("/api/post-ordered", checkUser, ordered_post);
+router.post("/api/retrieveOrdered", checkUser, retreive_ordered_post);
+router.patch("/api/updateOrder", checkUser, update_order_patch);
+router.delete("/api/deleteOrder", checkUser, order_delete);
 
 module.exports = router;
