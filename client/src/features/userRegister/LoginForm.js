@@ -27,6 +27,7 @@ const Login = () => {
     dispatch(clearCustomerInfo());
     setEmailError("");
     setPasswordErr("");
+
     dispatch(setTempEmail(null));
     if (email.length > 0 && password.length > 0) {
       try {
@@ -59,6 +60,7 @@ const Login = () => {
   const handleOTP = async () => {
     if (otpRef.current.value.length === 6) {
       setLoading(true);
+      setVerifyErr("");
       const res = await fetch("/api/verifyOTP", {
         method: "POST",
         body: JSON.stringify({ email: currUser, otp: otpRef.current?.value }),

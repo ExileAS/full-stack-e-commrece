@@ -11,23 +11,16 @@ module.exports.signup_post = async (req, res) => {
   const { email, password, sub, email_verified } = req.body;
 
   try {
-    let user, token;
     if (email && password) {
       const { info, send } = createSignupInfo(email, password);
-      user = await userModel.create({ ...info, password });
+      const user = await userModel.create({ ...info, password });
       send();
-      token = createTempToken(user._id);
-      res.cookie("jwtTemp", token, {
-        maxAge: 1000 * 60 * 60 * 2,
-        httpOnly: true,
-      });
+      const { token, name, options } = createTempToken(user._id);
+      res.cookie(name, token, options);
       res.status(201).json({ user: user.email });
     } else if (sub && email_verified) {
-      token = createToken(sub);
-      res.cookie("jwt", token, {
-        maxAge: 1000 * 60 * 60 * 24 * 2,
-        httpOnly: true,
-      });
+      const { token, name, options } = createToken(sub);
+      res.cookie(name, token, options);
       res.status(201).json({ user: email });
     }
   } catch (err) {
@@ -41,14 +34,13 @@ module.exports.login_post = async (req, res) => {
   try {
     const user = await userModel.login(email, password);
     if (user.verified) {
-      const token = createToken(user._id);
-      res.cookie("jwt", token, {
-        maxAge: 1000 * 60 * 60 * 24 * 2,
-        httpOnly: true,
-      });
+      const { token, name, options } = createToken(user._id);
+      res.cookie(name, token, options);
       res.cookie("jwtTemp", "", { maxAge: 1 });
       res.status(200).json({ user: user.email });
     } else {
+      const { token, name, options } = createTempToken(user._id);
+      res.cookie(name, token, options);
       res.status(401).json({ unverifiedEmail: user.email });
     }
   } catch (err) {
