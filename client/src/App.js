@@ -18,14 +18,15 @@ import PaymentConfirmed from "./features/shoppingCart/PaymentConfirmed";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import CategoriesContextProvider from "./contexts/categories-context";
 import Categories from "./features/search/Categories";
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import useLogout from "./features/userRegister/useLogout";
 function App() {
   const currEmail = useSelector((state) => state.user.userEmail);
-  const [error, setError] = useState("");
+  const tokenError = useRef({});
   const logoutUser = useLogout();
   useEffect(() => {
+    console.log(currEmail);
     if (currEmail) {
       checkToken();
     }
@@ -37,7 +38,7 @@ function App() {
       const data = await res.json();
       if (!res.ok) {
         await logoutUser();
-        setError(`${data.err}`);
+        tokenError.current = `${data.err}`;
       }
     }
   }, [currEmail, logoutUser]);
@@ -101,7 +102,11 @@ function App() {
             path="/products/ordered/:id"
             element={<PaymentConfirmed />}
           />
-          <Route exact path="/signup" element={<SignUp err={error} />} />
+          <Route
+            exact
+            path="/signup"
+            element={<SignUp err={tokenError.current} />}
+          />
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/products/selected" element={<SelectedList />} />
         </Routes>
