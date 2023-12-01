@@ -15,7 +15,9 @@ function useIdleTimeout(onTimeout, timeout = 1000 * 60 * 20) {
       }, timeout);
     };
 
-    const throttleReset = _.throttle(resetTimer, 1000);
+    const throttleReset = _.throttle(resetTimer, 500);
+
+    throttleReset();
 
     document.addEventListener("mouseover", throttleReset);
     document.addEventListener("keydown", throttleReset);
