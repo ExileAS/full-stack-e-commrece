@@ -12,7 +12,7 @@ const useLogout = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const selected = useSelector(getAllSelected);
-  const handleLogout = async () => {
+  const handleLogout = async (err) => {
     await fetch("/api/logout", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
@@ -24,7 +24,7 @@ const useLogout = () => {
     selected.forEach((item) =>
       dispatch(productUnSelected({ productId: item.id }))
     );
-    navigate("/signup");
+    navigate(`/login/${err}`);
   };
   return handleLogout;
 };

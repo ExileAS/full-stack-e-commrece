@@ -6,7 +6,7 @@ import {
   retrieveOrderedList,
 } from "../shoppingCart/shoppingCartSlice";
 import GoogleReg from "./GoogleReg";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Timer from "../../components/timer";
 
 const Login = () => {
@@ -19,6 +19,7 @@ const Login = () => {
   const [response, setResponse] = useState("");
   const [timer, setTimer] = useState("15");
   const otpRef = useRef({});
+  const { err } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const currUser = useSelector((state) => state.user.tempEmail);
@@ -172,6 +173,12 @@ const Login = () => {
                 Resend
               </button>
             )}
+          </div>
+        )}
+        {err && (
+          <div>
+            <h2 className="error">{err}!</h2>
+            <h2 className="error">please login again</h2>
           </div>
         )}
       </div>

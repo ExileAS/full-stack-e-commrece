@@ -21,10 +21,12 @@ import Categories from "./features/search/Categories";
 import { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import useLogout from "./features/userRegister/useLogout";
+import useIdleTimeout from "./features/userRegister/useIdleTimeout";
 function App() {
   const currEmail = useSelector((state) => state.user.userEmail);
   const tokenError = useRef({});
   const logoutUser = useLogout();
+  useIdleTimeout(() => logoutUser("timeout"));
   useEffect(() => {
     if (currEmail) {
       checkToken();
@@ -36,7 +38,7 @@ function App() {
       });
       const data = await res.json();
       if (!res.ok) {
-        await logoutUser();
+        await logoutUser("token expired!");
         console.log(data.err);
         if (data.err) tokenError.current = `${data.err}`;
       }
@@ -108,6 +110,7 @@ function App() {
             element={<SignUp err={tokenError.current} />}
           />
           <Route exact path="/login" element={<Login />} />
+          <Route exact path="/login/:err" element={<Login />} />
           <Route exact path="/products/selected" element={<SelectedList />} />
         </Routes>
       </div>
