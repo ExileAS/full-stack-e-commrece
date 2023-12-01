@@ -5,7 +5,7 @@ import GoogleReg from "./GoogleReg";
 import { useNavigate } from "react-router-dom";
 import { setTempEmail } from "./userSlice";
 
-const SignUp = () => {
+const SignUp = ({ err }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailErr, setEmailErr] = useState("");
@@ -66,6 +66,13 @@ const SignUp = () => {
           </button>
           <GoogleReg />
         </form>
+        <br />
+        {err && (
+          <div>
+            <h3 className="error">{err}</h3>
+            <h3 className="error">please login again</h3>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -64,6 +64,10 @@ const userSchema = new Schema({
     type: Number,
     default: 1,
   },
+  role: {
+    type: String,
+    default: "customer",
+  },
 });
 
 userSchema.pre("save", async function (next) {

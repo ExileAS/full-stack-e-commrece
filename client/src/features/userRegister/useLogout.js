@@ -24,7 +24,7 @@ const useLogout = () => {
     selected.forEach((item) =>
       dispatch(productUnSelected({ productId: item.id }))
     );
-    navigate("/products");
+    navigate("/signup");
   };
   return handleLogout;
 };

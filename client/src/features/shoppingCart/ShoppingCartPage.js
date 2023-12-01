@@ -14,7 +14,6 @@ const ShoppingCartPage = () => {
   const { err } = useParams();
   let errors;
   if (err?.length) errors = err.split(",");
-  console.log(errors);
   const productsInCart = useSelector(selectAllInCart);
   const totalCost = useSelector(getTotalCost);
   const [totalPrice, setTotalPrice] = useState(totalCost);
@@ -85,7 +84,7 @@ const ShoppingCartPage = () => {
       <span className="cart-title">
         <h2 className="nothing-incart">items in your Shopping Cart</h2>
       </span>
-      {errors[0] === "no token" && (
+      {errors && errors[0] === "no token" && (
         <p className="error">Please login to confirm!</p>
       )}
       <br />

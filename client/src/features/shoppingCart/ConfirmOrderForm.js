@@ -61,7 +61,6 @@ const ConfirmOrderForm = () => {
         headers: { "Content-Type": "application/json" },
       });
       const info = await res.json();
-      console.log(info);
       if (info.err) {
         navigate(`/shoppingCart/${info.err}`);
         return;

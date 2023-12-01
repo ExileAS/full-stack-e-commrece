@@ -10,17 +10,20 @@ const checkUser = (req, res, next) => {
     res.status(403).json({ err: "invalid origin" });
     return;
   }
+  const checkingUserToken = req.route.path === "/api/checkToken";
 
   if (token) {
     jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
       if (err) {
         res.status(400).json({ err: "invalid token" });
+      } else if (checkingUserToken) {
+        res.status(201).json({ valid: true });
       } else {
         next();
       }
     });
   } else {
-    res.status(400).json({ err: "no token" });
+    res.status(400).json({ err: "token expired!" });
   }
 };
 

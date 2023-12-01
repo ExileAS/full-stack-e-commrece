@@ -3,7 +3,6 @@ const app = express();
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const authRouter = require("./routes/authRoutes");
-const { checkUser } = require("./middleware/authMiddleware");
 const productRouter = require("./routes/productsRoutes");
 const orderedProductsRouter = require("./routes/orderedProductsRoutes");
 const reviewRouter = require("./routes/reviewRoutes");
@@ -13,6 +12,7 @@ const paymentRouter = require("./routes/paymentRoutes");
 const sellersRouter = require("./routes/sellerRoutes");
 const fileUpload = require("express-fileupload");
 const morgan = require("morgan");
+const { checkUser } = require("./middleware/authMiddleware");
 
 const corsOptions = {
   origin: process.env.CLIENT_URI_DEV,
@@ -38,6 +38,7 @@ mongoose
 
 app.use(express.urlencoded({ extended: true }));
 
+app.get("/api/checkToken", checkUser);
 app.use(productRouter);
 app.use(orderedProductsRouter);
 app.use(sellersRouter);
