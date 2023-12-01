@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { setTempEmail } from "./userSlice";
 
 const SignUp = ({ err }) => {
+  const tokenError = typeof err === "string" ? err : "";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailErr, setEmailErr] = useState("");
@@ -67,9 +68,9 @@ const SignUp = ({ err }) => {
           <GoogleReg />
         </form>
         <br />
-        {err && (
+        {tokenError && (
           <div>
-            <h3 className="error">{err}</h3>
+            <h3 className="error">{tokenError}</h3>
             <h3 className="error">please login again</h3>
           </div>
         )}

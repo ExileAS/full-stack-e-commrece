@@ -26,7 +26,6 @@ function App() {
   const tokenError = useRef({});
   const logoutUser = useLogout();
   useEffect(() => {
-    console.log(currEmail);
     if (currEmail) {
       checkToken();
     }
@@ -38,7 +37,8 @@ function App() {
       const data = await res.json();
       if (!res.ok) {
         await logoutUser();
-        tokenError.current = `${data.err}`;
+        console.log(data.err);
+        if (data.err) tokenError.current = `${data.err}`;
       }
     }
   }, [currEmail, logoutUser]);
