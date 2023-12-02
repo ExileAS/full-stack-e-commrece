@@ -1,5 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-
 import Navbar from "./app/Navbar";
 import ProductsList from "./features/products/ProductList";
 import { ProductDetails } from "./features/products/ProductDetails";
@@ -22,7 +21,7 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import useLogout from "./features/userRegister/useLogout";
 import useIdleTimeout from "./features/userRegister/useIdleTimeout";
-import { CsrfTokenProvider } from "./contexts/csrfTokenContext";
+import { CsrfContextLayout } from "./contexts/csrfTokenContext";
 function App() {
   const currEmail = useSelector((state) => state.user.userEmail);
   const logoutUser = useLogout();
@@ -60,20 +59,11 @@ function App() {
               </CategoriesContextProvider>
             }
           />
+          <Route exact path="/products/selected" element={<SelectedList />} />
           <Route
             exact
             path="/products/:productId"
             element={<ProductDetails />}
-          />
-          <Route
-            exact
-            path="/products/addProduct"
-            element={<AddNewProduct />}
-          />
-          <Route
-            exact
-            path="/products/addProduct/:productId"
-            element={<AddNewProduct />}
           />
           <Route exact path="/sellers" element={<SellerList />} />
           <Route
@@ -92,21 +82,27 @@ function App() {
             path="/moreProducts/:productId"
             element={<MoreLikeThis />}
           />
-          <Route exact path="/confirm-order" element={<ConfirmOrderForm />} />
-          <Route
-            exact
-            path="/products/ordered"
-            element={<OrderedProductsList />}
-          />
-          <Route
-            exact
-            path="/products/ordered/:id"
-            element={<PaymentConfirmed />}
-          />
-          <Route exact path="/signup" element={<SignUp />} />
-          <Route exact path="/login" element={<Login />} />
-          <Route exact path="/login/:err" element={<Login />} />
-          <Route exact path="/products/selected" element={<SelectedList />} />
+          <Route element={<CsrfContextLayout />}>
+            <Route path="/products/addProduct" element={<AddNewProduct />} />
+            <Route
+              path="/products/addProduct/:productId"
+              element={<AddNewProduct />}
+            />
+            <Route exact path="/confirm-order" element={<ConfirmOrderForm />} />
+            <Route
+              exact
+              path="/products/ordered"
+              element={<OrderedProductsList />}
+            />
+            <Route
+              exact
+              path="/products/ordered/:id"
+              element={<PaymentConfirmed />}
+            />
+            <Route exact path="/signup" element={<SignUp />} />
+            <Route exact path="/login" element={<Login />} />
+            <Route exact path="/login/:err" element={<Login />} />
+          </Route>
         </Routes>
       </div>
     </GoogleOAuthProvider>
