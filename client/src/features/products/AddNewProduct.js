@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { generateId, selectProductById } from "../products/productsSlice";
 import { addNewSeller, generateIdSeller } from "../sellers/sellersSlice";
+import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 
 export const AddNewProduct = () => {
+  const token = useContext(csrfTokenContext);
   const { productId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();

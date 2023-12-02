@@ -8,14 +8,13 @@ function useIdleTimeout(onTimeout, timeout = 1000 * 60 * 20) {
   useEffect(() => {
     if (!currUser) return;
     const resetTimer = () => {
-      console.log("event");
       clearTimeout(timer.current);
       timer.current = setTimeout(() => {
         onTimeout();
       }, timeout);
     };
 
-    const throttleReset = _.throttle(resetTimer, 500);
+    const throttleReset = _.throttle(resetTimer, 1000);
 
     throttleReset();
 

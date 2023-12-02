@@ -1,7 +1,7 @@
-import { useState, useEffect, createContext, useContext } from "react";
+import { useState, useEffect, createContext } from "react";
 import { Outlet } from "react-router-dom";
 
-const csrfTokenContext = createContext(null);
+export const csrfTokenContext = createContext(null);
 
 const CsrfTokenProvider = ({ children }) => {
   const [token, setToken] = useState("");
@@ -18,20 +18,13 @@ const CsrfTokenProvider = ({ children }) => {
     };
     fetchToken();
   }, []);
+  console.log(token);
 
   return (
     <csrfTokenContext.Provider value={token}>
       {children}
     </csrfTokenContext.Provider>
   );
-};
-
-export const useTokenContext = () => {
-  const context = useContext(csrfTokenContext);
-  if (!context) {
-    throw new Error("token context is only used inside it's provider");
-  }
-  return context;
 };
 
 export const CsrfContextLayout = () => {

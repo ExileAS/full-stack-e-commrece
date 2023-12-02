@@ -83,8 +83,13 @@ function App() {
             element={<MoreLikeThis />}
           />
           <Route element={<CsrfContextLayout />}>
-            <Route path="/products/addProduct" element={<AddNewProduct />} />
             <Route
+              exact
+              path="/products/addProduct"
+              element={<AddNewProduct />}
+            />
+            <Route
+              exact
               path="/products/addProduct/:productId"
               element={<AddNewProduct />}
             />
