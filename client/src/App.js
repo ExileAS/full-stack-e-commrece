@@ -16,15 +16,15 @@ import Login from "./features/userRegister/LoginForm";
 import SelectedList from "./features/products/SelectedList";
 import PaymentConfirmed from "./features/shoppingCart/PaymentConfirmed";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import CategoriesContextProvider from "./contexts/categories-context";
+import CategoriesContextProvider from "./contexts/categoriesContext";
 import Categories from "./features/search/Categories";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import useLogout from "./features/userRegister/useLogout";
 import useIdleTimeout from "./features/userRegister/useIdleTimeout";
+import { CsrfTokenProvider } from "./contexts/csrfTokenContext";
 function App() {
   const currEmail = useSelector((state) => state.user.userEmail);
-  const tokenError = useRef({});
   const logoutUser = useLogout();
   useIdleTimeout(() => logoutUser("timeout"));
   useEffect(() => {
@@ -38,9 +38,8 @@ function App() {
       });
       const data = await res.json();
       if (!res.ok) {
-        await logoutUser("token expired!");
         console.log(data.err);
-        if (data.err) tokenError.current = `${data.err}`;
+        logoutUser("token expired");
       }
     }
   }, [currEmail, logoutUser]);
@@ -104,11 +103,7 @@ function App() {
             path="/products/ordered/:id"
             element={<PaymentConfirmed />}
           />
-          <Route
-            exact
-            path="/signup"
-            element={<SignUp err={tokenError.current} />}
-          />
+          <Route exact path="/signup" element={<SignUp />} />
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/login/:err" element={<Login />} />
           <Route exact path="/products/selected" element={<SelectedList />} />

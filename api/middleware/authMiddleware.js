@@ -3,7 +3,7 @@ require("dotenv").config();
 
 const checkUser = (req, res, next) => {
   const token = req.cookies.jwt;
-  const validOrigin = req.headers.referer.startsWith(
+  const validOrigin = req.headers?.referer.startsWith(
     process.env.CLIENT_URI_DEV
   );
   if (!validOrigin) {
@@ -29,7 +29,7 @@ const checkUser = (req, res, next) => {
 
 const requireAuth = (req, res, next) => {
   const tempToken = req.cookies.jwtTemp;
-  const validOrigin = req.headers.referer.startsWith(
+  const validOrigin = req.headers?.referer.startsWith(
     process.env.CLIENT_URI_DEV
   );
   if (!validOrigin) {

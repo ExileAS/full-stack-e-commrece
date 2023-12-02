@@ -3,7 +3,7 @@ import ProductExcerpt from "../products/ProductExcerpt";
 import { useSelector } from "react-redux";
 import { selectAllInCart } from "../shoppingCart/shoppingCartSlice";
 import SortOptions from "../sortingList/SortOptions";
-import { CategoriesContext } from "../../contexts/categories-context";
+import { CategoriesContext } from "../../contexts/categoriesContext";
 import sortByRelevance from "./sortBySearchTerm";
 
 const SearchBar = ({ data }) => {

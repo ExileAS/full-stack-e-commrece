@@ -20,6 +20,7 @@ const Login = () => {
   const [timer, setTimer] = useState("15");
   const otpRef = useRef({});
   const { err } = useParams();
+  const showErr = err === "timeout" || err === "token expired";
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const currUser = useSelector((state) => state.user.tempEmail);
@@ -175,9 +176,9 @@ const Login = () => {
             )}
           </div>
         )}
-        {err && (
+        {showErr && (
           <div>
-            <h2 className="error">{err}!</h2>
+            <h2 className="error">{err}</h2>
             <h2 className="error">please login again</h2>
           </div>
         )}

@@ -7,7 +7,7 @@ import React, { useContext, useEffect, useRef } from "react";
 import { getAllSellers } from "../sellers/sellersSlice";
 import "transition-style";
 import bagSrc from "../../components/shoppingBag.jpg";
-import { CategoriesContext } from "../../contexts/categories-context";
+import { CategoriesContext } from "../../contexts/categoriesContext";
 import Loader from "../../components/Loader";
 import { fetchReviews, getAllReviews } from "../reviews/reviewSlice";
 import ProductExcerpt from "./ProductExcerpt";
