@@ -8,6 +8,7 @@ import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 
 export const AddNewProduct = () => {
   const token = useContext(csrfTokenContext);
+  console.log(token);
   const { productId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -72,6 +73,7 @@ export const AddNewProduct = () => {
             headers: {
               "Content-Type": "multipart/form-data",
               "x-rapidapi-host": "file-upload8.p.rapidapi.com",
+              "csrf-token": token,
             },
           }
         );
@@ -106,6 +108,7 @@ export const AddNewProduct = () => {
             headers: {
               "Content-Type": "multipart/form-data",
               "x-rapidapi-host": "file-upload8.p.rapidapi.com",
+              "csrf-token": token,
             },
           }
         );

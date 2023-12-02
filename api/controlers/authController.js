@@ -7,7 +7,7 @@ const {
 } = require("../utils/userRegisterErrors");
 const { createSignupInfo } = require("../utils/createUserInfo");
 
-module.exports.signup_post = async (req, res) => {
+const signup_post = async (req, res) => {
   const { email, password, sub, email_verified } = req.body;
 
   try {
@@ -29,7 +29,7 @@ module.exports.signup_post = async (req, res) => {
   }
 };
 
-module.exports.login_post = async (req, res) => {
+const login_post = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await userModel.login(email, password);
@@ -49,7 +49,7 @@ module.exports.login_post = async (req, res) => {
   }
 };
 
-module.exports.verify_user_url = async (req, res) => {
+const verify_user_url = async (req, res) => {
   const { verifyId, email } = req.params;
   const url = `${process.env.SERVER_URI}/shoppingBag/verifyUser/${verifyId}&${email}`;
   try {
@@ -78,7 +78,7 @@ module.exports.verify_user_url = async (req, res) => {
   }
 };
 
-module.exports.verify_user_otp = async (req, res) => {
+const verify_user_otp = async (req, res) => {
   const { otp, email } = req.body;
   try {
     const user = await userModel.findOne({ email: email });
@@ -106,7 +106,7 @@ module.exports.verify_user_otp = async (req, res) => {
   }
 };
 
-module.exports.resend_msg = async (req, res) => {
+const resend_msg = async (req, res) => {
   const { email } = req.body;
 
   try {
@@ -138,7 +138,16 @@ module.exports.resend_msg = async (req, res) => {
   }
 };
 
-module.exports.logout_get = (req, res) => {
+const logout_get = (req, res) => {
   res.cookie("jwt", "", { maxAge: 1 });
   res.redirect("/");
+};
+
+module.exports = {
+  logout_get,
+  resend_msg,
+  verify_user_otp,
+  verify_user_url,
+  login_post,
+  signup_post,
 };

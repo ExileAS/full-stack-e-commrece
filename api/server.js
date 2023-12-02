@@ -13,6 +13,7 @@ const sellersRouter = require("./routes/sellerRoutes");
 const fileUpload = require("express-fileupload");
 const morgan = require("morgan");
 const { checkUser } = require("./middleware/authMiddleware");
+const csrf = require("csurf");
 
 const corsOptions = {
   origin: process.env.CLIENT_URI_DEV,
@@ -39,6 +40,9 @@ mongoose
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/api/checkToken", checkUser);
+app.get("/api/csrf-create-token", csrf({ cookie: true }), (req, res) => {
+  res.json({ csrfToken: req.csrfToken() });
+});
 app.use(productRouter);
 app.use(orderedProductsRouter);
 app.use(sellersRouter);

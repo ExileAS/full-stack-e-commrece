@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -9,8 +9,10 @@ import {
   updateOrder,
 } from "./shoppingCartSlice";
 import { countNewOnhand } from "../products/productsSlice";
+import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 
 const ConfirmOrderForm = () => {
+  const token = useContext(csrfTokenContext);
   const info = useSelector((state) => state.shoppingCart.customerInfo);
   const orderedInCart = useSelector(selectAllInCart);
   const currentOrdered = useSelector(selectAllOrdered);
@@ -58,7 +60,7 @@ const ConfirmOrderForm = () => {
       const res = await fetch("/api/confirmAvailable", {
         method: "POST",
         body: JSON.stringify(orderedInCart),
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "csrf-token": token },
       });
       const info = await res.json();
       if (info.err) {
@@ -74,7 +76,7 @@ const ConfirmOrderForm = () => {
       dispatch(countNewOnhand(orderedInCart));
       navigate("/products/ordered");
       if (currentOrdered.length === 0) {
-        dispatch(postOrdered());
+        dispatch(postOrdered(token));
       } else {
         dispatch(updateOrder(false));
       }

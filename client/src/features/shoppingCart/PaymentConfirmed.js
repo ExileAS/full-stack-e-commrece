@@ -1,10 +1,12 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import OrderedProductsList from "./OrderedProductList";
 import { useDispatch, useSelector } from "react-redux";
 import { confirmPayment, updateOrder } from "./shoppingCartSlice";
 import { useParams } from "react-router-dom";
 import { setOrderId } from "../userRegister/userSlice";
+import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 const PaymentConfirmed = () => {
+  const token = useContext(csrfTokenContext);
   const confirmId = useSelector(
     (state) => state.shoppingCart.payedId || state.shoppingCart.confirmId
   );
@@ -15,7 +17,6 @@ const PaymentConfirmed = () => {
   useEffect(() => {
     if (orderId === id) {
       dispatch(confirmPayment());
-      console.log("PAYMENT CONFIRMED!!");
       dispatch(updateOrder(true));
       fetch("/api/confirmPayment", {
         method: "POST",
@@ -28,7 +29,7 @@ const PaymentConfirmed = () => {
         })
         .then((res) => console.log("Confirmed"));
     }
-  }, [dispatch, confirmId, id, orderId]);
+  }, [dispatch, confirmId, id, orderId, token]);
 
   return (
     <div>

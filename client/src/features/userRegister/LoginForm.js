@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login, setTempEmail } from "./userSlice";
 import {
@@ -8,8 +8,10 @@ import {
 import GoogleReg from "./GoogleReg";
 import { useNavigate, useParams } from "react-router-dom";
 import Timer from "../../components/timer";
+import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 
 const Login = () => {
+  const token = useContext(csrfTokenContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailErr, setEmailError] = useState("");
@@ -36,7 +38,7 @@ const Login = () => {
         const res = await fetch("/api/login", {
           method: "POST",
           body: JSON.stringify({ email, password }),
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", "csrf-token": token },
         });
         const data = await res.json();
 
@@ -66,7 +68,7 @@ const Login = () => {
       const res = await fetch("/api/verifyOTP", {
         method: "POST",
         body: JSON.stringify({ email: currUser, otp: otpRef.current?.value }),
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "csrf-token": token },
       });
       const data = await res.json();
       setLoading(false);
@@ -87,7 +89,7 @@ const Login = () => {
     const res = await fetch("/api/resend", {
       method: "POST",
       body: JSON.stringify({ email: currUser }),
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "csrf-token": token },
     });
     const data = await res.json();
     if (data.err) {

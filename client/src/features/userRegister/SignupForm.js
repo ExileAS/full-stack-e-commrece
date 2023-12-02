@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
 import { clearCustomerInfo } from "../shoppingCart/shoppingCartSlice";
 import GoogleReg from "./GoogleReg";
 import { useNavigate } from "react-router-dom";
 import { setTempEmail } from "./userSlice";
+import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 
 const SignUp = ({ err }) => {
   const tokenError = typeof err === "string" ? err : "";
+  const token = useContext(csrfTokenContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailErr, setEmailErr] = useState("");
@@ -22,7 +24,7 @@ const SignUp = ({ err }) => {
       const res = await fetch("/api/signup", {
         method: "POST",
         body: JSON.stringify({ email, password }),
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "csrf-token": token },
       });
       const data = await res.json();
       console.log(data);

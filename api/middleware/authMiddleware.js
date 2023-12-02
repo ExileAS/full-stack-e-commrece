@@ -50,4 +50,14 @@ const requireAuth = (req, res, next) => {
   }
 };
 
-module.exports = { checkUser, requireAuth };
+const validateCsrf = (req, res, next) => {
+  const token = req.headers["csrf-token"];
+  if (!token) {
+    console.log("invalid");
+    return res.status(403).json({ err: "Invalid CSRF token" });
+  } else {
+    next();
+  }
+};
+
+module.exports = { checkUser, requireAuth, validateCsrf };

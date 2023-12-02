@@ -13,7 +13,7 @@ const initialState = {
 
 export const postOrdered = createAsyncThunk(
   "shoppingCart/postOrdered",
-  async (_, { getState }) => {
+  async (token, { getState }) => {
     const state = getState();
     try {
       const res = await fetch("/api/post-ordered", {
@@ -22,7 +22,7 @@ export const postOrdered = createAsyncThunk(
           list: state.shoppingCart.ordered,
           customerInfo: state.shoppingCart.customerInfo,
         }),
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "csrf-token": token },
       });
       const data = await res.json();
       if (data.confirmId) {

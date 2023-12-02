@@ -4,9 +4,9 @@ const {
   payment_post,
   confirm_payment,
 } = require("../controlers/paymentController");
-const { checkUser } = require("../middleware/authMiddleware");
+const { checkUser, validateCsrf } = require("../middleware/authMiddleware");
 
-router.post("/api/payment", checkUser, payment_post);
+router.post("/api/payment", validateCsrf, checkUser, payment_post);
 router.post("/api/confirmPayment", checkUser, confirm_payment);
 
 module.exports = router;

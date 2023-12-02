@@ -10,13 +10,15 @@ import {
   selectAllConfirmed,
 } from "./shoppingCartSlice";
 import ProductExcerpt from "../products/ProductExcerpt";
-import { useLayoutEffect, useState, useEffect } from "react";
+import { useLayoutEffect, useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchProducts } from "../products/productsSlice";
 import { setOrderId } from "../userRegister/userSlice";
 import { Spinner } from "../../components/Spinner";
+import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 
 const OrderedProductsList = ({ confirmed }) => {
+  const token = useContext(csrfTokenContext);
   const productsUnconfirmed = useSelector(selectAllOrdered);
   const productsConfirmed = useSelector(selectAllConfirmed);
   const products = confirmed ? productsConfirmed : productsUnconfirmed;
@@ -99,14 +101,14 @@ const OrderedProductsList = ({ confirmed }) => {
         body: JSON.stringify({
           confirmId: confirmId,
         }),
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "csrf-token": token },
       });
       const data = await res.json();
       if (data.url) {
         dispatch(setOrderId(data.id));
         window.location.assign(`${data.url}`);
       }
-      console.log(data.error);
+      console.log(data);
     } catch (err) {
       console.log(err);
     }

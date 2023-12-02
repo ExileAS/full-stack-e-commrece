@@ -18,7 +18,6 @@ const CsrfTokenProvider = ({ children }) => {
     };
     fetchToken();
   }, []);
-  console.log(token);
 
   return (
     <csrfTokenContext.Provider value={token}>

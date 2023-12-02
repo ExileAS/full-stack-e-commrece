@@ -24,10 +24,8 @@ module.exports.detectExplicit = async (imgPath, seller) => {
     const res = await axios.request(options);
     console.log(res.data);
     const safe =
-      (res.data.amazon.status === "success" ||
-        res.data["eden-ai"].status === "success") &&
-      (res.data.amazon.nsfw_likelihood_score < 0.9 ||
-        res.data["eden-ai"].nsfw_likelihood < 5);
+      res.data.amazon.nsfw_likelihood_score < 0.9 ||
+      res.data["eden-ai"].nsfw_likelihood < 5;
     if (!safe) logger.info(`${seller}: ${imgPath}`);
     return safe;
   } catch (err) {
