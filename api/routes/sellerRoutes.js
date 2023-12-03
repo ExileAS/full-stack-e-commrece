@@ -6,12 +6,12 @@ const {
 } = require("../controlers/sellerController");
 
 // const { requireSellerAuth } = require("../middleware/authMiddleware");
-const { validateCsrf } = require("../middleware/authMiddleware");
+const { csrfProtection } = require("../middleware/authMiddleware");
 
 const router = Router();
 
 router.get("/api/allSellers", get_all_sellers);
-router.patch("/api/editProduct", validateCsrf, edit_product);
-router.post("/api", validateCsrf, product_post);
+router.patch("/api/editProduct", csrfProtection, edit_product);
+router.post("/api", csrfProtection, product_post);
 
 module.exports = router;

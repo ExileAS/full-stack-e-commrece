@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+const csrf = require("csurf");
+const csrfProtection = csrf({ cookie: true });
 
 const checkUser = (req, res, next) => {
   const token = req.cookies.jwt;
@@ -50,14 +52,4 @@ const requireAuth = (req, res, next) => {
   }
 };
 
-const validateCsrf = (req, res, next) => {
-  const token = req.headers["csrf-token"];
-  if (!token) {
-    console.log("invalid");
-    return res.status(403).json({ err: "Invalid CSRF token" });
-  } else {
-    next();
-  }
-};
-
-module.exports = { checkUser, requireAuth, validateCsrf };
+module.exports = { checkUser, requireAuth, csrfProtection };
