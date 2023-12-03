@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import useRunOnce from "./useRunOnce";
 import { fetchProducts } from "../products/productsSlice";
 import { useDispatch } from "react-redux";
-import logo from "../../components/shoppingBag.jpg";
+import logo from "../../components/images/shoppingBag.jpg";
 import Loader from "../../components/Loader";
 
 const LandingPage = () => {

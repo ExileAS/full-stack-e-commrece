@@ -15,6 +15,7 @@ export const postOrdered = createAsyncThunk(
   "shoppingCart/postOrdered",
   async (token, { getState }) => {
     const state = getState();
+    console.log(state.shoppingCart.customerInfo);
     try {
       const res = await fetch("/api/post-ordered", {
         method: "POST",

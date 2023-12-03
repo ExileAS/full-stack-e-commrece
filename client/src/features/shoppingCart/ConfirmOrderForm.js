@@ -10,6 +10,9 @@ import {
 } from "./shoppingCartSlice";
 import { countNewOnhand } from "../products/productsSlice";
 import { csrfTokenContext } from "../../contexts/csrfTokenContext";
+import ConutryPicker from "../../components/CountryPicker";
+import { PhoneNumberInput } from "../../components/PhoneInput";
+import { isPossiblePhoneNumber } from "react-phone-number-input";
 
 const ConfirmOrderForm = () => {
   const token = useContext(csrfTokenContext);
@@ -17,7 +20,7 @@ const ConfirmOrderForm = () => {
   const orderedInCart = useSelector(selectAllInCart);
   const currentOrdered = useSelector(selectAllOrdered);
   const infoAvailable = JSON.stringify(info) !== JSON.stringify({});
-  const { firstName, lastName, adress, phoneNumber } = infoAvailable && info;
+  const { firstName, lastName, adress } = infoAvailable && info;
   const userEmail = useSelector((state) => state.user.userEmail);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -25,7 +28,6 @@ const ConfirmOrderForm = () => {
     firstName: "",
     lastName: "",
     adress: "",
-    phoneNumber: "",
   };
 
   const initialForm = infoAvailable
@@ -33,11 +35,12 @@ const ConfirmOrderForm = () => {
         firstName,
         lastName,
         adress,
-        phoneNumber,
       }
     : emptyForm;
 
   const [formState, setFormState] = useState(initialForm);
+  const [countryState, setCountryState] = useState({ country: "", region: "" });
+  const [phoneNumber, setPhoneNumber] = useState(null);
 
   const handleChangeForm = (e) => {
     setFormState((prev) => ({
@@ -51,9 +54,13 @@ const ConfirmOrderForm = () => {
       formState.firstName,
       formState.lastName,
       formState.adress,
-      formState.phoneNumber,
       userEmail,
-    ].every(Boolean) && Number(formState.phoneNumber);
+      phoneNumber,
+      countryState.country,
+      countryState.region,
+    ].every(Boolean) &&
+    Number(phoneNumber) &&
+    isPossiblePhoneNumber(phoneNumber);
 
   const handleSubmitInfo = async () => {
     if (canSumbit) {
@@ -69,7 +76,7 @@ const ConfirmOrderForm = () => {
       }
       dispatch(
         productsOrdered({
-          userInfo: { ...formState, userEmail },
+          userInfo: { ...formState, userEmail, ...countryState, phoneNumber },
           orderedInCart,
         })
       );
@@ -78,6 +85,7 @@ const ConfirmOrderForm = () => {
       if (currentOrdered.length === 0) {
         dispatch(postOrdered(token));
       } else {
+        console.log(countryState);
         dispatch(updateOrder(false));
       }
     }
@@ -87,8 +95,8 @@ const ConfirmOrderForm = () => {
     <div className="bg-img">
       <div className="box-confirm">
         <form className="add-product-form" onSubmit={(e) => e.preventDefault()}>
+          <label className="info-title">Customer info</label>
           <div className="input-container">
-            <label>Customer info</label>
             <br />
             <input
               type="text"
@@ -120,13 +128,12 @@ const ConfirmOrderForm = () => {
             />
           </div>
           <div className="input-container">
-            <input
-              type="text"
-              placeholder="phone number"
-              name="phoneNumber"
-              onChange={handleChangeForm}
-              className="number"
-              value={formState.phoneNumber}
+            <PhoneNumberInput number={phoneNumber} setNumber={setPhoneNumber} />
+          </div>
+          <div className="input-container">
+            <ConutryPicker
+              countryState={countryState}
+              setCountryState={setCountryState}
             />
           </div>
           <button onClick={handleSubmitInfo} className="button-85">

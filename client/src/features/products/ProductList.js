@@ -6,7 +6,7 @@ import { fetchProducts } from "./productsSlice";
 import React, { useContext, useEffect, useRef } from "react";
 import { getAllSellers } from "../sellers/sellersSlice";
 import "transition-style";
-import bagSrc from "../../components/shoppingBag.jpg";
+import bagSrc from "../../components/images/shoppingBag.jpg";
 import { CategoriesContext } from "../../contexts/categoriesContext";
 import Loader from "../../components/Loader";
 import { fetchReviews, getAllReviews } from "../reviews/reviewSlice";

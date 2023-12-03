@@ -2354,3 +2354,13 @@ input[type="radio"] {
   background-color: #0064bd;
   box-shadow: none;
 }
+
+.info-title {
+  text-align: center;
+  color: white;
+  font-size: 20px;
+}
+
+.country {
+  width: 150px;
+}

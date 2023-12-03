@@ -40,7 +40,10 @@ const Navbar = () => {
                   <h2 className="welcome">
                     Logged as {user.substring(0, user.indexOf("@"))}
                   </h2>
-                  <button className="button-81" onClick={handleLogout}>
+                  <button
+                    className="button-81"
+                    onClick={() => handleLogout("")}
+                  >
                     Logout
                   </button>
                 </>
