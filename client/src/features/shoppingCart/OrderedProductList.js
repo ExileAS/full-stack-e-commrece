@@ -11,7 +11,7 @@ import {
 } from "./shoppingCartSlice";
 import ProductExcerpt from "../products/ProductExcerpt";
 import { useLayoutEffect, useState, useEffect, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { fetchProducts } from "../products/productsSlice";
 import { setOrderId } from "../userRegister/userSlice";
 import { Spinner } from "../../components/Spinner";
@@ -32,6 +32,7 @@ const OrderedProductsList = ({ confirmed }) => {
   const [disableCheckout, setDisableCheckout] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { paymentMethod } = useParams();
 
   useEffect(() => {
     if (totalCost > 0) {
@@ -108,7 +109,6 @@ const OrderedProductsList = ({ confirmed }) => {
         dispatch(setOrderId(data.id));
         window.location.assign(`${data.url}`);
       }
-      console.log(data);
     } catch (err) {
       console.log(err);
     }
@@ -116,7 +116,19 @@ const OrderedProductsList = ({ confirmed }) => {
 
   return (
     <div className="ordered-content" transition-style="in:square:center">
-      {confirmId && totalCost > 0 && !confirmed && <b>Order ID: {confirmId}</b>}
+      {productsUnconfirmed.length > 0 && (
+        <div className="title">
+          {" "}
+          {confirmId && totalCost > 0 && !confirmed && (
+            <b>Order ID: {confirmId}</b>
+          )}
+          {paymentMethod === "checkout" && (
+            <div>
+              <h3>proceed to checkout to confirm</h3>
+            </div>
+          )}
+        </div>
+      )}
       {content}
       <div>
         {totalCost > 0 ? (

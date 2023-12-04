@@ -1,4 +1,4 @@
-const OrderedProducts = require("../models/oderedProductsModel");
+const { OrderedProductModel } = require("../models/oderedProductsModel");
 const crypto = require("crypto");
 const {
   handleAddMain,
@@ -18,7 +18,7 @@ module.exports.ordered_post = async (req, res) => {
   const randomId = crypto.randomBytes(16).toString("hex");
   const confirmId = randomId;
 
-  const productsOrdered = await OrderedProducts.create({
+  const productsOrdered = await OrderedProductModel.create({
     confirmId,
     list,
     customerInfo,
@@ -34,11 +34,11 @@ module.exports.ordered_post = async (req, res) => {
 module.exports.retreive_ordered_post = async (req, res) => {
   const { userEmail } = req.body;
   try {
-    const orderedByUser = await OrderedProducts.findOne({
+    const orderedByUser = await OrderedProductModel.findOne({
       "customerInfo.userEmail": userEmail,
     });
     if (orderedByUser && orderedByUser.customerPayed) {
-      const unpaidOrder = await OrderedProducts.findOne({
+      const unpaidOrder = await OrderedProductModel.findOne({
         "customerInfo.userEmail": userEmail,
         customerPayed: false,
       });
@@ -84,10 +84,11 @@ module.exports.retreive_ordered_post = async (req, res) => {
 
 module.exports.update_order_patch = async (req, res) => {
   const { confirmId, list, customerInfo, payedOrder } = req.body;
+
   const orderUpdates = { list, customerInfo, customerPayed: payedOrder };
   const updates = {};
   try {
-    const orderedByUser = await OrderedProducts.findOne({
+    const orderedByUser = await OrderedProductModel.findOne({
       confirmId: confirmId,
     });
 
@@ -99,7 +100,7 @@ module.exports.update_order_patch = async (req, res) => {
         updates[id] = updates[id] ? updates[id] - count : -count;
       });
       if (!payedOrder) handlePatchDeleteMain(updates);
-      const res = await OrderedProducts.findOneAndUpdate(
+      const res = await OrderedProductModel.findOneAndUpdate(
         { confirmId: confirmId },
         { $set: orderUpdates },
         { new: true, upsert: true }
@@ -118,7 +119,7 @@ module.exports.order_delete = async (req, res) => {
   const updates = {};
 
   try {
-    const orderedByUser = await OrderedProducts.findOne({
+    const orderedByUser = await OrderedProductModel.findOne({
       confirmId: confirmId,
     });
 
@@ -127,7 +128,7 @@ module.exports.order_delete = async (req, res) => {
         updates[id] = count;
       });
       handlePatchDeleteMain(updates);
-      const res = await OrderedProducts.deleteOne({ confirmId: confirmId });
+      const res = await OrderedProductModel.deleteOne({ confirmId: confirmId });
     } else {
       console.log("no order found");
     }

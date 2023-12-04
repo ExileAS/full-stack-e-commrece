@@ -25,14 +25,20 @@ const Navbar = () => {
                   Selected
                 </Link>
               )}
-              <Link to={"/products/ordered"}>Ordered</Link>
+              <Link to={"/products/ordered/checkout"}>Ordered</Link>
+              {confirmed && logged && (
+                <Link to={"/products/ordered/confirmed/id"}>Confirmed</Link>
+              )}
               {!logged ? (
                 <>
                   <Link to={"/signup"}>
-                    <button className="button-33">Sign Up</button>
+                    <button className="button-33">Signup</button>
                   </Link>
                   <Link to={"/login"}>
-                    <button className="button-33">Log in</button>
+                    <button className="button-33">Login</button>
+                  </Link>
+                  <Link to={"/signupSeller"}>
+                    <button className="button-33">Seller Signup</button>
                   </Link>
                 </>
               ) : (
@@ -47,9 +53,6 @@ const Navbar = () => {
                     Logout
                   </button>
                 </>
-              )}
-              {confirmed && logged && (
-                <Link to={"/products/ordered/:id"}>Confirmed</Link>
               )}
             </div>
           </div>

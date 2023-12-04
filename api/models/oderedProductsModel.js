@@ -15,9 +15,19 @@ const OrderedProductSchema = new Schema(
     },
     delivered: {
       type: Boolean,
+      default: false,
     },
     customerPayed: {
       type: Boolean,
+      default: false,
+    },
+    shipmentStartedAt: {
+      type: Date,
+      default: null,
+    },
+    total: {
+      type: Number,
+      default: null,
     },
   },
   { timestamps: true }
@@ -28,4 +38,4 @@ const OrderedProductModel = mongoose.model(
   OrderedProductSchema
 );
 
-module.exports = OrderedProductModel;
+module.exports = { OrderedProductModel, OrderedProductSchema };

@@ -22,6 +22,7 @@ import { useSelector } from "react-redux";
 import useLogout from "./features/userRegister/useLogout";
 import useIdleTimeout from "./features/userRegister/useIdleTimeout";
 import { CsrfContextLayout } from "./contexts/csrfTokenContext";
+
 function App() {
   const currEmail = useSelector((state) => state.user.userEmail);
   const logoutUser = useLogout();
@@ -96,15 +97,16 @@ function App() {
             <Route exact path="/confirm-order" element={<ConfirmOrderForm />} />
             <Route
               exact
-              path="/products/ordered"
+              path="/products/ordered/:paymentMethod"
               element={<OrderedProductsList />}
             />
             <Route
               exact
-              path="/products/ordered/:id"
+              path="/products/ordered/confirmed/:id"
               element={<PaymentConfirmed />}
             />
             <Route exact path="/signup" element={<SignUp />} />
+            <Route exact path="/signupSeller" element={<SignUp />} />
             <Route exact path="/login" element={<Login />} />
             <Route exact path="/login/:err" element={<Login />} />
           </Route>

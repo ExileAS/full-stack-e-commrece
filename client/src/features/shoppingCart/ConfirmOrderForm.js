@@ -21,6 +21,7 @@ const ConfirmOrderForm = () => {
   const currentOrdered = useSelector(selectAllOrdered);
   const infoAvailable = JSON.stringify(info) !== JSON.stringify({});
   const { firstName, lastName, adress } = infoAvailable && info;
+  console.log(info);
   const userEmail = useSelector((state) => state.user.userEmail);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -28,6 +29,7 @@ const ConfirmOrderForm = () => {
     firstName: "",
     lastName: "",
     adress: "",
+    paymentMethod: "",
   };
 
   const initialForm = infoAvailable
@@ -58,6 +60,7 @@ const ConfirmOrderForm = () => {
       phoneNumber,
       countryState.country,
       countryState.region,
+      formState.paymentMethod,
     ].every(Boolean) &&
     Number(phoneNumber) &&
     isPossiblePhoneNumber(phoneNumber);
@@ -81,11 +84,10 @@ const ConfirmOrderForm = () => {
         })
       );
       dispatch(countNewOnhand(orderedInCart));
-      navigate("/products/ordered");
+      navigate(`/products/ordered/${formState.paymentMethod}`);
       if (currentOrdered.length === 0) {
         dispatch(postOrdered(token));
       } else {
-        console.log(countryState);
         dispatch(updateOrder(false));
       }
     }
@@ -126,6 +128,16 @@ const ConfirmOrderForm = () => {
               className="adress"
               value={formState.adress}
             />
+          </div>
+          <div className="input-container">
+            <h5 className="info-title">Payment Method</h5>
+            <select name="paymentMethod" onChange={handleChangeForm}>
+              <option value="">--</option>
+              <option disabled value="onReceiving">
+                on Receiving ☆VIP
+              </option>
+              <option value="checkout">checkout</option>
+            </select>
           </div>
           <div className="input-container">
             <PhoneNumberInput number={phoneNumber} setNumber={setPhoneNumber} />

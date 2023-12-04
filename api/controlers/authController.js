@@ -8,12 +8,18 @@ const {
 const { createSignupInfo } = require("../utils/createUserInfo");
 
 const signup_post = async (req, res) => {
-  const { email, password, sub, email_verified } = req.body;
+  const { email, password, sub, email_verified, isSeller, phoneNumber } =
+    req.body;
 
   try {
     if (email && password) {
       const { info, send } = createSignupInfo(email, password);
-      const user = await userModel.create({ ...info, password });
+      const user = await userModel.create({
+        ...info,
+        password,
+        role: isSeller ? "seller" : "customer",
+        phoneNumber: isSeller ? phoneNumber : null,
+      });
       send();
       const { token, name, options } = createTempToken(user._id);
       res.cookie(name, token, options);
@@ -37,7 +43,13 @@ const login_post = async (req, res) => {
       const { token, name, options } = createToken(user._id);
       res.cookie(name, token, options);
       res.cookie("jwtTemp", "", { maxAge: 1 });
-      res.status(200).json({ user: user.email });
+      res
+        .status(200)
+        .json({
+          user: user.email,
+          purchaseCount: user.purchaseCount,
+          totalPayments: user.totalPayments,
+        });
     } else {
       const { token, name, options } = createTempToken(user._id);
       res.cookie(name, token, options);

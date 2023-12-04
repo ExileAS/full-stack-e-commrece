@@ -8,6 +8,7 @@ const initialState = {
   orderInfo: "undelivered",
   payment: false,
   payedOrder: [],
+  payedId: null,
   isSplit: false,
 };
 
@@ -15,7 +16,6 @@ export const postOrdered = createAsyncThunk(
   "shoppingCart/postOrdered",
   async (token, { getState }) => {
     const state = getState();
-    console.log(state.shoppingCart.customerInfo);
     try {
       const res = await fetch("/api/post-ordered", {
         method: "POST",
@@ -207,7 +207,6 @@ const shoppingCartSlice = createSlice({
         );
       });
       state.payedOrder = filtered;
-
       state.ordered = [];
       return state;
     },
@@ -216,12 +215,14 @@ const shoppingCartSlice = createSlice({
     builder
       .addCase(postOrdered.fulfilled, (state, action) => {
         state.confirmId = action.payload;
+        console.log(state.confirmId);
         return state;
       })
       .addCase(retrieveOrderedList.fulfilled, (state, action) => {
         state.customerInfo = action.payload.customerInfo;
         state.confirmId = action.payload.orderId;
         state.payedId = action.payload.payedId;
+        console.log(state.payedId, state.confirmId);
         if (action.payload.isSplit) {
           state.isSplit = true;
           state.ordered = action.payload.orderedUnpaid;
@@ -272,4 +273,5 @@ export const getTotalCostOrdered = (state) =>
     (acc, item) => acc + item.price * item.count,
     0
   );
+
 export const getCartLength = (state) => state.shoppingCart.cart.length;

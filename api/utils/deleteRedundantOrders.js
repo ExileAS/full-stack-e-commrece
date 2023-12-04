@@ -1,9 +1,9 @@
-const OrderedProducts = require("../models/oderedProductsModel");
+const { OrderedProductModel } = require("../models/oderedProductsModel");
 
 const handleDeleteRedundant = async (info, list, confirmId) => {
   const { userEmail } = info;
   try {
-    const existingOrder = await OrderedProducts.findOne({
+    const existingOrder = await OrderedProductModel.findOne({
       "customerInfo.userEmail": userEmail,
     });
     if (!existingOrder) return;
@@ -20,7 +20,7 @@ const handleDeleteRedundant = async (info, list, confirmId) => {
 
     if (count === existingList.length) {
       //console.log("deleted");
-      const res = await OrderedProducts.deleteOne({ _id: existingId });
+      const res = await OrderedProductModel.deleteOne({ _id: existingId });
     }
   } catch (error) {
     console.log(error);

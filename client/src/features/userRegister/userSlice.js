@@ -8,6 +8,8 @@ const initialState = {
   google: false,
   userName: null,
   tempEmail: null,
+  purchaseCount: 0,
+  totalPayments: 0,
 };
 
 const userSlice = createSlice({
@@ -24,11 +26,13 @@ const userSlice = createSlice({
     login(state, action) {
       state.loggedIn = true;
       state.tempId = "";
-      state.userEmail = action.payload;
+      state.userEmail = action.payload.user;
       state.userName = state.userEmail.substring(
         0,
         state.userEmail.indexOf("@")
       );
+      state.purchaseCount = action.payload.purchaseCount;
+      state.totalPayments = action.payload.totalPayments;
       return state;
     },
     setOrderId(state, action) {

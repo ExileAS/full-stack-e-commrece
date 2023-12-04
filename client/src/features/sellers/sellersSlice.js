@@ -3,6 +3,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 const initialState = {
   status: "idle",
   sellers: [],
+  currIsSeller: false,
 };
 
 export const getAllSellers = createAsyncThunk("getAllSellers", async () => {

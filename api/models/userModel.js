@@ -2,6 +2,16 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const { default: isEmail } = require("validator/lib/isemail");
 const bcrypt = require("bcrypt");
+const order = new Schema({
+  orderId: {
+    type: String,
+    required: true,
+  },
+  list: {
+    type: Array,
+    default: [],
+  },
+});
 
 const userSchema = new Schema({
   email: {
@@ -68,6 +78,19 @@ const userSchema = new Schema({
     type: String,
     default: "customer",
   },
+  phoneNumber: {
+    type: Number,
+    default: null,
+  },
+  purchaseCount: {
+    type: Number,
+    default: 0,
+  },
+  totalPayments: {
+    type: Number,
+    default: 0,
+  },
+  orders: [order],
 });
 
 userSchema.pre("save", async function (next) {
