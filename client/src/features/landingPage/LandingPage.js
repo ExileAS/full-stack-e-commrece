@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import logo from "../../components/images/shoppingBag.jpg";
 import Loader from "../../components/Loader";
 import { getAllSellers } from "../sellers/sellersSlice";
+import { fetchReviews } from "../reviews/reviewSlice";
 
 const LandingPage = () => {
   const naviate = useNavigate();
@@ -12,8 +13,11 @@ const LandingPage = () => {
 
   useRunOnce({
     fn: async () => {
-      await dispatch(fetchProducts()).unwrap();
-      await dispatch(getAllSellers()).unwrap();
+      await Promise.all([
+        dispatch(fetchProducts()).unwrap(),
+        dispatch(getAllSellers()).unwrap(),
+        dispatch(fetchReviews()).unwrap(),
+      ]);
       naviate("/products");
     },
     sessionKey: "1",
