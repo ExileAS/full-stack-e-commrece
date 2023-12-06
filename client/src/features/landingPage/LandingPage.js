@@ -4,6 +4,7 @@ import { fetchProducts } from "../products/productsSlice";
 import { useDispatch } from "react-redux";
 import logo from "../../components/images/shoppingBag.jpg";
 import Loader from "../../components/Loader";
+import { getAllSellers } from "../sellers/sellersSlice";
 
 const LandingPage = () => {
   const naviate = useNavigate();
@@ -12,6 +13,7 @@ const LandingPage = () => {
   useRunOnce({
     fn: async () => {
       await dispatch(fetchProducts()).unwrap();
+      await dispatch(getAllSellers()).unwrap();
       naviate("/products");
     },
     sessionKey: "1",

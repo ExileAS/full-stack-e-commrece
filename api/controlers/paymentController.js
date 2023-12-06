@@ -34,6 +34,7 @@ module.exports.payment_post = async (req, res) => {
 module.exports.confirm_payment = async (req, res) => {
   console.log("CONFIRMING!");
   const { confirmId, currUser } = req.body;
+  console.log(confirmId);
   try {
     const order = await OrderedProductModel.findOneAndUpdate(
       { confirmId: confirmId, "customerInfo.userEmail": currUser },
@@ -45,7 +46,10 @@ module.exports.confirm_payment = async (req, res) => {
       }
     );
 
-    res.status(200).json({ confirm: "payment confirmed" });
+    res.status(200).json({
+      confirmId,
+      startedAt: order.shipmentStartedAt,
+    });
     const updatedOrder = await OrderedProductModel.findById({ _id: order._id });
     const totalPayment = updatedOrder.list.reduce(
       (acc, item) => acc + item.price * item.count,
@@ -59,32 +63,39 @@ module.exports.confirm_payment = async (req, res) => {
     const user = await userModel.findOne({ email: currUser });
     // console.log("user: ", user.orders, "updated: ", updatedPaymentOrder);
     const existingOrder = user?.orders.find(
-      (order) => order.orderId === updatedPaymentOrder.confirmId
+      (order) => order.orderId === confirmId
     );
-    // console.log(existingOrder);
+
     const newOrder = {
-      orderId: updatedPaymentOrder.confirmId,
+      orderId: confirmId,
       list: updatedPaymentOrder.list,
     };
-    console.log(updatedPaymentOrder.list);
+
+    let userOrder;
 
     if (existingOrder) {
       console.log("existing");
-      await userModel.findOneAndUpdate(
+      userOrder = await userModel.findOneAndUpdate(
         { email: currUser },
         { $set: { "orders.$[order]": newOrder } },
         { arrayFilters: [{ "order.orderId": confirmId }] }
       );
     } else {
-      console.log("updating");
-      await userModel.findOneAndUpdate(
+      console.log("new");
+      userOrder = await userModel.findOneAndUpdate(
         { email: currUser },
         {
           $push: { orders: newOrder },
         }
       );
+
+      await userModel.findByIdAndUpdate(
+        { _id: userOrder._id },
+        { $inc: { purchaseCount: 1 } }
+      );
     }
   } catch (err) {
+    // res.status(400).json({ err });
     console.log(err);
   }
 };

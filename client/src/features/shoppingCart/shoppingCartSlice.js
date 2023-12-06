@@ -15,6 +15,7 @@ const initialState = {
 export const postOrdered = createAsyncThunk(
   "shoppingCart/postOrdered",
   async (token, { getState }) => {
+    console.log("POSTING!");
     const state = getState();
     try {
       const res = await fetch("/api/post-ordered", {
@@ -62,7 +63,7 @@ export const updateOrder = createAsyncThunk(
       ? state.shoppingCart.ordered
       : state.shoppingCart.payedOrder;
     try {
-      fetch("/api/updateOrder", {
+      const res = await fetch("/api/updateOrder", {
         method: "PATCH",
         body: JSON.stringify({
           customerInfo: state.shoppingCart.customerInfo,
@@ -73,6 +74,8 @@ export const updateOrder = createAsyncThunk(
         }),
         headers: { "Content-Type": "application/json" },
       });
+      const data = res.json();
+      return data;
     } catch (err) {
       console.log(err);
     }
@@ -172,10 +175,7 @@ const shoppingCartSlice = createSlice({
       }
       product.count--;
     },
-    clearCustomerInfo(state, action) {
-      state.customerInfo = {};
-      return state;
-    },
+    clearCustomerInfo: () => initialState,
     createOrderedList(state, action) {
       state.ordered = action.payload;
       return state;
@@ -210,30 +210,38 @@ const shoppingCartSlice = createSlice({
       state.ordered = [];
       return state;
     },
+    setPayedId(state, action) {
+      state.payedId = action.payload;
+      return state;
+    },
   },
   extraReducers(builder) {
     builder
       .addCase(postOrdered.fulfilled, (state, action) => {
         state.confirmId = action.payload;
-        console.log(state.confirmId);
+        return state;
+      })
+      .addCase(updateOrder.fulfilled, (state, action) => {
+        state.payedId = action.payload.newId || state.payedId;
         return state;
       })
       .addCase(retrieveOrderedList.fulfilled, (state, action) => {
         state.customerInfo = action.payload.customerInfo;
-        state.confirmId = action.payload.orderId;
-        state.payedId = action.payload.payedId;
-        console.log(state.payedId, state.confirmId);
         if (action.payload.isSplit) {
           state.isSplit = true;
           state.ordered = action.payload.orderedUnpaid;
           state.payedOrder = action.payload.orderedPaid;
+          state.confirmId = action.payload.orderId;
+          state.payedId = action.payload.payedId;
           return state;
         }
         if (action.payload.payed) {
           state.payedOrder = action.payload.ordered;
+          state.payedId = action.payload.orderId;
           state.isSplit = false;
         } else {
           state.ordered = action.payload.ordered;
+          state.confirmId = action.payload.orderId;
           state.isSplit = false;
         }
         return state;
@@ -254,6 +262,7 @@ export const {
   clearCustomerInfo,
   createOrderedList,
   confirmPayment,
+  setPayedId,
 } = shoppingCartSlice.actions;
 export const selectAllInCart = (state) => state.shoppingCart.cart;
 export const getTotalCost = (state) =>

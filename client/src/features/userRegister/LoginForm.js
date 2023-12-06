@@ -7,8 +7,8 @@ import {
 } from "../shoppingCart/shoppingCartSlice";
 import GoogleReg from "./GoogleReg";
 import { useNavigate, useParams } from "react-router-dom";
-import Timer from "../../components/Timer";
 import { csrfTokenContext } from "../../contexts/csrfTokenContext";
+import Timer from "../../components/Timer";
 
 const Login = () => {
   const token = useContext(csrfTokenContext);
@@ -51,7 +51,6 @@ const Login = () => {
           dispatch(setTempEmail(data.unverifiedEmail));
         }
         if (data.user) {
-          console.log(data);
           dispatch(login(data));
           navigate("/products");
           dispatch(retrieveOrderedList(data.user));

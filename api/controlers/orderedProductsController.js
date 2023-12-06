@@ -100,12 +100,26 @@ module.exports.update_order_patch = async (req, res) => {
         updates[id] = updates[id] ? updates[id] - count : -count;
       });
       if (!payedOrder) handlePatchDeleteMain(updates);
-      const res = await OrderedProductModel.findOneAndUpdate(
+      const response = await OrderedProductModel.findOneAndUpdate(
         { confirmId: confirmId },
         { $set: orderUpdates },
         { new: true, upsert: true }
       );
-      if (payedOrder) handleDeleteRedundant(customerInfo, list, confirmId);
+      // console.log(res);
+      if (payedOrder) {
+        const newId = await handleDeleteRedundant(
+          customerInfo,
+          list,
+          confirmId
+        );
+        console.log("NEWID: ", newId);
+        const response = await OrderedProductModel.findOneAndUpdate(
+          { confirmId: confirmId },
+          { $set: { confirmId: newId } }
+        );
+        console.log(newId);
+        res.status(200).json({ newId });
+      }
     } else {
       console.log("no order found");
     }

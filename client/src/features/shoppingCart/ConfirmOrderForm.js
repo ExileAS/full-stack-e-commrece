@@ -21,7 +21,6 @@ const ConfirmOrderForm = () => {
   const currentOrdered = useSelector(selectAllOrdered);
   const infoAvailable = JSON.stringify(info) !== JSON.stringify({});
   const { firstName, lastName, adress } = infoAvailable && info;
-  console.log(info);
   const userEmail = useSelector((state) => state.user.userEmail);
   const dispatch = useDispatch();
   const navigate = useNavigate();
