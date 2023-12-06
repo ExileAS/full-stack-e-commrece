@@ -32,9 +32,8 @@ module.exports.payment_post = async (req, res) => {
 };
 
 module.exports.confirm_payment = async (req, res) => {
-  console.log("CONFIRMING!");
   const { confirmId, currUser } = req.body;
-  console.log(confirmId);
+
   try {
     const order = await OrderedProductModel.findOneAndUpdate(
       { confirmId: confirmId, "customerInfo.userEmail": currUser },
@@ -46,11 +45,11 @@ module.exports.confirm_payment = async (req, res) => {
       }
     );
 
-    res.status(200).json({
-      confirmId,
-      startedAt: order.shipmentStartedAt,
-    });
     const updatedOrder = await OrderedProductModel.findById({ _id: order._id });
+    res.status(200).json({
+      startedAt: updatedOrder.shipmentStartedAt.toUTCString(),
+    });
+    console.log(order);
     const totalPayment = updatedOrder.list.reduce(
       (acc, item) => acc + item.price * item.count,
       0
@@ -69,6 +68,7 @@ module.exports.confirm_payment = async (req, res) => {
     const newOrder = {
       orderId: confirmId,
       list: updatedPaymentOrder.list,
+      total: totalPayment,
     };
 
     let userOrder;
@@ -89,9 +89,17 @@ module.exports.confirm_payment = async (req, res) => {
         }
       );
 
+      const totalUserPayments = userOrder.orders.reduce(
+        (acc, val) => acc + val.total,
+        0
+      );
+
       await userModel.findByIdAndUpdate(
         { _id: userOrder._id },
-        { $inc: { purchaseCount: 1 } }
+        {
+          $inc: { purchaseCount: 1 },
+          $set: { totalPayments: totalUserPayments },
+        }
       );
     }
   } catch (err) {

@@ -11,6 +11,10 @@ const order = new Schema({
     type: Array,
     default: [],
   },
+  total: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const userSchema = new Schema({

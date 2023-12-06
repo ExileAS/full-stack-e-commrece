@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import OrderedProductsList from "./OrderedProductList";
 import { useDispatch, useSelector } from "react-redux";
-import { confirmPayment, setPayedId, updateOrder } from "./shoppingCartSlice";
+import { confirmPayment, setStartedAt, updateOrder } from "./shoppingCartSlice";
 import { useParams } from "react-router-dom";
 import { setOrderId } from "../userRegister/userSlice";
 
@@ -9,9 +9,9 @@ const PaymentConfirmed = () => {
   const confirmId = useSelector(
     (state) => state.shoppingCart.payedId || state.shoppingCart.confirmId
   );
-  const test = useSelector((state) => state.shoppingCart.confirmId);
-  const test2 = useSelector((state) => state.shoppingCart.payedId);
-  console.log(test, test2);
+  const startedAt = useSelector(
+    (state) => state.shoppingCart.shipmentStartedAt
+  );
   const orderId = useSelector((state) => state.user.userOrderId);
   const currUser = useSelector((state) => state.user.userEmail);
   const dispatch = useDispatch();
@@ -34,11 +34,13 @@ const PaymentConfirmed = () => {
           body: JSON.stringify({ confirmId, currUser }),
           headers: { "Content-Type": "application/json" },
         });
-        const data = res.json();
-        if (data.err) setConfirmErr(data.err);
-        if (data.confirmId) setPayedId(data.confirmId);
+        const data = await res.json();
+        console.log(data);
+        if (data.err)
+          setConfirmErr(data.err || "unknown error try again later");
+        if (data.startedAt) dispatch(setStartedAt(data.startedAt));
       } catch (err) {
-        setConfirmErr(err);
+        setConfirmErr(err.message);
       }
     }
   }, [currUser, confirmId, dispatch, id, orderId]);
@@ -47,9 +49,11 @@ const PaymentConfirmed = () => {
     <div>
       <OrderedProductsList confirmed={true} />
       <h2 className="payment-confirm">Payment confirmed</h2>
-      {!confirmErr && <div>shipment started at</div>}
+      {!confirmErr && (
+        <div className="payment-confirm">shipment started at {startedAt}</div>
+      )}
       <b className="payment-confirm">Order Id: {confirmId}</b>
-      <h3>{confirmErr}</h3>
+      <h3 className="error">{confirmErr}</h3>
     </div>
   );
 };
