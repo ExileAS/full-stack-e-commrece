@@ -6,6 +6,7 @@ import {
   productsOrdered,
   selectAllInCart,
   selectAllOrdered,
+  setStartedAt,
   updateOrder,
 } from "./shoppingCartSlice";
 import { countNewOnhand } from "../products/productsSlice";
@@ -42,6 +43,7 @@ const ConfirmOrderForm = () => {
   const [formState, setFormState] = useState(initialForm);
   const [countryState, setCountryState] = useState({ country: "", region: "" });
   const [phoneNumber, setPhoneNumber] = useState(null);
+  const verifiedUser = useSelector((state) => state.user.verifiedUser);
 
   const handleChangeForm = (e) => {
     setFormState((prev) => ({
@@ -85,7 +87,10 @@ const ConfirmOrderForm = () => {
       dispatch(countNewOnhand(orderedInCart));
       navigate(`/products/ordered/${formState.paymentMethod}`);
       if (currentOrdered.length === 0) {
-        dispatch(postOrdered(token));
+        dispatch(postOrdered({ token, verifiedUser }));
+        if (verifiedUser && formState.paymentMethod === "onReceiving") {
+          dispatch(setStartedAt(new Date(Date.now()).toUTCString()));
+        }
       } else {
         dispatch(updateOrder(false));
       }
@@ -132,7 +137,7 @@ const ConfirmOrderForm = () => {
             <h5 className="info-title">Payment Method</h5>
             <select name="paymentMethod" onChange={handleChangeForm}>
               <option value="">--</option>
-              <option disabled value="onReceiving">
+              <option disabled={!verifiedUser} value="onReceiving">
                 on Receiving ☆VIP
               </option>
               <option value="checkout">checkout</option>

@@ -6,7 +6,7 @@ import useLogout from "../features/userRegister/useLogout";
 
 const Navbar = () => {
   const logged = useSelector((state) => state.user.loggedIn);
-  const user = useSelector((state) => state.user.userEmail);
+  const user = useSelector((state) => state.user.userName);
   const selected = useSelector(getAllSelected);
   const confirmed = useSelector(selectAllConfirmed)?.length > 0;
   const handleLogout = useLogout();
@@ -43,9 +43,7 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
-                  <h2 className="welcome">
-                    Logged as {user.substring(0, user.indexOf("@"))}
-                  </h2>
+                  <h2 className="welcome">Logged as {user}</h2>
                   <button
                     className="button-81"
                     onClick={() => handleLogout("")}

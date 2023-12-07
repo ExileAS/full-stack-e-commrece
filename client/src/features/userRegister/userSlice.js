@@ -10,6 +10,7 @@ const initialState = {
   tempEmail: null,
   purchaseCount: 0,
   totalPayments: 0,
+  verifiedUser: false,
 };
 
 const userSlice = createSlice({
@@ -27,12 +28,15 @@ const userSlice = createSlice({
       state.loggedIn = true;
       state.tempId = "";
       state.userEmail = action.payload.user;
-      state.userName = state.userEmail.substring(
-        0,
-        state.userEmail.indexOf("@")
-      );
       state.purchaseCount = action.payload.purchaseCount;
       state.totalPayments = action.payload.totalPayments;
+      state.verifiedUser =
+        action.payload.purchaseCount >= 3 &&
+        action.payload.totalPayments / 100 >= 3000;
+      state.userName =
+        state.userEmail.substring(0, state.userEmail.indexOf("@")) +
+        (state.verifiedUser ? "☆" : "");
+
       return state;
     },
     setOrderId(state, action) {

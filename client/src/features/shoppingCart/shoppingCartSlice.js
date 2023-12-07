@@ -15,7 +15,7 @@ const initialState = {
 
 export const postOrdered = createAsyncThunk(
   "shoppingCart/postOrdered",
-  async (token, { getState }) => {
+  async ({ token, verifiedUser }, { getState }) => {
     console.log("POSTING!");
     const state = getState();
     try {
@@ -24,6 +24,7 @@ export const postOrdered = createAsyncThunk(
         body: JSON.stringify({
           list: state.shoppingCart.ordered,
           customerInfo: state.shoppingCart.customerInfo,
+          verifiedUser,
         }),
         headers: { "Content-Type": "application/json", "csrf-token": token },
       });

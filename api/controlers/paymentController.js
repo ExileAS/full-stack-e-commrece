@@ -35,12 +35,18 @@ module.exports.confirm_payment = async (req, res) => {
   const { confirmId, currUser } = req.body;
 
   try {
+    const original = await OrderedProductModel.findOne({
+      confirmId: confirmId,
+      "customerInfo.userEmail": currUser,
+    });
     const order = await OrderedProductModel.findOneAndUpdate(
       { confirmId: confirmId, "customerInfo.userEmail": currUser },
       {
         $set: {
           customerPayed: true,
-          shipmentStartedAt: Date.now(),
+          ...(original.shipmentStartedAt !== null
+            ? {}
+            : { shipmentStartedAt: Date.now() }),
         },
       }
     );
@@ -103,6 +109,7 @@ module.exports.confirm_payment = async (req, res) => {
       { _id: userOrder._id },
       { $set: { totalPayments: totalUserPayments } }
     );
+    console.log(totalUserPayments);
   } catch (err) {
     // res.status(400).json({ err });
     console.log(err);

@@ -7,7 +7,7 @@ const {
 const { handleDeleteRedundant } = require("../utils/deleteRedundantOrders");
 
 module.exports.ordered_post = async (req, res) => {
-  const { list, customerInfo } = req.body;
+  const { list, customerInfo, verifiedUser } = req.body;
   const updates = {};
   list.forEach(({ id, onhand }) => {
     updates[id] = onhand;
@@ -24,6 +24,7 @@ module.exports.ordered_post = async (req, res) => {
     customerInfo,
     delivered: false,
     customerPayed: false,
+    shipmentStartedAt: verifiedUser ? Date.now() : null,
   });
   productsOrdered
     .save()

@@ -49,10 +49,10 @@ const PaymentConfirmed = () => {
     <div>
       <OrderedProductsList confirmed={true} />
       <h2 className="payment-confirm">Payment confirmed</h2>
+      <b className="payment-confirm">Order Id: {confirmId}</b>
       {!confirmErr && (
         <div className="payment-confirm">shipment started at {startedAt}</div>
       )}
-      <b className="payment-confirm">Order Id: {confirmId}</b>
       <h3 className="error">{confirmErr}</h3>
     </div>
   );

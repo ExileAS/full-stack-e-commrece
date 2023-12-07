@@ -31,7 +31,7 @@ const handleVerifyErrors = (user, verifyMethod, resend = false) => {
   const validUrl =
     resend || user.verifyURL.expireAt > Date.now() || verifyMethod === "otp";
   if (!validUser || !validOtp || !validUrl) {
-    throw new Error("invalid user status");
+    throw new Error("user or verify method expired");
   }
   if (user.verified) {
     throw new Error("already verified");

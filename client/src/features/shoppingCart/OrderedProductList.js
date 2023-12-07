@@ -26,6 +26,10 @@ const OrderedProductsList = ({ confirmed }) => {
   const status = useSelector((state) => state.products.status);
   const customerInfo = useSelector((state) => state.shoppingCart.customerInfo);
   const confirmId = useSelector((state) => state.shoppingCart.confirmId);
+  const verifiedUser = useSelector((state) => state.user.verifiedUser);
+  const startedAt = useSelector(
+    (state) => state.shoppingCart.shipmentStartedAt
+  );
   const [costAfterDiscount, setCostAfterDiscount] = useState(totalCost);
   const [shippingFee, setShippingFee] = useState(120);
   const [discountRatio, setDiscountRatio] = useState(0);
@@ -125,6 +129,11 @@ const OrderedProductsList = ({ confirmed }) => {
           {paymentMethod === "checkout" && (
             <div>
               <h3>proceed to checkout to confirm</h3>
+            </div>
+          )}
+          {paymentMethod === "onReceiving" && verifiedUser && (
+            <div>
+              <h3>shipment started at {startedAt}</h3>
             </div>
           )}
         </div>
