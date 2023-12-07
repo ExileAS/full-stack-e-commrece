@@ -49,7 +49,6 @@ module.exports.confirm_payment = async (req, res) => {
     res.status(200).json({
       startedAt: updatedOrder.shipmentStartedAt.toUTCString(),
     });
-    console.log(order);
     const totalPayment = updatedOrder.list.reduce(
       (acc, item) => acc + item.price * item.count,
       0
@@ -74,11 +73,9 @@ module.exports.confirm_payment = async (req, res) => {
     let userOrder;
 
     if (existingOrder) {
-      console.log("existing");
       userOrder = await userModel.findOneAndUpdate(
-        { email: currUser },
-        { $set: { "orders.$[order]": newOrder } },
-        { arrayFilters: [{ "order.orderId": confirmId }] }
+        { email: currUser, "orders.orderId": confirmId },
+        { $set: { "orders.$": newOrder } }
       );
     } else {
       console.log("new");
@@ -89,19 +86,23 @@ module.exports.confirm_payment = async (req, res) => {
         }
       );
 
-      const totalUserPayments = userOrder.orders.reduce(
-        (acc, val) => acc + val.total,
-        0
-      );
-
-      await userModel.findByIdAndUpdate(
+      const test = await userModel.findByIdAndUpdate(
         { _id: userOrder._id },
         {
           $inc: { purchaseCount: 1 },
-          $set: { totalPayments: totalUserPayments },
         }
       );
     }
+    const updated = await userModel.findById({ _id: userOrder._id });
+    const totalUserPayments = updated.orders.reduce(
+      (acc, order) => acc + order.total,
+      0
+    );
+
+    await userModel.findByIdAndUpdate(
+      { _id: userOrder._id },
+      { $set: { totalPayments: totalUserPayments } }
+    );
   } catch (err) {
     // res.status(400).json({ err });
     console.log(err);

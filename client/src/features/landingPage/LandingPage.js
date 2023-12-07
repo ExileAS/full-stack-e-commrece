@@ -13,11 +13,15 @@ const LandingPage = () => {
 
   useRunOnce({
     fn: async () => {
-      await Promise.all([
-        dispatch(fetchProducts()).unwrap(),
-        dispatch(getAllSellers()).unwrap(),
-        dispatch(fetchReviews()).unwrap(),
-      ]);
+      try {
+        await Promise.all([
+          dispatch(fetchProducts()).unwrap(),
+          dispatch(getAllSellers()).unwrap(),
+          dispatch(fetchReviews()).unwrap(),
+        ]);
+      } catch (err) {
+        console.log(err);
+      }
       naviate("/products");
     },
     sessionKey: "1",

@@ -109,17 +109,13 @@ module.exports.update_order_patch = async (req, res) => {
       );
       // console.log(res);
       if (payedOrder) {
-        const newId = await handleDeleteRedundant(
-          customerInfo,
-          list,
-          confirmId
-        );
-        console.log("NEWID: ", newId);
+        const newId =
+          (await handleDeleteRedundant(customerInfo, list, confirmId)) ||
+          confirmId;
         const response = await OrderedProductModel.findOneAndUpdate(
           { confirmId: confirmId },
           { $set: { confirmId: newId } }
         );
-        console.log(newId);
         res.status(200).json({ newId });
       }
     } else {
