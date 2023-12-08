@@ -95,6 +95,10 @@ const userSchema = new Schema({
     default: 0,
   },
   orders: [order],
+  encryptedEmail: {
+    type: String,
+    required: true,
+  },
 });
 
 userSchema.pre("save", async function (next) {

@@ -43,13 +43,11 @@ const login_post = async (req, res) => {
       const { token, name, options } = createToken(user._id);
       res.cookie(name, token, options);
       res.cookie("jwtTemp", "", { maxAge: 1 });
-      res
-        .status(200)
-        .json({
-          user: user.email,
-          purchaseCount: user.purchaseCount,
-          totalPayments: user.totalPayments,
-        });
+      res.status(200).json({
+        user: user.email,
+        purchaseCount: user.purchaseCount,
+        totalPayments: user.totalPayments,
+      });
     } else {
       const { token, name, options } = createTempToken(user._id);
       res.cookie(name, token, options);
@@ -65,7 +63,7 @@ const verify_user_url = async (req, res) => {
   const { verifyId, email } = req.params;
   const url = `${process.env.SERVER_URI}/shoppingBag/verifyUser/${verifyId}&${email}`;
   try {
-    const user = await userModel.findOne({ email: email });
+    const user = await userModel.findOne({ encryptedEmail: email });
     handleVerifyErrors(user, "url");
     const verifiedUser = await userModel.findOneAndUpdate(
       { _id: user._id, "verifyURL.url": url },
@@ -125,13 +123,14 @@ const resend_msg = async (req, res) => {
     const user = await userModel.findOne({ email: email });
     handleVerifyErrors(user, "", true);
     const { info, send } = createSignupInfo(email);
-    const { verifyURL, OTP } = info;
+    const { verifyURL, OTP, encryptedEmail } = info;
     const existingUser = await userModel.findOneAndUpdate(
       { _id: user._id, email: email },
       {
         $set: {
-          verifyURL: verifyURL,
-          OTP: OTP,
+          verifyURL,
+          OTP,
+          encryptedEmail,
         },
         $inc: { resendAttempts: 1 },
       }
