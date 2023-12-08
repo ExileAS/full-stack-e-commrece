@@ -18,6 +18,7 @@ import { isPossiblePhoneNumber } from "react-phone-number-input";
 const ConfirmOrderForm = () => {
   const token = useContext(csrfTokenContext);
   const info = useSelector((state) => state.shoppingCart.customerInfo);
+  const userPhoneNumer = useSelector((state) => state.user.phoneNumber);
   const orderedInCart = useSelector(selectAllInCart);
   const currentOrdered = useSelector(selectAllOrdered);
   const infoAvailable = JSON.stringify(info) !== JSON.stringify({});
