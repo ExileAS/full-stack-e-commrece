@@ -73,6 +73,24 @@ const verify_user_url = async (req, res) => {
     );
     if (verifiedUser) {
       res.send("<h2>Verified Succesfully</h2>");
+      const deletedUnwantedFields = await userModel.findOneAndUpdate(
+        {
+          _id: verifiedUser._id,
+          verified: true,
+          encryptedEmail: email,
+        },
+        {
+          $unset: {
+            verifyURL: 1,
+            OTP: 1,
+            verifyAttempts: 1,
+            resendAttempts: 1,
+            encryptedEmail: 1,
+            expireAt: 1,
+          },
+        }
+      );
+      console.log(deletedUnwantedFields);
     } else {
       const failedVerify = await userModel.findOneAndUpdate(
         { email: email },
@@ -101,6 +119,24 @@ const verify_user_otp = async (req, res) => {
     );
     if (verifiedUser) {
       res.status(200).json({ success: "verified successfully!" });
+      const deletedUnwantedFields = await userModel.findOneAndUpdate(
+        {
+          _id: verifiedUser._id,
+          verified: true,
+          email: email,
+        },
+        {
+          $unset: {
+            verifyURL: 1,
+            OTP: 1,
+            verifyAttempts: 1,
+            resendAttempts: 1,
+            encryptedEmail: 1,
+            expireAt: 1,
+          },
+        }
+      );
+      console.log(deletedUnwantedFields);
     } else {
       const failedVerify = await userModel.findOneAndUpdate(
         { email: email },

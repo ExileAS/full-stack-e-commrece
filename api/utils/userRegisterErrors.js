@@ -23,7 +23,8 @@ const handleErrors = (err) => {
 
 const handleVerifyErrors = (user, verifyMethod, resend = false) => {
   if (!user) {
-    throw new Error("user not found!");
+    if (verifyMethod !== "url") throw new Error("user not found!");
+    else throw new Error("already verified");
   }
   const validUser = user.expireAt === null || user.expireAt > Date.now();
   const validOtp =
