@@ -1,8 +1,10 @@
 const { sendToUser, mailOptions } = require("../services/mailer");
 const generateUniqueId = require("generate-unique-id");
 require("dotenv").config();
+const { encrypt } = require("./textEncryption");
 
 const createSignupInfo = (email) => {
+  const encryptedEmail = encrypt(email).encryptedText;
   const URLID = generateUniqueId({
     length: 80,
   });
@@ -10,7 +12,7 @@ const createSignupInfo = (email) => {
     length: 6,
     useLetters: false,
   });
-  const url = `${process.env.SERVER_URI}/shoppingBag/verifyUser/${URLID}&${email}`;
+  const url = `${process.env.SERVER_URI}/shoppingBag/verifyUser/${URLID}&${encryptedEmail}`;
   const info = {
     email,
     verified: false,
@@ -20,6 +22,7 @@ const createSignupInfo = (email) => {
     OTP: {
       otp,
     },
+    encryptedEmail,
   };
   const send = () =>
     sendToUser({
