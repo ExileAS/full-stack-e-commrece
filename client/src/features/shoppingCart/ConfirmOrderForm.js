@@ -70,7 +70,7 @@ const ConfirmOrderForm = () => {
 
   const invalidPhoneNumber =
     formState.paymentMethod === "onReceiving" &&
-    formState.phoneNumber !== info.phoneNumber;
+    formState.phoneNumber !== userPhoneNumer;
 
   const handleSubmitInfo = async () => {
     if (invalidPhoneNumber) {
