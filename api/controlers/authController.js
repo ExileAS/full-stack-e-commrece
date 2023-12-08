@@ -47,6 +47,7 @@ const login_post = async (req, res) => {
         user: user.email,
         purchaseCount: user.purchaseCount,
         totalPayments: user.totalPayments,
+        phoneNumber: user.phoneNumber,
       });
     } else {
       const { token, name, options } = createTempToken(user._id);

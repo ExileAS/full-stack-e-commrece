@@ -84,7 +84,7 @@ const userSchema = new Schema({
     default: "customer",
   },
   phoneNumber: {
-    type: Number,
+    type: String,
     default: null,
   },
   purchaseCount: {
