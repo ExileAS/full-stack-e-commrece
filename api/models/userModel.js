@@ -34,6 +34,9 @@ const userSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  verifiedAt: {
+    type: Date,
+  },
   verifyURL: {
     url: {
       type: String,
@@ -47,9 +50,7 @@ const userSchema = new Schema({
       },
     },
   },
-  verifiedAt: {
-    type: Date,
-  },
+
   OTP: {
     otp: {
       type: Number,
