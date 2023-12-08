@@ -11,6 +11,7 @@ const initialState = {
   purchaseCount: 0,
   totalPayments: 0,
   verifiedUser: false,
+  phoneNumber: null,
 };
 
 const userSlice = createSlice({
@@ -36,7 +37,7 @@ const userSlice = createSlice({
       state.userName =
         state.userEmail.substring(0, state.userEmail.indexOf("@")) +
         (state.verifiedUser ? "☆" : "");
-
+      state.phoneNumber = action.payload.phoneNumber;
       return state;
     },
     setOrderId(state, action) {

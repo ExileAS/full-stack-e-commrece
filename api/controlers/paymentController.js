@@ -26,6 +26,12 @@ module.exports.payment_post = async (req, res) => {
       cancel_url: "http://localhost:3000/products/ordered/checkout",
     });
     res.json({ url: session.url, id });
+    const updated = await order.save();
+    const userPhoneNumber = updated.customerInfo.phoneNumber;
+    await userModel.findOneAndUpdate(
+      { email: updated.customerInfo.userEmail },
+      { $set: { phoneNumber: userPhoneNumber } }
+    );
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -51,7 +57,7 @@ module.exports.confirm_payment = async (req, res) => {
       }
     );
 
-    const updatedOrder = await OrderedProductModel.findById({ _id: order._id });
+    const updatedOrder = await order.save();
     res.status(200).json({
       startedAt: updatedOrder.shipmentStartedAt.toUTCString(),
     });
@@ -89,17 +95,11 @@ module.exports.confirm_payment = async (req, res) => {
         { email: currUser },
         {
           $push: { orders: newOrder },
-        }
-      );
-
-      const test = await userModel.findByIdAndUpdate(
-        { _id: userOrder._id },
-        {
           $inc: { purchaseCount: 1 },
         }
       );
     }
-    const updated = await userModel.findById({ _id: userOrder._id });
+    const updated = await userOrder.save();
     const totalUserPayments = updated.orders.reduce(
       (acc, order) => acc + order.total,
       0

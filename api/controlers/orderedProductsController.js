@@ -55,7 +55,7 @@ module.exports.retreive_ordered_post = async (req, res) => {
             customerInfo: orderedByUser.customerInfo,
             orderId: unpaidOrder.confirmId,
             payedId: orderedByUser.confirmId,
-            startedAt: orderedByUser.shipmentStartedAt.toUTCString(),
+            startedAt: orderedByUser.shipmentStartedAt?.toUTCString(),
           });
         }
         return;
@@ -69,7 +69,7 @@ module.exports.retreive_ordered_post = async (req, res) => {
           customerInfo: orderedByUser.customerInfo,
           orderId: orderedByUser.confirmId,
           payed: orderedByUser.customerPayed,
-          startedAt: orderedByUser.shipmentStartedAt.toUTCString(),
+          startedAt: orderedByUser.shipmentStartedAt?.toUTCString(),
         });
       } else {
         res.status(200).json({ orderInfo: "delivered" });

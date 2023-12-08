@@ -44,6 +44,7 @@ const ConfirmOrderForm = () => {
   const [formState, setFormState] = useState(initialForm);
   const [countryState, setCountryState] = useState({ country: "", region: "" });
   const [phoneNumber, setPhoneNumber] = useState(null);
+  const [phoneNumberErr, setPhoneNumberErr] = useState("");
   const verifiedUser = useSelector((state) => state.user.verifiedUser);
 
   const handleChangeForm = (e) => {
@@ -67,7 +68,15 @@ const ConfirmOrderForm = () => {
     Number(phoneNumber) &&
     isPossiblePhoneNumber(phoneNumber);
 
+  const invalidPhoneNumber =
+    formState.paymentMethod === "onReceiving" &&
+    formState.phoneNumber !== info.phoneNumber;
+
   const handleSubmitInfo = async () => {
+    if (invalidPhoneNumber) {
+      setPhoneNumberErr("please use your verified phone number");
+      return;
+    }
     if (canSumbit) {
       const res = await fetch("/api/confirmAvailable", {
         method: "POST",
@@ -146,6 +155,7 @@ const ConfirmOrderForm = () => {
           </div>
           <div className="input-container">
             <PhoneNumberInput number={phoneNumber} setNumber={setPhoneNumber} />
+            <div className="error">{phoneNumberErr}</div>
           </div>
           <div className="input-container">
             <ConutryPicker
