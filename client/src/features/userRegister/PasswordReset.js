@@ -1,17 +1,32 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 
 const PasswordReset = () => {
+  const token = useContext(csrfTokenContext);
   const [email, setEmail] = useState("");
   const [showOtp, setShowOtp] = useState(false);
   const [err, setErr] = useState("");
+  const remainingAttempts = useSelector(
+    (state) => state.user.resetAttemptsRemaining
+  );
   const otpRef = useRef({});
+  const { id } = useParams();
 
-  const handleReset = () => {
+  const handleReset = async () => {
     if (!email || !email.includes("@") || !email.includes(".com")) {
       setErr("please type your email");
       return;
     }
-    setShowOtp(true);
+
+    const res = await fetch("/api/resetUserPass", {
+      method: "POST",
+      body: JSON.stringify({ email: email, resetId: id }),
+      headers: { "Content-Type": "application/json", "csrf-token": token },
+    });
+    const data = await res.json();
+    console.log(data);
   };
   return (
     <div className="bg-img">
@@ -27,13 +42,16 @@ const PasswordReset = () => {
           <label htmlFor="email">Email</label>
         </div>
         {showOtp && (
-          <input
-            type="text"
-            placeholder="type your otp..."
-            className="input-price"
-            maxLength="6"
-            ref={otpRef}
-          />
+          <div>
+            <input
+              type="text"
+              placeholder="type your otp..."
+              className="input-price"
+              maxLength="6"
+              ref={otpRef}
+            />
+            <b>Remaining Attempts: {remainingAttempts}</b>
+          </div>
         )}
         {!showOtp && (
           <div>

@@ -52,4 +52,27 @@ const requireAuth = (req, res, next) => {
   }
 };
 
-module.exports = { checkUser, requireAuth, csrfProtection };
+const requireResetToken = (req, res, next) => {
+  const resetToken = req.cookies.jwtReset;
+  const validOrigin = req.headers?.referer.startsWith(
+    process.env.CLIENT_URI_DEV
+  );
+  if (!validOrigin) {
+    res.status(403).json({ err: "invalid origin" });
+    return;
+  }
+
+  if (resetToken) {
+    jwt.verify(resetToken, process.env.RESET_KEY, async (err, decodedToken) => {
+      if (err) {
+        res.status(400).json({ err: "invalid token" });
+      } else {
+        next();
+      }
+    });
+  } else {
+    res.status(400).json({ err: "no reset token" });
+  }
+};
+
+module.exports = { checkUser, requireAuth, requireResetToken, csrfProtection };

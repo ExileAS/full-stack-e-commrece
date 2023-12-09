@@ -30,4 +30,19 @@ const createToken = (id) => {
   };
 };
 
-module.exports = { createToken, createTempToken };
+const createResetToken = (id) => {
+  const token = jwt.sign({ id }, process.env.RESET_KEY, {
+    expiresIn: 60 * 60,
+  });
+  return {
+    token,
+    name: "jwtReset",
+    options: {
+      maxAge: 1000 * 60 * 60,
+      httpOnly: true,
+      sameSite: "strict",
+    },
+  };
+};
+
+module.exports = { createToken, createTempToken, createResetToken };

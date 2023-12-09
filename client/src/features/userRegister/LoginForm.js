@@ -1,12 +1,12 @@
 import { useContext, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { login, setTempEmail } from "./userSlice";
+import { login, setRemainingAttempts, setTempEmail } from "./userSlice";
 import {
   clearCustomerInfo,
   retrieveOrderedList,
 } from "../shoppingCart/shoppingCartSlice";
 import GoogleReg from "./GoogleReg";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 import Timer from "../../components/Timer";
 
@@ -105,15 +105,27 @@ const Login = () => {
 
   const handleReset = async () => {
     if (!email) {
-      setEmailError("please type ypur email");
+      setEmailError("please type your email");
       return;
     }
 
-    const res = await fetch("/api/requireReset", {
+    const res = await fetch("/api/api/requireReset", {
       method: "POST",
-      body: JSON.stringify({ email: currUser }),
+      body: JSON.stringify({ email: email }),
       headers: { "Content-Type": "application/json", "csrf-token": token },
     });
+    const data = await res.json();
+    if (res.status === 301) {
+      if (data.id && data.remainingAttempts) {
+        dispatch(setRemainingAttempts(data.remainingAttempts));
+        if (data.remainingAttempts > 0) {
+          navigate(`/passowrd-reset/${data.id}`);
+        }
+      }
+    }
+    if (data.err) {
+      setVerifyErr(data.err);
+    }
   };
 
   return (
@@ -137,12 +149,17 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
             <label htmlFor="password">Password</label>
+            <p className="error">{passwordErr}</p>
           </div>
+          {forgotOption && !verifyErr.length && (
+            <div className="forgot" onClick={handleReset}>
+              <b>Forgot Password</b>
+            </div>
+          )}
           <button className="button-17" onClick={handleLogin}>
             Login
           </button>
           <GoogleReg />
-          <p className="error">{passwordErr}</p>
         </form>
         <br />
         <div className="otp-container">
@@ -197,11 +214,6 @@ const Login = () => {
           <div>
             <h2 className="error">{err}</h2>
             <h2 className="error">please login again</h2>
-          </div>
-        )}
-        {forgotOption && (
-          <div className="forgot" onClick={handleReset}>
-            <b className="error">Forgot Password</b>
           </div>
         )}
       </div>

@@ -39,7 +39,31 @@ const cleanExit = async () => {
   }
 };
 
+const cleanAccountResets = async () => {
+  try {
+    const db = mongoose.connection;
+
+    if (db.readyState !== 1) {
+      console.error("MongoDB connection is not ready");
+      return;
+    }
+
+    const collection = db.collection("reseting-users");
+
+    const query = {
+      deletionAt: { $exists: true, $lt: new Date() },
+    };
+
+    const result = await collection.deleteMany(query);
+
+    console.log(`${result.deletedCount} documents deleted during cleanup`);
+  } catch (error) {
+    console.error("Error during cleanup:", error);
+  }
+};
+
 module.exports = {
   cleanupExpiredUsers,
   cleanExit,
+  cleanAccountResets,
 };

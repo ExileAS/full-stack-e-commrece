@@ -85,7 +85,11 @@ function App() {
             element={<MoreLikeThis />}
           />
           <Route element={<CsrfContextLayout />}>
-            <Route exact path="/passowrd-reset" element={<PasswordReset />} />
+            <Route
+              exact
+              path="/passowrd-reset/:id"
+              element={<PasswordReset />}
+            />
             <Route
               exact
               path="/products/addProduct"

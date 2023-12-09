@@ -12,6 +12,7 @@ const initialState = {
   totalPayments: 0,
   verifiedUser: false,
   phoneNumber: null,
+  resetAttemptsRemaining: 0,
 };
 
 const userSlice = createSlice({
@@ -61,6 +62,10 @@ const userSlice = createSlice({
       state.tempEmail = action.payload;
       return state;
     },
+    setRemainingAttempts(state, action) {
+      state.resetAttemptsRemaining = action.payload;
+      return state;
+    },
   },
 });
 
@@ -71,6 +76,7 @@ export const {
   googleLogin,
   isGoogle,
   setTempEmail,
+  setRemainingAttempts,
 } = userSlice.actions;
 
 export default userSlice.reducer;

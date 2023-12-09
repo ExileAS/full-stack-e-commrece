@@ -2367,8 +2367,11 @@ input[type="radio"] {
 
 .forgot {
   padding: 3px;
+  color: #273ead;
+  font-size: larger;
 }
 
 .forgot:hover {
   cursor: pointer;
+  text-decoration: underline;
 }

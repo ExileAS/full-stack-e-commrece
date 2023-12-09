@@ -14,7 +14,11 @@ const reviewRouter = require("./routes/reviewRoutes");
 const paymentRouter = require("./routes/paymentRoutes");
 const sellersRouter = require("./routes/sellerRoutes");
 const { checkUser, csrfProtection } = require("./middleware/authMiddleware");
-const { cleanupExpiredUsers, cleanExit } = require("./utils/cleanup");
+const {
+  cleanupExpiredUsers,
+  cleanExit,
+  cleanAccountResets,
+} = require("./utils/cleanup");
 const morgan = require("morgan");
 
 const corsOptions = {
@@ -37,6 +41,7 @@ mongoose
     app.listen(PORT);
     console.log(`listening on port ${PORT}`);
     cron.schedule("0 0 */2 * *", cleanupExpiredUsers);
+    cron.schedule("0 */12 * * *", cleanAccountResets);
     process.on("SIGINT", cleanExit);
   })
   .catch((err) => console.log(err));

@@ -1,7 +1,11 @@
 const userModel = require("../models/userModel");
 require("dotenv").config();
+const generateUniqueId = require("generate-unique-id");
 const { handleVerifyErrors } = require("../utils/userRegisterErrors");
 const { createSignupInfo } = require("../utils/createUserInfo");
+const { encrypt, decrypt } = require("../utils/textEncryption");
+const resetingModel = require("../models/resetingUsersModel");
+const { createResetToken } = require("../utils/tokens");
 
 const verify_user_url = async (req, res) => {
   const { verifyId, email } = req.params;
@@ -34,7 +38,6 @@ const verify_user_url = async (req, res) => {
           },
         }
       );
-      console.log(deletedUnwantedFields);
     } else {
       const failedVerify = await userModel.findOneAndUpdate(
         { email: email },
@@ -129,8 +132,69 @@ const resend_msg = async (req, res) => {
   }
 };
 
+const create_reset_info = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await userModel.findOne({ email: email, verified: true });
+    if (!user) throw new Error("user not found");
+    const existing = await resetingModel.findOne({ email: email });
+    if (existing && existing.attempts >= 3) {
+      throw new Error("too many attempts");
+    }
+    const { token, name, options } = createResetToken(user._id);
+    res.cookie(name, token, options);
+    const { encryptedText, iv, key } = encrypt(`${user._id}`);
+    if (existing) {
+      const updated = await resetingModel.findOneAndUpdate(
+        { email: email },
+        {
+          $set: { iv: iv, key: key },
+          $inc: { attempts: 1 },
+        }
+      );
+      const saved = await updated.save();
+      return res
+        .status(301)
+        .json({ id: encryptedText, remainingAttempts: 3 - saved.attempts });
+    }
+    const userReset = await resetingModel.create({
+      id: user._id,
+      email: user.email,
+      iv: iv,
+      key: key,
+    });
+    const savedReset = await userReset.save();
+    res.status(301).json({ id: encryptedText, remainingAttempts: 3 });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ err: err.message });
+  }
+};
+
+const reset_password = async (req, res) => {
+  const { email, resetId } = req.body;
+  try {
+    const resetingUser = await resetingModel.findOne({ email: email });
+    if (!resetingUser) {
+      throw new Error("incorrect email");
+    }
+    if (resetingUser.attempts >= 3) {
+      throw new Error("too many attempts");
+    }
+    const { iv, key, id } = resetingUser;
+    const decrypted = decrypt({ encryptedText: resetId, iv }, key);
+    console.log(decrypted);
+    res.status(200).json({});
+  } catch (err) {
+    res.status(400).json({ err: err.message });
+  }
+};
+
 module.exports = {
   resend_msg,
   verify_user_otp,
   verify_user_url,
+  create_reset_info,
+  reset_password,
 };
