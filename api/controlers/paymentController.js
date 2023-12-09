@@ -1,35 +1,19 @@
-const stripe = require("stripe")(process.env.STRIPE_KEY);
 const { OrderedProductModel } = require("../models/oderedProductsModel");
 const userModel = require("../models/userModel");
+const createStripeSession = require("../services/stripe");
 
 module.exports.payment_post = async (req, res) => {
   const { confirmId } = req.body;
   try {
     const order = await OrderedProductModel.findOne({ confirmId: confirmId });
-    const id = order._id;
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      mode: "payment",
-      line_items: order.list.map((product) => {
-        return {
-          price_data: {
-            currency: "usd",
-            product_data: {
-              name: product.name,
-            },
-            unit_amount: product.price,
-          },
-          quantity: product.count,
-        };
-      }),
-      success_url: `http://localhost:3000/products/ordered/confirmed/${id}`,
-      cancel_url: "http://localhost:3000/products/ordered/checkout",
-    });
-    res.json({ url: session.url, id });
+    const session = await createStripeSession(order);
+    res.json({ url: session.url, id: order._id });
+
     const updated = await order.save();
     const userPhoneNumber = updated.customerInfo.phoneNumber;
+    const userEmail = updated.customerInfo.userEmail;
     await userModel.findOneAndUpdate(
-      { email: updated.customerInfo.userEmail },
+      { email: userEmail },
       { $set: { phoneNumber: userPhoneNumber } }
     );
   } catch (err) {
@@ -59,7 +43,7 @@ module.exports.confirm_payment = async (req, res) => {
 
     const updatedOrder = await order.save();
     res.status(200).json({
-      startedAt: updatedOrder.shipmentStartedAt.toUTCString(),
+      startedAt: updatedOrder.shipmentStartedAt?.toUTCString(),
     });
     const totalPayment = updatedOrder.list.reduce(
       (acc, item) => acc + item.price * item.count,
@@ -71,7 +55,6 @@ module.exports.confirm_payment = async (req, res) => {
       { $set: { total: totalPayment } }
     );
     const user = await userModel.findOne({ email: currUser });
-    // console.log("user: ", user.orders, "updated: ", updatedPaymentOrder);
     const existingOrder = user?.orders.find(
       (order) => order.orderId === confirmId
     );
@@ -109,7 +92,6 @@ module.exports.confirm_payment = async (req, res) => {
       { _id: userOrder._id },
       { $set: { totalPayments: totalUserPayments } }
     );
-    console.log(totalUserPayments);
   } catch (err) {
     // res.status(400).json({ err });
     console.log(err);

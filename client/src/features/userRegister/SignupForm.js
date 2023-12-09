@@ -13,6 +13,7 @@ const SignUp = ({ err }) => {
   const token = useContext(csrfTokenContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
   const [emailErr, setEmailErr] = useState("");
   const [passwordErr, setPasswordErr] = useState("");
   const [phoneNumber, setPhoneNumber] = useState(null);
@@ -25,6 +26,10 @@ const SignUp = ({ err }) => {
   const handleSignup = async () => {
     if (isSeller && (!phoneNumber || !isPossiblePhoneNumber)) {
       setPhoneNumberErr("please enter a valid number");
+      return;
+    }
+    if (password !== passwordConfirm) {
+      setPasswordErr("password confirmation incorrect");
       return;
     }
     dispatch(clearCustomerInfo());
@@ -73,6 +78,11 @@ const SignUp = ({ err }) => {
             />
             <label htmlFor="password">Password</label>
             <p className="error">{passwordErr}</p>
+            <input
+              type="password"
+              value={passwordConfirm}
+              onChange={(e) => setPasswordConfirm(e.target.value)}
+            />
           </div>
           {isSeller && (
             <div>

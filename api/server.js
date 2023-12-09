@@ -8,6 +8,7 @@ const cron = require("node-cron");
 require("dotenv").config();
 const authRouter = require("./routes/authRoutes");
 const productRouter = require("./routes/productsRoutes");
+const userRouter = require("./routes/userRegisterRoutes");
 const orderedProductsRouter = require("./routes/orderedProductsRoutes");
 const reviewRouter = require("./routes/reviewRoutes");
 const paymentRouter = require("./routes/paymentRoutes");
@@ -48,6 +49,7 @@ app.get("/api/csrf-create-token", csrfProtection, (req, res) => {
 });
 app.use(productRouter);
 app.use(orderedProductsRouter);
+app.use(userRouter);
 app.use(sellersRouter);
 app.use(reviewRouter);
 app.use(authRouter);

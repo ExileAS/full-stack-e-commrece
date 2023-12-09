@@ -2364,3 +2364,11 @@ input[type="radio"] {
 .country {
   width: 150px;
 }
+
+.forgot {
+  padding: 3px;
+}
+
+.forgot:hover {
+  cursor: pointer;
+}

@@ -6,7 +6,7 @@ import {
   retrieveOrderedList,
 } from "../shoppingCart/shoppingCartSlice";
 import GoogleReg from "./GoogleReg";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 import Timer from "../../components/Timer";
 
@@ -18,6 +18,7 @@ const Login = () => {
   const [passwordErr, setPasswordErr] = useState("");
   const [verifyErr, setVerifyErr] = useState("");
   const [loading, setLoading] = useState(false);
+  const [forgotOption, setForgotOption] = useState(false);
   const [response, setResponse] = useState("");
   const [timer, setTimer] = useState("15");
   const otpRef = useRef({});
@@ -45,6 +46,7 @@ const Login = () => {
         if (data.errors) {
           setEmailError(data.errors.email);
           setPasswordErr(data.errors.password);
+          if (data.errors.password) setForgotOption(true);
         }
         if (data.unverifiedEmail) {
           setVerifyErr("please verify your account");
@@ -99,6 +101,19 @@ const Login = () => {
     if (data.success) {
       setResponse(data.success);
     }
+  };
+
+  const handleReset = async () => {
+    if (!email) {
+      setEmailError("please type ypur email");
+      return;
+    }
+
+    const res = await fetch("/api/requireReset", {
+      method: "POST",
+      body: JSON.stringify({ email: currUser }),
+      headers: { "Content-Type": "application/json", "csrf-token": token },
+    });
   };
 
   return (
@@ -182,6 +197,11 @@ const Login = () => {
           <div>
             <h2 className="error">{err}</h2>
             <h2 className="error">please login again</h2>
+          </div>
+        )}
+        {forgotOption && (
+          <div className="forgot" onClick={handleReset}>
+            <b className="error">Forgot Password</b>
           </div>
         )}
       </div>

@@ -22,6 +22,7 @@ import { useSelector } from "react-redux";
 import useLogout from "./features/userRegister/useLogout";
 import useIdleTimeout from "./features/userRegister/useIdleTimeout";
 import { CsrfContextLayout } from "./contexts/csrfTokenContext";
+import PasswordReset from "./features/userRegister/PasswordReset";
 
 function App() {
   const currEmail = useSelector((state) => state.user.userEmail);
@@ -84,6 +85,7 @@ function App() {
             element={<MoreLikeThis />}
           />
           <Route element={<CsrfContextLayout />}>
+            <Route exact path="/passowrd-reset" element={<PasswordReset />} />
             <Route
               exact
               path="/products/addProduct"

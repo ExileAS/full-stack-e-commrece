@@ -40,11 +40,10 @@ const userSchema = new Schema({
   verifyURL: {
     url: {
       type: String,
-      required: true,
     },
     expireAt: {
       type: Date,
-      required: true,
+
       default: function () {
         return Date.now() + 1000 * 60 * 60 * 3;
       },
@@ -54,11 +53,10 @@ const userSchema = new Schema({
   OTP: {
     otp: {
       type: Number,
-      required: true,
     },
     expireAt: {
       type: Date,
-      required: true,
+
       default: function () {
         return Date.now() + 1000 * 60 * 10;
       },
@@ -66,7 +64,7 @@ const userSchema = new Schema({
   },
   expireAt: {
     type: Date,
-    required: true,
+
     default: function () {
       return Date.now() + 1000 * 60 * 60 * 24 * 2;
     },
@@ -98,7 +96,6 @@ const userSchema = new Schema({
   orders: [order],
   encryptedEmail: {
     type: String,
-    required: true,
   },
 });
 

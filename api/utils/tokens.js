@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-
+require("dotenv").config();
 const createTempToken = (id) => {
   const token = jwt.sign({ id }, process.env.TEMP_KEY, {
     expiresIn: 60 * 60 * 2,

@@ -1,64 +1,7 @@
 const userModel = require("../models/userModel");
 require("dotenv").config();
-const { createToken, createTempToken } = require("../utils/tokens");
-const {
-  handleErrors,
-  handleVerifyErrors,
-} = require("../utils/userRegisterErrors");
+const { handleVerifyErrors } = require("../utils/userRegisterErrors");
 const { createSignupInfo } = require("../utils/createUserInfo");
-
-const signup_post = async (req, res) => {
-  const { email, password, sub, email_verified, isSeller, phoneNumber } =
-    req.body;
-
-  try {
-    if (email && password) {
-      const { info, send } = createSignupInfo(email, password);
-      const user = await userModel.create({
-        ...info,
-        password,
-        role: isSeller ? "seller" : "customer",
-        phoneNumber: isSeller ? phoneNumber : null,
-      });
-      send();
-      const { token, name, options } = createTempToken(user._id);
-      res.cookie(name, token, options);
-      res.status(201).json({ user: user.email });
-    } else if (sub && email_verified) {
-      const { token, name, options } = createToken(sub);
-      res.cookie(name, token, options);
-      res.status(201).json({ user: email });
-    }
-  } catch (err) {
-    const errors = handleErrors(err);
-    res.status(400).json({ errors });
-  }
-};
-
-const login_post = async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    const user = await userModel.login(email, password);
-    if (user.verified) {
-      const { token, name, options } = createToken(user._id);
-      res.cookie(name, token, options);
-      res.cookie("jwtTemp", "", { maxAge: 1 });
-      res.status(200).json({
-        user: user.email,
-        purchaseCount: user.purchaseCount,
-        totalPayments: user.totalPayments,
-        phoneNumber: user.phoneNumber,
-      });
-    } else {
-      const { token, name, options } = createTempToken(user._id);
-      res.cookie(name, token, options);
-      res.status(401).json({ unverifiedEmail: user.email });
-    }
-  } catch (err) {
-    const errors = handleErrors(err);
-    res.status(400).json({ errors });
-  }
-};
 
 const verify_user_url = async (req, res) => {
   const { verifyId, email } = req.params;
@@ -186,16 +129,8 @@ const resend_msg = async (req, res) => {
   }
 };
 
-const logout_get = (req, res) => {
-  res.cookie("jwt", "", { maxAge: 1 });
-  res.redirect("/");
-};
-
 module.exports = {
-  logout_get,
   resend_msg,
   verify_user_otp,
   verify_user_url,
-  login_post,
-  signup_post,
 };
