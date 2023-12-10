@@ -21,6 +21,12 @@ const signup_post = async (req, res) => {
       res.cookie(name, token, options);
       res.status(201).json({ user: user.email });
     } else if (sub && email_verified) {
+      const existingUser = await userModel.findOne({ email: email });
+      if (existingUser) {
+        return res
+          .status(409)
+          .json({ err: "already registerd as non-google account" });
+      }
       const { token, name, options } = createToken(sub);
       res.cookie(name, token, options);
       res.status(201).json({ user: email });
