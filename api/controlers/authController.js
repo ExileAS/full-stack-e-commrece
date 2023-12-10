@@ -185,6 +185,10 @@ const reset_password = async (req, res) => {
     const { iv, key, id } = resetingUser;
     const decrypted = decrypt({ encryptedText: resetId, iv }, key);
     console.log(decrypted);
+    if (decrypted === id) {
+      // create email with new otp and send to user
+    }
+
     res.status(200).json({});
   } catch (err) {
     res.status(400).json({ err: err.message });

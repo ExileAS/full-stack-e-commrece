@@ -27,8 +27,15 @@ const userSchema = new Schema({
   },
   password: {
     type: String,
-    required: [true, "please enter a password"],
-    minlength: [8, "minimum password length is 8"],
+    required: [true, "Please enter a password"],
+    validate: {
+      validator: function (value) {
+        return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*]).{8,}$/.test(
+          value
+        );
+      },
+      message: "please use a stronger password",
+    },
   },
   verified: {
     type: Boolean,

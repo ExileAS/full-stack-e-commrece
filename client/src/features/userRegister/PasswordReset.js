@@ -50,7 +50,6 @@ const PasswordReset = () => {
               maxLength="6"
               ref={otpRef}
             />
-            <b>Remaining Attempts: {remainingAttempts}</b>
           </div>
         )}
         {!showOtp && (
@@ -61,6 +60,8 @@ const PasswordReset = () => {
             <p className="error">{err}</p>
           </div>
         )}
+        <br />
+        <b className="error">Remaining Attempts: {remainingAttempts}</b>
       </div>
     </div>
   );
