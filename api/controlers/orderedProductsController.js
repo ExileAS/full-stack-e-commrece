@@ -108,7 +108,6 @@ module.exports.update_order_patch = async (req, res) => {
         { $set: orderUpdates },
         { new: true, upsert: true }
       );
-      // console.log(res);
       if (payedOrder) {
         const newId =
           (await handleDeleteRedundant(customerInfo, list, confirmId)) ||
