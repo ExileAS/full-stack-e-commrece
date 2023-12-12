@@ -5,15 +5,14 @@ const exponentialBackoff = async (cbPromise) => {
   while (retries < maxRetries) {
     try {
       const requestResult = await cbPromise();
-      if (requestResult.success) {
-        console.log("request processed successfully!");
-        break;
+      if (!requestResult.err) {
+        return requestResult;
       } else {
         throw new Error("request failed");
       }
-    } catch (error) {
+    } catch (err) {
       retries++;
-      console.error(`Error processing attempt ${retries}: ${error.message}`);
+      console.error(`Error processing attempt ${retries}: ${err.message}`);
       const delay = Math.pow(2, retries - 1) * 3000;
       await new Promise((resolve) => setTimeout(resolve, delay));
     }

@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import exponentialBackoff from "../utils/exponentialBackoff";
 
 const initialState = {
   cart: [],
@@ -16,44 +17,45 @@ const initialState = {
 export const postOrdered = createAsyncThunk(
   "shoppingCart/postOrdered",
   async ({ token, verifiedUser }, { getState }) => {
-    console.log("POSTING!");
     const state = getState();
-    try {
-      const res = await fetch("/api/post-ordered", {
-        method: "POST",
-        body: JSON.stringify({
-          list: state.shoppingCart.ordered,
-          customerInfo: state.shoppingCart.customerInfo,
-          verifiedUser,
-        }),
-        headers: { "Content-Type": "application/json", "csrf-token": token },
-      });
-      const data = await res.json();
-      if (data.confirmId) {
-        return data.confirmId;
+    const postOrderedFn = async () => {
+      try {
+        const res = await fetch("/api/post-ordered", {
+          method: "POST",
+          body: JSON.stringify({
+            list: state.shoppingCart.ordered,
+            customerInfo: state.shoppingCart.customerInfo,
+            verifiedUser,
+          }),
+          headers: { "Content-Type": "application/json", "csrf-token": token },
+        });
+        const data = await res.json();
+        return data;
+      } catch (err) {
+        console.log(err);
       }
-    } catch (err) {
-      console.log(err);
-    }
+    };
+    return await exponentialBackoff(postOrderedFn);
   }
 );
 
 export const retrieveOrderedList = createAsyncThunk(
   "shoppingCart/retrieveOrderedList",
   async (userEmail) => {
-    try {
-      const res = await fetch("/api/retrieveOrdered", {
-        method: "POST",
-        body: JSON.stringify({ userEmail }),
-        headers: { "Content-Type": "application/json" },
-      });
-      const data = await res.json();
-      if (!data.error) return data;
-      console.log(data.error);
-      return data.error;
-    } catch (err) {
-      console.log(err);
-    }
+    const retrieveOrderFn = async () => {
+      try {
+        const res = await fetch("/api/retrieveOrdered", {
+          method: "POST",
+          body: JSON.stringify({ userEmail }),
+          headers: { "Content-Type": "application/json" },
+        });
+        const data = await res.json();
+        return data;
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    return await exponentialBackoff(retrieveOrderFn);
   }
 );
 
@@ -64,38 +66,46 @@ export const updateOrder = createAsyncThunk(
     const listUpdates = state.shoppingCart.ordered.length
       ? state.shoppingCart.ordered
       : state.shoppingCart.payedOrder;
-    try {
-      const res = await fetch("/api/updateOrder", {
-        method: "PATCH",
-        body: JSON.stringify({
-          customerInfo: state.shoppingCart.customerInfo,
-          list: listUpdates,
-          confirmId: state.shoppingCart.confirmId,
-          payedOrder: isPaid,
-          isSplit: state.shoppingCart.isSplit,
-        }),
-        headers: { "Content-Type": "application/json" },
-      });
-      const data = res.json();
-      return data;
-    } catch (err) {
-      console.log(err);
-    }
+    const updateFn = async () => {
+      try {
+        const res = await fetch("/api/updateOrder", {
+          method: "PATCH",
+          body: JSON.stringify({
+            customerInfo: state.shoppingCart.customerInfo,
+            list: listUpdates,
+            confirmId: state.shoppingCart.confirmId,
+            payedOrder: isPaid,
+            isSplit: state.shoppingCart.isSplit,
+          }),
+          headers: { "Content-Type": "application/json" },
+        });
+        const data = res.json();
+        return data;
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    return await exponentialBackoff(updateFn);
   }
 );
 
 export const clearInDB = createAsyncThunk(
   "shoppingCart/clearInDB",
-  (confirmId) => {
-    try {
-      fetch("/api/deleteOrder", {
-        method: "DELETE",
-        body: JSON.stringify({ confirmId }),
-        headers: { "Content-Type": "application/json" },
-      });
-    } catch (err) {
-      console.log(err);
-    }
+  async (confirmId) => {
+    const clearFn = async () => {
+      try {
+        const res = await fetch("/api/deleteOrder", {
+          method: "DELETE",
+          body: JSON.stringify({ confirmId }),
+          headers: { "Content-Type": "application/json" },
+        });
+        const data = await res.json();
+        return data;
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    return await exponentialBackoff(clearFn);
   }
 );
 
@@ -220,15 +230,13 @@ const shoppingCartSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(postOrdered.fulfilled, (state, action) => {
-        state.confirmId = action.payload;
-        return state;
+        state.confirmId = action.payload?.confirmId;
       })
       .addCase(updateOrder.fulfilled, (state, action) => {
         state.payedId = action.payload.newId || state.payedId;
-        return state;
       })
       .addCase(retrieveOrderedList.fulfilled, (state, action) => {
-        if (!action.payload) return state;
+        if (!action.payload) return;
         state.customerInfo = action.payload.customerInfo;
         if (action.payload.isSplit) {
           state.isSplit = true;
@@ -237,7 +245,7 @@ const shoppingCartSlice = createSlice({
           state.confirmId = action.payload.orderId;
           state.payedId = action.payload.payedId;
           state.shipmentStartedAt = action.payload.startedAt;
-          return state;
+          return;
         }
         if (action.payload.payed) {
           state.payedOrder = action.payload.ordered;
@@ -249,7 +257,6 @@ const shoppingCartSlice = createSlice({
           state.confirmId = action.payload.orderId;
           state.isSplit = false;
         }
-        return state;
       });
   },
 });

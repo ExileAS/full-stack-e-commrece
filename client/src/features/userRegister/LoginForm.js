@@ -46,6 +46,7 @@ const Login = () => {
         if (data.errors) {
           setEmailError(data.errors.email);
           setPasswordErr(data.errors.password);
+          console.log(data.errors);
           if (data.errors.password) setForgotOption(true);
         }
         if (data.unverifiedEmail) {

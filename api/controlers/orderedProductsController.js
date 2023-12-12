@@ -75,13 +75,11 @@ module.exports.retreive_ordered_post = async (req, res) => {
         res.status(200).json({ orderInfo: "delivered" });
       }
     } else {
-      res.status(404);
+      res.status(404).json({ err: "order not found" });
     }
   } catch (err) {
     console.log(err);
-    res.status(404).json({
-      error: "error finding order",
-    });
+    res.status(404).json({ err: "error finding order" });
   }
 };
 
@@ -140,11 +138,15 @@ module.exports.order_delete = async (req, res) => {
         updates[id] = count;
       });
       handlePatchDeleteMain(updates);
-      const res = await OrderedProductModel.deleteOne({ confirmId: confirmId });
+      await OrderedProductModel.deleteOne({ confirmId: confirmId });
+      res.status(200).json({ success: true });
     } else {
-      console.log("no order found");
+      const err = new Error("order not found");
+      err.code = 404;
+      throw err;
     }
   } catch (err) {
     console.log(err);
+    res.status(err.code).json({ err: err.message });
   }
 };

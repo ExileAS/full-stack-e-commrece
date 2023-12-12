@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { confirmPayment, setStartedAt, updateOrder } from "./shoppingCartSlice";
 import { useParams } from "react-router-dom";
 import { setOrderId } from "../userRegister/userSlice";
+import exponentialBackoff from "../utils/exponentialBackoff";
 
 const PaymentConfirmed = () => {
   const confirmId = useSelector(
@@ -20,7 +21,7 @@ const PaymentConfirmed = () => {
 
   useEffect(() => {
     if (orderId === id) {
-      confirmOrderPayment();
+      exponentialBackoff(confirmOrderPayment);
     }
 
     async function confirmOrderPayment() {
