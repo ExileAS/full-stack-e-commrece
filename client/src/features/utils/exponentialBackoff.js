@@ -5,10 +5,11 @@ const exponentialBackoff = async (cbPromise) => {
   while (retries < maxRetries) {
     try {
       const requestResult = await cbPromise();
-      if (!requestResult.err) {
-        return requestResult;
-      } else {
+      if (!requestResult || requestResult.err) {
         throw new Error("request failed");
+      } else {
+        console.log("success");
+        return requestResult;
       }
     } catch (err) {
       retries++;

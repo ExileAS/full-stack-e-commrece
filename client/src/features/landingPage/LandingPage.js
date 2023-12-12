@@ -6,24 +6,30 @@ import logo from "../../components/images/shoppingBag.jpg";
 import Loader from "../../components/Loader";
 import { getAllSellers } from "../sellers/sellersSlice";
 import { fetchReviews } from "../reviews/reviewSlice";
+import exponentialBackoff from "../utils/exponentialBackoff";
 
 const LandingPage = () => {
   const naviate = useNavigate();
   const dispatch = useDispatch();
 
   useRunOnce({
-    fn: async () => {
-      try {
-        await Promise.all([
-          dispatch(fetchProducts()).unwrap(),
-          dispatch(getAllSellers()).unwrap(),
-          dispatch(fetchReviews()).unwrap(),
-        ]);
-      } catch (err) {
-        console.log(err);
-      }
-      naviate("/products");
-    },
+    fn: () =>
+      exponentialBackoff(async () => {
+        try {
+          const test = await Promise.all([
+            dispatch(fetchProducts()).unwrap(),
+            dispatch(getAllSellers()).unwrap(),
+            dispatch(fetchReviews()).unwrap(),
+          ]);
+          naviate("/products");
+          return test;
+        } catch (err) {
+          console.log(err);
+          return {
+            err: err.message,
+          };
+        }
+      }),
     sessionKey: "1",
   });
 

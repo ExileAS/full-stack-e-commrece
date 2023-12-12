@@ -9,6 +9,7 @@ import GoogleReg from "./GoogleReg";
 import { useNavigate, useParams } from "react-router-dom";
 import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 import Timer from "../../components/Timer";
+import exponentialBackoff from "../utils/exponentialBackoff";
 
 const Login = () => {
   const token = useContext(csrfTokenContext);
@@ -28,41 +29,49 @@ const Login = () => {
   const navigate = useNavigate();
   const currUser = useSelector((state) => state.user.tempEmail);
 
-  const handleLogin = async () => {
-    dispatch(clearCustomerInfo());
-    setEmailError("");
-    setPasswordErr("");
+  const handleLogin = () =>
+    exponentialBackoff(async () => {
+      dispatch(clearCustomerInfo());
+      setEmailError("");
+      setPasswordErr("");
 
-    dispatch(setTempEmail(null));
-    if (email.length > 0 && password.length > 0) {
-      try {
-        const res = await fetch("/api/login", {
-          method: "POST",
-          body: JSON.stringify({ email, password }),
-          headers: { "Content-Type": "application/json", "csrf-token": token },
-        });
-        const data = await res.json();
+      dispatch(setTempEmail(null));
+      if (email.length > 0 && password.length > 0) {
+        try {
+          const res = await fetch("/api/login", {
+            method: "POST",
+            body: JSON.stringify({ email, password }),
+            headers: {
+              "Content-Type": "application/json",
+              "csrf-token": token,
+            },
+          });
+          const data = await res.json();
 
-        if (data.errors) {
-          setEmailError(data.errors.email);
-          setPasswordErr(data.errors.password);
-          console.log(data.errors);
-          if (data.errors.password) setForgotOption(true);
+          if (data.errors) {
+            setEmailError(data.errors.email);
+            setPasswordErr(data.errors.password);
+            console.log(data.errors);
+            if (data.errors.password) setForgotOption(true);
+          }
+          if (data.unverifiedEmail) {
+            setVerifyErr("please verify your account");
+            dispatch(setTempEmail(data.unverifiedEmail));
+          }
+          if (data.user) {
+            dispatch(login(data));
+            navigate("/products");
+            dispatch(retrieveOrderedList(data.user));
+          }
+          return data;
+        } catch (err) {
+          console.log(err);
+          return {
+            err: err.message,
+          };
         }
-        if (data.unverifiedEmail) {
-          setVerifyErr("please verify your account");
-          dispatch(setTempEmail(data.unverifiedEmail));
-        }
-        if (data.user) {
-          dispatch(login(data));
-          navigate("/products");
-          dispatch(retrieveOrderedList(data.user));
-        }
-      } catch (err) {
-        console.log(err);
       }
-    }
-  };
+    });
 
   const handleOTP = async () => {
     if (otpRef.current.value.length === 6) {
