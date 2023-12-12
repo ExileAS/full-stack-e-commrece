@@ -13,9 +13,7 @@ const exponentialBackoff = async (cbPromise) => {
       }
     } catch (error) {
       retries++;
-      console.error(
-        `Error during order processing attempt ${retries}: ${error.message}`
-      );
+      console.error(`Error processing attempt ${retries}: ${error.message}`);
       const delay = Math.pow(2, retries - 1) * 3000;
       await new Promise((resolve) => setTimeout(resolve, delay));
     }

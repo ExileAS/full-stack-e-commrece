@@ -448,6 +448,8 @@ html {
   color: crimson;
   font-style: italic;
   font-size: large;
+  width: 200px;
+  word-wrap: break-word;
 }
 
 .ordered-content {
@@ -2374,4 +2376,10 @@ input[type="radio"] {
 .forgot:hover {
   cursor: pointer;
   text-decoration: underline;
+}
+
+.input-otp {
+  color: white !important;
+  text-align: center;
+  font-size: 14px;
 }

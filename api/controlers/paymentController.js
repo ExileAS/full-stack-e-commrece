@@ -17,7 +17,7 @@ module.exports.payment_post = async (req, res) => {
       { $set: { phoneNumber: userPhoneNumber } }
     );
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ err: err.message });
   }
 };
 

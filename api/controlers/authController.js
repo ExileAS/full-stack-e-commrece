@@ -95,7 +95,7 @@ const verify_user_otp = async (req, res) => {
     }
   } catch (err) {
     console.log(err.message);
-    res.status(400).json({ err: err.message });
+    res.status(err.code).json({ err: err.message });
   }
 };
 
@@ -128,7 +128,7 @@ const resend_msg = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    res.status(400).json({ err: err.message });
+    res.status(err.code).json({ err: err.message });
   }
 };
 

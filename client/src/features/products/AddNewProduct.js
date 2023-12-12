@@ -8,7 +8,6 @@ import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 
 export const AddNewProduct = () => {
   const token = useContext(csrfTokenContext);
-  console.log(token);
   const { productId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();

@@ -16,6 +16,7 @@ import { fetchProducts } from "../products/productsSlice";
 import { setOrderId } from "../userRegister/userSlice";
 import { Spinner } from "../../components/Spinner";
 import { csrfTokenContext } from "../../contexts/csrfTokenContext";
+import exponentialBackoff from "../utils/exponentialBackoff";
 
 const OrderedProductsList = ({ confirmed }) => {
   const token = useContext(csrfTokenContext);
@@ -98,25 +99,26 @@ const OrderedProductsList = ({ confirmed }) => {
       </div>
     ));
 
-  const handleCheckout = async () => {
-    setDisableCheckout(true);
-    try {
-      const res = await fetch("/api/payment", {
-        method: "POST",
-        body: JSON.stringify({
-          confirmId: confirmId,
-        }),
-        headers: { "Content-Type": "application/json", "csrf-token": token },
-      });
-      const data = await res.json();
-      if (data.url) {
-        dispatch(setOrderId(data.id));
-        window.location.assign(`${data.url}`);
+  const handleCheckout = () =>
+    exponentialBackoff(async () => {
+      setDisableCheckout(true);
+      try {
+        const res = await fetch("/api/payment", {
+          method: "POST",
+          body: JSON.stringify({
+            confirmId: confirmId,
+          }),
+          headers: { "Content-Type": "application/json", "csrf-token": token },
+        });
+        const data = await res.json();
+        if (data.url) {
+          dispatch(setOrderId(data.id));
+          window.location.assign(`${data.url}`);
+        }
+      } catch (err) {
+        console.log(err);
       }
-    } catch (err) {
-      console.log(err);
-    }
-  };
+    });
 
   return (
     <div className="ordered-content" transition-style="in:square:center">

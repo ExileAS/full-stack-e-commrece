@@ -22,9 +22,15 @@ const handleErrors = (err) => {
 };
 
 const handleVerifyErrors = (user, verifyMethod, resend = false) => {
+  let err;
   if (!user) {
-    if (verifyMethod !== "url") throw new Error("user not found!");
-    else throw new Error("already verified");
+    if (verifyMethod !== "url") {
+      err = new Error("user not found!");
+      err.code = 404;
+    } else {
+      err = new Error("already verified");
+      err.code = 409;
+    }
   }
   const validUser = user.expireAt === null || user.expireAt > Date.now();
   const validOtp =
@@ -32,14 +38,18 @@ const handleVerifyErrors = (user, verifyMethod, resend = false) => {
   const validUrl =
     resend || user.verifyURL.expireAt > Date.now() || verifyMethod === "otp";
   if (!validUser || !validOtp || !validUrl) {
-    throw new Error("user or verify method expired");
+    err = new Error("user or verify method expired");
+    err.code = 403;
   }
   if (user.verified) {
-    throw new Error("already verified");
+    err = new Error("already verified");
+    err.code = 409;
   }
   if (user.verifyAttempts > 4 || user.resendAttempts > 4) {
-    throw new Error("too many attempts!");
+    err = new Error("too many attempts!");
+    err.code = 429;
   }
+  if (err) throw err;
 };
 
 module.exports = { handleErrors, handleVerifyErrors };
