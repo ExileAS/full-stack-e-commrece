@@ -96,6 +96,7 @@ const Login = () => {
       }
     }
   };
+
   const handleResend = async () => {
     setTimer("15");
     const res = await fetch("/api/resend", {

@@ -2285,7 +2285,11 @@ input[type="radio"] {
 }
 
 .info {
-  color: #108614;
+  color: #28922b;
+  font-style: italic;
+  font-size: 17px;
+  width: 200px;
+  word-wrap: break-word;
 }
 
 .otp-container {

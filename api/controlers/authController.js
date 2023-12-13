@@ -6,6 +6,7 @@ const { createSignupInfo } = require("../utils/createUserInfo");
 const { encrypt, decrypt } = require("../utils/textEncryption");
 const resetingModel = require("../models/resetingUsersModel");
 const { createResetToken } = require("../utils/tokens");
+const { sendToUser, mailOptions } = require("../services/mailer");
 
 const verify_user_url = async (req, res) => {
   const { verifyId, email } = req.params;
@@ -149,7 +150,7 @@ const create_reset_info = async (req, res) => {
       const updated = await resetingModel.findOneAndUpdate(
         { email: email },
         {
-          $set: { iv: iv, key: key },
+          $set: { iv: iv.toString("base64"), key: key.toString("base64") },
           $inc: { attempts: 1 },
         }
       );
@@ -183,15 +184,46 @@ const reset_password = async (req, res) => {
       throw new Error("too many attempts");
     }
     const { iv, key, id } = resetingUser;
-    const decrypted = decrypt({ encryptedText: resetId, iv }, key);
-    console.log(decrypted);
-    if (decrypted === id) {
-      // create email with new otp and send to user
+    const decrypted = decrypt({ encryptedText: resetId, iv, key });
+    if (decrypted !== id) {
+      throw new Error("invalid reset status");
     }
-
-    res.status(200).json({});
+    const otp = generateUniqueId({
+      length: 6,
+      useLetters: false,
+    });
+    const user = await resetingModel.findByIdAndUpdate(
+      { _id: resetingUser._id },
+      {
+        $set: { "OTP.otp": otp, "OTP.expireAt": Date.now() + 1000 * 60 * 8 },
+        $inc: { attempts: 1 },
+      }
+    );
+    await user.save();
+    sendToUser({
+      ...mailOptions,
+      subject: "reset your password",
+      to: email,
+      text: `verify password reset with this otp: \n${otp}`,
+    });
+    res.status(200).json({ user: email, remainingAttempts: 3 - user.attempts });
   } catch (err) {
     res.status(400).json({ err: err.message });
+  }
+};
+
+const verify_reset_otp = async (req, res) => {
+  const { email, otp } = req.body;
+
+  try {
+    const user = await resetingModel.findOne({ email: email, "OTP.otp": otp });
+    if (!user || user.OTP.expireAt < Date.now()) {
+      throw new Error("invalid reset otp");
+    }
+    res.status(200).json({ success: "type your new password" });
+  } catch (err) {
+    console.log(err);
+    res.status(403).json({ err: err.message });
   }
 };
 
@@ -201,4 +233,5 @@ module.exports = {
   verify_user_url,
   create_reset_info,
   reset_password,
+  verify_reset_otp,
 };

@@ -2,6 +2,7 @@ const userModel = require("../models/userModel");
 const { createToken, createTempToken } = require("../utils/tokens");
 const { handleErrors } = require("../utils/userRegisterErrors");
 const { createSignupInfo } = require("../utils/createUserInfo");
+const { passowrdHash } = require("../utils/textEncryption");
 
 const signup_post = async (req, res) => {
   const { email, password, sub, email_verified, isSeller, phoneNumber } =
@@ -9,13 +10,15 @@ const signup_post = async (req, res) => {
 
   try {
     if (email && password) {
-      const { info, send } = createSignupInfo(email, password);
+      const { info, send } = createSignupInfo(email);
+      const hashedPassword = await passowrdHash(password);
       const user = await userModel.create({
         ...info,
-        password,
+        password: hashedPassword,
         role: isSeller ? "seller" : "customer",
         phoneNumber: isSeller ? phoneNumber : null,
       });
+      await user.save();
       send();
       const { token, name, options } = createTempToken(user._id);
       res.cookie(name, token, options);

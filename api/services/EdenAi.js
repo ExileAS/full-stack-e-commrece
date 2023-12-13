@@ -2,6 +2,7 @@ const axios = require("axios").default;
 const fs = require("fs");
 const FormData = require("form-data");
 const logger = require("../logs/winstonLogger");
+const makeRequestWithRetry = require("../utils/requsetRetry");
 
 module.exports.detectExplicit = async (imgPath, seller) => {
   const form = new FormData();
@@ -20,15 +21,15 @@ module.exports.detectExplicit = async (imgPath, seller) => {
     data: form,
   };
 
-  try {
-    const res = await axios.request(options);
-    console.log(res.data);
+  const requestFn = async (params) => await axios.request(params);
+  const validate = (res) => {
+    if (!res.data || res.data.amazon.status !== "success")
+      throw new Error(`api request failed with status ${res.status}`);
     const safe =
       res.data.amazon.nsfw_likelihood_score < 0.9 ||
       res.data["eden-ai"].nsfw_likelihood < 5;
     if (!safe) logger.info(`${seller}: ${imgPath}`);
     return safe;
-  } catch (err) {
-    console.log(err);
-  }
+  };
+  return makeRequestWithRetry(requestFn, options, validate);
 };

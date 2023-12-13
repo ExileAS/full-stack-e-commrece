@@ -5,6 +5,7 @@ import axios from "axios";
 import { generateId, selectProductById } from "../products/productsSlice";
 import { addNewSeller, generateIdSeller } from "../sellers/sellersSlice";
 import { csrfTokenContext } from "../../contexts/csrfTokenContext";
+import Loader from "../../components/Loader";
 
 export const AddNewProduct = () => {
   const token = useContext(csrfTokenContext);
@@ -220,23 +221,33 @@ export const AddNewProduct = () => {
               <div className="input-data">
                 <div className="inner"></div>
                 {!sellerEdit ? (
-                  <button
-                    className="button-64"
-                    type="button"
-                    onClick={handleProductAdded}
-                    disabled={status !== "idle"}
-                  >
-                    Add Product
-                  </button>
+                  <div>
+                    {status !== "pending" ? (
+                      <button
+                        className="button-64"
+                        type="button"
+                        onClick={handleProductAdded}
+                      >
+                        Add Product
+                      </button>
+                    ) : (
+                      <Loader />
+                    )}
+                  </div>
                 ) : (
-                  <button
-                    className="button-64"
-                    type="button"
-                    onClick={handleEdit}
-                    disabled={status !== "idle"}
-                  >
-                    Edit
-                  </button>
+                  <div>
+                    {status !== "pending" ? (
+                      <button
+                        className="button-64"
+                        type="button"
+                        onClick={handleEdit}
+                      >
+                        Edit
+                      </button>
+                    ) : (
+                      <Loader />
+                    )}
+                  </div>
                 )}
               </div>
             </div>

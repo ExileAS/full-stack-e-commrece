@@ -18,7 +18,7 @@ const resetingUserSchema = new Schema({
     max: 3,
   },
   iv: {
-    type: Buffer,
+    type: String,
     required: true,
   },
   OTP: {
@@ -30,10 +30,11 @@ const resetingUserSchema = new Schema({
       default: function () {
         return Date.now() + 1000 * 60 * 8;
       },
+      required: true,
     },
   },
   key: {
-    type: Buffer,
+    type: String,
     required: true,
   },
   deletionAt: {
