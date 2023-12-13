@@ -15,7 +15,7 @@ const resetingUserSchema = new Schema({
   attempts: {
     type: Number,
     default: 0,
-    max: 3,
+    max: [3, "maximum send attempts reached."],
   },
   iv: {
     type: String,
@@ -31,6 +31,11 @@ const resetingUserSchema = new Schema({
         return Date.now() + 1000 * 60 * 8;
       },
       required: true,
+    },
+    attempts: {
+      type: Number,
+      default: 0,
+      max: [3, "maximum attempts reached."],
     },
   },
   key: {

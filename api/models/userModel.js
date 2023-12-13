@@ -104,6 +104,9 @@ const userSchema = new Schema({
   encryptedEmail: {
     type: String,
   },
+  reseting: {
+    type: Boolean,
+  },
 });
 
 userSchema.statics.login = async function (email, password) {

@@ -1,6 +1,6 @@
 import { useState, useRef, useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 import { setRemainingAttempts } from "./userSlice";
 
@@ -11,7 +11,12 @@ const PasswordReset = () => {
   const [err, setErr] = useState("");
   const [info, setInfo] = useState();
   const [loading, setLoading] = useState(false);
+  const [otpSuccess, setOtpSuccess] = useState(false);
+  const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [passwordErr, setPasswordErr] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const remainingAttempts = useSelector(
     (state) => state.user.resetAttemptsRemaining
   );
@@ -49,20 +54,51 @@ const PasswordReset = () => {
     if (otpRef.current.value.length === 6) {
       setLoading(true);
       setErr("");
-      const res = await fetch("/api/otp-passwordReset", {
+      try {
+        const res = await fetch("/api/otp-passwordReset", {
+          method: "POST",
+          body: JSON.stringify({ email: email, otp: otpRef.current?.value }),
+          headers: { "Content-Type": "application/json", "csrf-token": token },
+        });
+        const data = await res.json();
+        setLoading(false);
+        if (data.success) {
+          setOtpSuccess(true);
+          setInfo(data.success);
+          setShowOtp(false);
+        }
+        if (data.err) {
+          setErr(data.err);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
+  const handlePasswordReset = async () => {
+    if (password !== passwordConfirm) {
+      setPasswordErr("password confirmation incorrect");
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/confirm-reset", {
         method: "POST",
-        body: JSON.stringify({ email: email, otp: otpRef.current?.value }),
+        body: JSON.stringify({ email, password }),
         headers: { "Content-Type": "application/json", "csrf-token": token },
       });
       const data = await res.json();
-      setLoading(false);
-      if (data.success) {
-        setInfo(data.success);
-        setShowOtp(false);
+      console.log(data);
+      if (data.user) {
+        setInfo("password reset success");
+        navigate("/login");
       }
       if (data.err) {
         setErr(data.err);
       }
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -81,20 +117,20 @@ const PasswordReset = () => {
         </div>
         {!loading && (
           <div>
+            <h3 className="info">{info}</h3>
             {showOtp && (
               <div>
-                <h3 className="info">{info}</h3>
                 <input
                   type="number"
                   placeholder="type your otp..."
-                  className="input-price"
+                  className="input-otp"
                   maxLength="6"
                   ref={otpRef}
                   onChange={handleOTP}
                 />
               </div>
             )}
-            {!showOtp && (
+            {!showOtp && !otpSuccess && (
               <div>
                 <button className="button-7" onClick={handleReset}>
                   Send
@@ -105,7 +141,34 @@ const PasswordReset = () => {
           </div>
         )}
         <br />
-        <b className="error">Remaining Attempts: {remainingAttempts}</b>
+        {!otpSuccess && (
+          <b className="error">Remaining Attempts: {remainingAttempts}</b>
+        )}
+        <div>
+          {otpSuccess && (
+            <div className="input-container">
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <br />
+              <label htmlFor="password">Password</label>
+              <p className="error">{passwordErr}</p>
+              <input
+                type="password"
+                value={passwordConfirm}
+                onChange={(e) => setPasswordConfirm(e.target.value)}
+              />
+              <br />
+              <div className="confirm-reset">
+                <button className="button-85" onClick={handlePasswordReset}>
+                  Confirm
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -2387,3 +2387,8 @@ input[type="radio"] {
   text-align: center;
   font-size: 14px;
 }
+
+.confirm-reset {
+  margin-top: 18px;
+  text-align: center;
+}

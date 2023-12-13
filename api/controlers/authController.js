@@ -3,7 +3,7 @@ require("dotenv").config();
 const generateUniqueId = require("generate-unique-id");
 const { handleVerifyErrors } = require("../utils/userRegisterErrors");
 const { createSignupInfo } = require("../utils/createUserInfo");
-const { encrypt, decrypt } = require("../utils/textEncryption");
+const { encrypt, decrypt, passowrdHash } = require("../utils/textEncryption");
 const resetingModel = require("../models/resetingUsersModel");
 const { createResetToken } = require("../utils/tokens");
 const { sendToUser, mailOptions } = require("../services/mailer");
@@ -137,7 +137,10 @@ const create_reset_info = async (req, res) => {
   const { email } = req.body;
 
   try {
-    const user = await userModel.findOne({ email: email, verified: true });
+    const user = await userModel.findOneAndUpdate(
+      { email: email, verified: true },
+      { $set: { reseting: true } }
+    );
     if (!user) throw new Error("user not found");
     const existing = await resetingModel.findOne({ email: email });
     if (existing && existing.attempts >= 3) {
@@ -217,13 +220,36 @@ const verify_reset_otp = async (req, res) => {
 
   try {
     const user = await resetingModel.findOne({ email: email, "OTP.otp": otp });
-    if (!user || user.OTP.expireAt < Date.now()) {
+    if (!user || user.OTP.expireAt < Date.now() || user.OTP.attempts >= 3) {
       throw new Error("invalid reset otp");
     }
     res.status(200).json({ success: "type your new password" });
   } catch (err) {
     console.log(err);
     res.status(403).json({ err: err.message });
+  }
+};
+
+const confirm_reset = async (req, res) => {
+  const { email, password } = req.body;
+  const resetToken = req.cookies.jwtReset;
+
+  try {
+    const hashedPassword = await passowrdHash(password);
+    const user = await userModel.findOne({ email, reseting: true });
+    if (!user) throw new Error("user not found");
+
+    const resetUserPassword = await userModel.findOneAndUpdate(
+      { email: email, _id: user._id, reseting: true },
+      { $set: { password: hashedPassword }, $unset: { reseting: 1 } }
+    );
+    await resetUserPassword.save();
+    await resetingModel.findOneAndDelete({ email: email, id: user._id });
+    if (resetToken) res.cookie("jwtReset", "", { maxAge: 1 });
+    res.status(201).json({ user: user.email });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ err: err.message });
   }
 };
 
@@ -234,4 +260,5 @@ module.exports = {
   create_reset_info,
   reset_password,
   verify_reset_otp,
+  confirm_reset,
 };

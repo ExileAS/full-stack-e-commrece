@@ -6,6 +6,7 @@ const {
   create_reset_info,
   reset_password,
   verify_reset_otp,
+  confirm_reset,
 } = require("../controlers/authController");
 const {
   requireAuth,
@@ -30,5 +31,12 @@ router.post(
   csrfProtection,
   requireResetToken,
   verify_reset_otp
+);
+
+router.post(
+  "/api/confirm-reset",
+  csrfProtection,
+  requireResetToken,
+  confirm_reset
 );
 module.exports = router;
