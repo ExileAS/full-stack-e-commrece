@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 import { setRemainingAttempts } from "./userSlice";
+import exponentialBackoff from "../utils/exponentialBackoff";
 
 const PasswordReset = () => {
   const token = useContext(csrfTokenContext);
@@ -76,31 +77,36 @@ const PasswordReset = () => {
     }
   };
 
-  const handlePasswordReset = async () => {
-    if (password !== passwordConfirm) {
-      setPasswordErr("password confirmation incorrect");
-      return;
-    }
+  const handlePasswordReset = () =>
+    exponentialBackoff(async () => {
+      if (password !== passwordConfirm) {
+        setPasswordErr("password confirmation incorrect");
+        return;
+      }
 
-    try {
-      const res = await fetch("/api/confirm-reset", {
-        method: "POST",
-        body: JSON.stringify({ email, password }),
-        headers: { "Content-Type": "application/json", "csrf-token": token },
-      });
-      const data = await res.json();
-      console.log(data);
-      if (data.user) {
-        setInfo("password reset success");
-        navigate("/login");
+      try {
+        const res = await fetch("/api/confirm-reset", {
+          method: "POST",
+          body: JSON.stringify({ email, password }),
+          headers: { "Content-Type": "application/json", "csrf-token": token },
+        });
+        const data = await res.json();
+        console.log(data);
+        if (data.user) {
+          setInfo("password reset success");
+          navigate("/login");
+          return data.user;
+        }
+        if (data.err) {
+          setErr(data.err);
+        }
+      } catch (err) {
+        console.log(err);
+        return {
+          err,
+        };
       }
-      if (data.err) {
-        setErr(data.err);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
+    });
 
   return (
     <div className="bg-img">

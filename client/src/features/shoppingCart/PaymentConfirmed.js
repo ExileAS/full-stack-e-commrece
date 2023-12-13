@@ -37,11 +37,15 @@ const PaymentConfirmed = () => {
         });
         const data = await res.json();
         console.log(data);
-        if (data.err)
-          setConfirmErr(data.err || "unknown error try again later");
+        if (data.err) {
+          return data;
+        }
         if (data.startedAt) dispatch(setStartedAt(data.startedAt));
       } catch (err) {
         setConfirmErr(err.message);
+        return {
+          err,
+        };
       }
     }
   }, [currUser, confirmId, dispatch, id, orderId]);
