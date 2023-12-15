@@ -7,6 +7,7 @@ import { setTempEmail } from "./userSlice";
 import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 import { PhoneNumberInput } from "../../components/PhoneInput";
 import { isPossiblePhoneNumber } from "react-phone-number-input";
+import { SIGNUP_URL } from "../utils/urlConstants";
 
 const SignUp = ({ err }) => {
   const tokenError = typeof err === "string" ? err : "";
@@ -36,7 +37,7 @@ const SignUp = ({ err }) => {
     setEmailErr("");
     setPasswordErr("");
     try {
-      const res = await fetch("/api/signup", {
+      const res = await fetch(SIGNUP_URL, {
         method: "POST",
         body: JSON.stringify({ email, password, isSeller }),
         headers: { "Content-Type": "application/json", "csrf-token": token },

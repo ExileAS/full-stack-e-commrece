@@ -23,6 +23,7 @@ import useLogout from "./features/userRegister/useLogout";
 import useIdleTimeout from "./features/utils/useIdleTimeout";
 import { CsrfContextLayout } from "./contexts/csrfTokenContext";
 import PasswordReset from "./features/userRegister/PasswordReset";
+import { CHECK_TOKEN_URL } from "./features/utils/urlConstants";
 
 function App() {
   const currEmail = useSelector((state) => state.user.userEmail);
@@ -33,7 +34,7 @@ function App() {
       checkToken();
     }
     async function checkToken() {
-      const res = await fetch("/api/checkToken", {
+      const res = await fetch(CHECK_TOKEN_URL, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });

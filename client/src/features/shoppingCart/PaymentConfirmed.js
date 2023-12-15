@@ -5,6 +5,7 @@ import { confirmPayment, setStartedAt, updateOrder } from "./shoppingCartSlice";
 import { useParams } from "react-router-dom";
 import { setOrderId } from "../userRegister/userSlice";
 import exponentialBackoff from "../utils/exponentialBackoff";
+import { CONFIRM_PAYMENT_URL } from "../utils/urlConstants";
 
 const PaymentConfirmed = () => {
   const confirmId = useSelector(
@@ -30,7 +31,7 @@ const PaymentConfirmed = () => {
       dispatch(confirmPayment());
       try {
         await dispatch(updateOrder(true)).unwrap();
-        const res = await fetch("/api/confirmPayment", {
+        const res = await fetch(CONFIRM_PAYMENT_URL, {
           method: "POST",
           body: JSON.stringify({ confirmId, currUser }),
           headers: { "Content-Type": "application/json" },

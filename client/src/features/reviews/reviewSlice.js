@@ -1,4 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  ADD_REVIEW_URL,
+  EDIT_REVIEW_URL,
+  GET_REVIEWS_URL,
+} from "../utils/urlConstants";
 
 const initialState = {
   products: [],
@@ -8,7 +13,7 @@ const initialState = {
 export const fetchReviews = createAsyncThunk(
   "review/fetchReviews",
   async () => {
-    const res = await fetch("/api/reviews", {
+    const res = await fetch(GET_REVIEWS_URL, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
@@ -21,7 +26,7 @@ export const addReviewDb = createAsyncThunk(
   "review/addReviewDb",
   async (info) => {
     try {
-      const res = await fetch("/api/addReview", {
+      const res = await fetch(ADD_REVIEW_URL, {
         method: "POST",
         body: JSON.stringify({
           id: info.productId,
@@ -44,7 +49,7 @@ export const editReviewDb = createAsyncThunk(
   "review/editReviewDb",
   async (info) => {
     try {
-      const res = await fetch("/api/editReview", {
+      const res = await fetch(EDIT_REVIEW_URL, {
         method: "PATCH",
         body: JSON.stringify({
           id: info.productId,

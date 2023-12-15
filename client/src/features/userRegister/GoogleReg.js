@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 import exponentialBackoff from "../utils/exponentialBackoff";
+import { SIGNUP_URL } from "../utils/urlConstants";
 
 const GoogleReg = () => {
   const token = useContext(csrfTokenContext);
@@ -16,7 +17,7 @@ const GoogleReg = () => {
     exponentialBackoff(async (response) => {
       try {
         const { sub, email_verified, email } = jwtDecode(response.credential);
-        const res = await fetch("/api/signup", {
+        const res = await fetch(SIGNUP_URL, {
           method: "POST",
           body: JSON.stringify({ sub, email_verified, email }),
           headers: { "Content-Type": "application/json", "csrf-token": token },

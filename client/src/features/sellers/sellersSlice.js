@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { GET_SELLERS_URL } from "../utils/urlConstants";
 
 const initialState = {
   status: "idle",
@@ -8,7 +9,7 @@ const initialState = {
 
 export const getAllSellers = createAsyncThunk("getAllSellers", async () => {
   try {
-    const res = await fetch("/api/allSellers", {
+    const res = await fetch(GET_SELLERS_URL, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });

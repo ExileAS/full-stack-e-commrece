@@ -4,6 +4,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 import { setRemainingAttempts } from "./userSlice";
 import exponentialBackoff from "../utils/exponentialBackoff";
+import {
+  RESET_URL,
+  RESET_CONFIRM_URL,
+  VERIFY_RESET_OTP_URL,
+} from "../utils/urlConstants";
 
 const PasswordReset = () => {
   const token = useContext(csrfTokenContext);
@@ -34,7 +39,7 @@ const PasswordReset = () => {
       return;
     }
 
-    const res = await fetch("/api/resetUserPass", {
+    const res = await fetch(RESET_URL, {
       method: "POST",
       body: JSON.stringify({ email: email, resetId: id }),
       headers: { "Content-Type": "application/json", "csrf-token": token },
@@ -56,7 +61,7 @@ const PasswordReset = () => {
       setLoading(true);
       setErr("");
       try {
-        const res = await fetch("/api/otp-passwordReset", {
+        const res = await fetch(VERIFY_RESET_OTP_URL, {
           method: "POST",
           body: JSON.stringify({ email: email, otp: otpRef.current?.value }),
           headers: { "Content-Type": "application/json", "csrf-token": token },
@@ -84,7 +89,7 @@ const PasswordReset = () => {
     }
     exponentialBackoff(async () => {
       try {
-        const res = await fetch("/api/confirm-reset", {
+        const res = await fetch(RESET_CONFIRM_URL, {
           method: "POST",
           body: JSON.stringify({ email, password }),
           headers: { "Content-Type": "application/json", "csrf-token": token },

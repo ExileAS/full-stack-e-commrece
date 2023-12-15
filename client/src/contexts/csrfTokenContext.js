@@ -1,5 +1,6 @@
 import { useState, useEffect, createContext } from "react";
 import { Outlet } from "react-router-dom";
+import { CREATE_CSRF_URL } from "../features/utils/urlConstants";
 
 export const csrfTokenContext = createContext(null);
 
@@ -9,7 +10,7 @@ const CsrfTokenProvider = ({ children }) => {
   useEffect(() => {
     const fetchToken = async () => {
       try {
-        const res = await fetch("/api/csrf-create-token");
+        const res = await fetch(CREATE_CSRF_URL);
         const data = await res.json();
         setToken(data.csrfToken);
       } catch (err) {

@@ -15,6 +15,7 @@ import ConutryPicker from "../../components/CountryPicker";
 import { PhoneNumberInput } from "../../components/PhoneInput";
 import { isPossiblePhoneNumber } from "react-phone-number-input";
 import Loader from "../../components/Loader";
+import { CONFIRM_AVAILABLE_URL } from "../utils/urlConstants";
 
 const ConfirmOrderForm = () => {
   const token = useContext(csrfTokenContext);
@@ -87,7 +88,7 @@ const ConfirmOrderForm = () => {
     setLoading(true);
     setErr("");
     try {
-      const res = await fetch("/api/confirmAvailable", {
+      const res = await fetch(CONFIRM_AVAILABLE_URL, {
         method: "POST",
         body: JSON.stringify(orderedInCart),
         headers: { "Content-Type": "application/json", "csrf-token": token },

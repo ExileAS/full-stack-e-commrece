@@ -1,5 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import exponentialBackoff from "../utils/exponentialBackoff";
+import {
+  DELETE_ORDER_URL,
+  POST_ORDERED_URL,
+  RETRIVE_ORDERED_URL,
+  UPDATE_ORDER_URL,
+} from "../utils/urlConstants";
 
 const initialState = {
   cart: [],
@@ -20,7 +26,7 @@ export const postOrdered = createAsyncThunk(
     const state = getState();
     const postOrderedFn = async () => {
       try {
-        const res = await fetch("/api/post-ordered", {
+        const res = await fetch(POST_ORDERED_URL, {
           method: "POST",
           body: JSON.stringify({
             list: state.shoppingCart.ordered,
@@ -44,7 +50,7 @@ export const retrieveOrderedList = createAsyncThunk(
   async (userEmail) => {
     const retrieveOrderFn = async () => {
       try {
-        const res = await fetch("/api/retrieveOrdered", {
+        const res = await fetch(RETRIVE_ORDERED_URL, {
           method: "POST",
           body: JSON.stringify({ userEmail }),
           headers: { "Content-Type": "application/json" },
@@ -68,7 +74,7 @@ export const updateOrder = createAsyncThunk(
       : state.shoppingCart.payedOrder;
     const updateFn = async () => {
       try {
-        const res = await fetch("/api/updateOrder", {
+        const res = await fetch(UPDATE_ORDER_URL, {
           method: "PATCH",
           body: JSON.stringify({
             customerInfo: state.shoppingCart.customerInfo,
@@ -94,7 +100,7 @@ export const clearInDB = createAsyncThunk(
   async (confirmId) => {
     const clearFn = async () => {
       try {
-        const res = await fetch("/api/deleteOrder", {
+        const res = await fetch(DELETE_ORDER_URL, {
           method: "DELETE",
           body: JSON.stringify({ confirmId }),
           headers: { "Content-Type": "application/json" },

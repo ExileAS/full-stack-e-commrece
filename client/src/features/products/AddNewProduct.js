@@ -7,6 +7,7 @@ import { addNewSeller, generateIdSeller } from "../sellers/sellersSlice";
 import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 import Loader from "../../components/Loader";
 import exponentialBackoff from "../utils/exponentialBackoff";
+import { ADD_PRODUCT_URL, EDIT_PRODUCT_URL } from "../utils/urlConstants";
 
 export const AddNewProduct = () => {
   const token = useContext(csrfTokenContext);
@@ -60,7 +61,7 @@ export const AddNewProduct = () => {
       exponentialBackoff(async () => {
         try {
           const res = await axios.post(
-            "/api",
+            ADD_PRODUCT_URL,
             {
               name: formState.productName,
               description: formState.description,
@@ -102,7 +103,7 @@ export const AddNewProduct = () => {
       exponentialBackoff(async () => {
         try {
           const res = await axios.patch(
-            "/api/editProduct",
+            EDIT_PRODUCT_URL,
             {
               name: formState.productName,
               description: formState.description,

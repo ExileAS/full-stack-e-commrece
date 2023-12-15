@@ -10,6 +10,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 import Timer from "../../components/Timer";
 import exponentialBackoff from "../utils/exponentialBackoff";
+import {
+  LOGIN_URL,
+  RESEND_URL,
+  VERIFY_OTP_URL,
+  REQUIRE_RESET_URL,
+} from "../utils/urlConstants";
 
 const Login = () => {
   const token = useContext(csrfTokenContext);
@@ -37,7 +43,7 @@ const Login = () => {
       dispatch(setTempEmail(null));
       exponentialBackoff(async () => {
         try {
-          const res = await fetch("/api/login", {
+          const res = await fetch(LOGIN_URL, {
             method: "POST",
             body: JSON.stringify({ email, password }),
             headers: {
@@ -76,7 +82,7 @@ const Login = () => {
     if (otpRef.current.value.length === 6) {
       setLoading(true);
       setVerifyErr("");
-      const res = await fetch("/api/verifyOTP", {
+      const res = await fetch(VERIFY_OTP_URL, {
         method: "POST",
         body: JSON.stringify({ email: currUser, otp: otpRef.current?.value }),
         headers: { "Content-Type": "application/json", "csrf-token": token },
@@ -98,7 +104,7 @@ const Login = () => {
 
   const handleResend = async () => {
     setTimer("15");
-    const res = await fetch("/api/resend", {
+    const res = await fetch(RESEND_URL, {
       method: "POST",
       body: JSON.stringify({ email: currUser }),
       headers: { "Content-Type": "application/json", "csrf-token": token },
@@ -119,7 +125,7 @@ const Login = () => {
       return;
     }
 
-    const res = await fetch("/api/api/requireReset", {
+    const res = await fetch(REQUIRE_RESET_URL, {
       method: "POST",
       body: JSON.stringify({ email: email }),
       headers: { "Content-Type": "application/json", "csrf-token": token },

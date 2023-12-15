@@ -17,6 +17,7 @@ import { setOrderId } from "../userRegister/userSlice";
 import { Spinner } from "../../components/Spinner";
 import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 import exponentialBackoff from "../utils/exponentialBackoff";
+import { PAYMENT_URL } from "../utils/urlConstants";
 
 const OrderedProductsList = ({ confirmed }) => {
   const token = useContext(csrfTokenContext);
@@ -103,7 +104,7 @@ const OrderedProductsList = ({ confirmed }) => {
     exponentialBackoff(async () => {
       setDisableCheckout(true);
       try {
-        const res = await fetch("/api/payment", {
+        const res = await fetch(PAYMENT_URL, {
           method: "POST",
           body: JSON.stringify({
             confirmId: confirmId,

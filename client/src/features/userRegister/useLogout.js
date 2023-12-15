@@ -7,13 +7,14 @@ import {
 } from "../shoppingCart/shoppingCartSlice";
 import { logout } from "./userSlice";
 import { getAllSelected, productUnSelected } from "../products/productsSlice";
+import { LOGOUT_URL } from "../utils/urlConstants";
 
 const useLogout = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const selected = useSelector(getAllSelected);
   const handleLogout = async (err) => {
-    await fetch("/api/logout", {
+    await fetch(LOGOUT_URL, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });

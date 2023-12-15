@@ -8,12 +8,10 @@ import {
   getCartLength,
   addToShoppingCart,
 } from "../shoppingCart/shoppingCartSlice";
-import useLogout from "../userRegister/useLogout";
 
 const SelectedList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const logoutUser = useLogout();
   const cartHasItems = useSelector(getCartLength) > 0;
 
   const selectedList = useSelector(getAllSelected);
@@ -38,24 +36,11 @@ const SelectedList = () => {
     }
   }, [selectedList, cartHasItems, navigate]);
 
-  const handleAddAll = async (selectedList) => {
-    try {
-      const res = await fetch("/api/requireAuth", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      if (!res.err) {
-        selectedList.forEach((product) => {
-          dispatch(addToShoppingCart(product));
-          dispatch(productUnSelected({ productId: product.id }));
-        });
-      } else {
-        await logoutUser();
-        navigate("/signup");
-      }
-    } catch (err) {
-      console.log(err);
-    }
+  const handleAddAll = (selectedList) => {
+    selectedList.forEach((product) => {
+      dispatch(addToShoppingCart(product));
+      dispatch(productUnSelected({ productId: product.id }));
+    });
   };
 
   return selectedList.length > 0 ? (

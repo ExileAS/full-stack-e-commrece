@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { GET_PRODUCTS_URL } from "../utils/urlConstants";
 
 const initialState = {
   products: [],
@@ -10,7 +11,7 @@ const initialState = {
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
   async () => {
-    const res = await fetch("/api/all-products", {
+    const res = await fetch(GET_PRODUCTS_URL, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
