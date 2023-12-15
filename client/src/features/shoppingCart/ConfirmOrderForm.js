@@ -14,6 +14,7 @@ import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 import ConutryPicker from "../../components/CountryPicker";
 import { PhoneNumberInput } from "../../components/PhoneInput";
 import { isPossiblePhoneNumber } from "react-phone-number-input";
+import Loader from "../../components/Loader";
 
 const ConfirmOrderForm = () => {
   const token = useContext(csrfTokenContext);
@@ -45,6 +46,8 @@ const ConfirmOrderForm = () => {
   const [countryState, setCountryState] = useState({ country: "", region: "" });
   const [phoneNumber, setPhoneNumber] = useState(null);
   const [phoneNumberErr, setPhoneNumberErr] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState("");
   const verifiedUser = useSelector((state) => state.user.verifiedUser);
 
   const handleChangeForm = (e) => {
@@ -77,7 +80,13 @@ const ConfirmOrderForm = () => {
       setPhoneNumberErr("please use your verified phone number");
       return;
     }
-    if (canSumbit) {
+    if (!canSumbit) {
+      setErr("Please fill the order info form");
+      return;
+    }
+    setLoading(true);
+    setErr("");
+    try {
       const res = await fetch("/api/confirmAvailable", {
         method: "POST",
         body: JSON.stringify(orderedInCart),
@@ -104,6 +113,8 @@ const ConfirmOrderForm = () => {
       } else {
         dispatch(updateOrder(false));
       }
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -163,10 +174,19 @@ const ConfirmOrderForm = () => {
               setCountryState={setCountryState}
             />
           </div>
-          <button onClick={handleSubmitInfo} className="button-85">
-            Confirm order
-          </button>
+          {!loading ? (
+            <button
+              onClick={handleSubmitInfo}
+              className="button-85"
+              disabled={loading}
+            >
+              Confirm order
+            </button>
+          ) : (
+            <Loader />
+          )}
         </form>
+        <b className="error">{err}</b>
       </div>
     </div>
   );
