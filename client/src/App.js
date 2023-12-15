@@ -20,7 +20,7 @@ import Categories from "./features/search/Categories";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import useLogout from "./features/userRegister/useLogout";
-import useIdleTimeout from "./features/userRegister/useIdleTimeout";
+import useIdleTimeout from "./features/utils/useIdleTimeout";
 import { CsrfContextLayout } from "./contexts/csrfTokenContext";
 import PasswordReset from "./features/userRegister/PasswordReset";
 

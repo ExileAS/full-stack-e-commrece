@@ -14,8 +14,7 @@ const SortOptions = ({ products }) => {
 
   useEffect(() => {
     dispatch(setProductState(sorted));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sortBy, dispatch, order]);
+  }, [sortBy, dispatch, order, sorted]);
 
   return (
     <div className="sort-container">

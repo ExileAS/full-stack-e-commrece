@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useCallback } from "react";
 
 const Timer = ({ start, timer, setTimer }) => {
   const Ref = useRef(null);
@@ -12,21 +12,27 @@ const Timer = ({ start, timer, setTimer }) => {
     };
   };
 
-  const startTimer = (e) => {
-    let { total, seconds } = getTimeRemaining(e);
-    if (total >= 0) {
-      setTimer(seconds > 9 ? seconds : "0" + seconds);
-    }
-  };
+  const startTimer = useCallback(
+    (e) => {
+      let { total, seconds } = getTimeRemaining(e);
+      if (total >= 0) {
+        setTimer(seconds > 9 ? seconds : "0" + seconds);
+      }
+    },
+    [setTimer]
+  );
 
-  const clearTimer = (e) => {
-    setTimer("15");
-    if (Ref.current) clearInterval(Ref.current);
-    const id = setInterval(() => {
-      startTimer(e);
-    }, 1000);
-    Ref.current = id;
-  };
+  const clearTimer = useCallback(
+    (e) => {
+      setTimer("15");
+      if (Ref.current) clearInterval(Ref.current);
+      const id = setInterval(() => {
+        startTimer(e);
+      }, 1000);
+      Ref.current = id;
+    },
+    [setTimer, startTimer]
+  );
 
   const getDeadTime = () => {
     let deadline = new Date();
@@ -37,8 +43,7 @@ const Timer = ({ start, timer, setTimer }) => {
     if (start) {
       clearTimer(getDeadTime());
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [start]);
+  }, [start, clearTimer]);
 
   return (
     <div>
