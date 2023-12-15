@@ -34,7 +34,7 @@ module.exports.product_post = async (req, res) => {
     await product.save();
     res.status(200).json({});
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ err: err.message });
   }
 };
 
@@ -58,8 +58,7 @@ module.exports.edit_product = async (req, res) => {
   img.mv(imgPath);
   const edenResSafe = await detectExplicit(imgPath, seller);
   if (!edenResSafe) {
-    res.status(403).json({ explicit: true });
-    return;
+    return res.status(403).json({ explicit: true });
   }
   const updates = { name, description, price, onhand, img: img.name, category };
   try {

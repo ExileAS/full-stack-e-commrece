@@ -16,13 +16,13 @@ const LandingPage = () => {
     fn: () =>
       exponentialBackoff(async () => {
         try {
-          const test = await Promise.all([
+          const data = await Promise.all([
             dispatch(fetchProducts()).unwrap(),
             dispatch(getAllSellers()).unwrap(),
             dispatch(fetchReviews()).unwrap(),
           ]);
           naviate("/products");
-          return test;
+          return data;
         } catch (err) {
           console.log(err);
           return {

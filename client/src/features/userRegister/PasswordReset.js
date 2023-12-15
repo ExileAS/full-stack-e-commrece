@@ -77,13 +77,12 @@ const PasswordReset = () => {
     }
   };
 
-  const handlePasswordReset = () =>
+  const handlePasswordReset = () => {
+    if (password !== passwordConfirm) {
+      setPasswordErr("password confirmation incorrect");
+      return;
+    }
     exponentialBackoff(async () => {
-      if (password !== passwordConfirm) {
-        setPasswordErr("password confirmation incorrect");
-        return;
-      }
-
       try {
         const res = await fetch("/api/confirm-reset", {
           method: "POST",
@@ -91,7 +90,6 @@ const PasswordReset = () => {
           headers: { "Content-Type": "application/json", "csrf-token": token },
         });
         const data = await res.json();
-        console.log(data);
         if (data.user) {
           setInfo("password reset success");
           navigate("/login");
@@ -107,6 +105,7 @@ const PasswordReset = () => {
         };
       }
     });
+  };
 
   return (
     <div className="bg-img">

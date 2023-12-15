@@ -6,6 +6,7 @@ import { generateId, selectProductById } from "../products/productsSlice";
 import { addNewSeller, generateIdSeller } from "../sellers/sellersSlice";
 import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 import Loader from "../../components/Loader";
+import exponentialBackoff from "../utils/exponentialBackoff";
 
 export const AddNewProduct = () => {
   const token = useContext(csrfTokenContext);
@@ -53,73 +54,85 @@ export const AddNewProduct = () => {
     formState.amountToSell > 0;
 
   const [status, setStatus] = useState("idle");
-  const handleProductAdded = async () => {
+  const handleProductAdded = () => {
     if (canAdd) {
       setStatus("pending");
-      try {
-        const res = await axios.post(
-          "/api",
-          {
-            name: formState.productName,
-            description: formState.description,
-            price: formState.price,
-            onhand: formState.amountToSell,
-            id,
-            seller: userName,
-            category: formState.category,
-            img: img,
-          },
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              "x-rapidapi-host": "file-upload8.p.rapidapi.com",
-              "csrf-token": token,
+      exponentialBackoff(async () => {
+        try {
+          const res = await axios.post(
+            "/api",
+            {
+              name: formState.productName,
+              description: formState.description,
+              price: formState.price,
+              onhand: formState.amountToSell,
+              id,
+              seller: userName,
+              category: formState.category,
+              img: img,
             },
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+                "x-rapidapi-host": "file-upload8.p.rapidapi.com",
+                "csrf-token": token,
+              },
+            }
+          );
+          const info = await res.json();
+          if (res.ok) {
+            dispatch(addNewSeller({ name: userName, id: sellerId }));
+            navigate("/products");
+            window.location.reload(true);
+            setStatus("success");
           }
-        );
-        if (res.ok) {
-          dispatch(addNewSeller({ name: userName, id: sellerId }));
+          return info;
+        } catch (err) {
+          console.log(err);
+          return {
+            err,
+          };
         }
-        setStatus("success");
-      } catch (err) {
-        console.log(err);
-      }
-      navigate("/products");
-      window.location.reload(true);
+      });
     }
   };
 
   const handleEdit = async () => {
     if (canAdd && sellerEdit) {
-      try {
-        const res = await axios.patch(
-          "/api/editProduct",
-          {
-            name: formState.productName,
-            description: formState.description,
-            price: formState.price,
-            onhand: formState.amountToSell,
-            id: productId,
-            seller: userName,
-            category: formState.category,
-            img: img,
-          },
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              "x-rapidapi-host": "file-upload8.p.rapidapi.com",
-              "csrf-token": token,
+      exponentialBackoff(async () => {
+        try {
+          const res = await axios.patch(
+            "/api/editProduct",
+            {
+              name: formState.productName,
+              description: formState.description,
+              price: formState.price,
+              onhand: formState.amountToSell,
+              id: productId,
+              seller: userName,
+              category: formState.category,
+              img: img,
             },
-          }
-        );
-        const info = await res.json();
-        console.log(info);
-        setStatus("success");
-      } catch (err) {
-        console.log(err);
-      }
-      navigate("/products");
-      window.location.reload(true);
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+                "x-rapidapi-host": "file-upload8.p.rapidapi.com",
+                "csrf-token": token,
+              },
+            }
+          );
+          const info = await res.json();
+          setStatus("success");
+          navigate("/products");
+          window.location.reload(true);
+          return info;
+        } catch (err) {
+          console.log(err);
+          return {
+            err,
+          };
+        }
+      });
     }
   };
 

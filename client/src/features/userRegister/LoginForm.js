@@ -29,14 +29,13 @@ const Login = () => {
   const navigate = useNavigate();
   const currUser = useSelector((state) => state.user.tempEmail);
 
-  const handleLogin = () =>
-    exponentialBackoff(async () => {
+  const handleLogin = () => {
+    if (email.length > 0 && password.length > 0) {
       dispatch(clearCustomerInfo());
       setEmailError("");
       setPasswordErr("");
-
       dispatch(setTempEmail(null));
-      if (email.length > 0 && password.length > 0) {
+      exponentialBackoff(async () => {
         try {
           const res = await fetch("/api/login", {
             method: "POST",
@@ -51,7 +50,6 @@ const Login = () => {
           if (data.errors) {
             setEmailError(data.errors.email);
             setPasswordErr(data.errors.password);
-            console.log(data.errors);
             if (data.errors.password) setForgotOption(true);
           }
           if (data.unverifiedEmail) {
@@ -70,8 +68,9 @@ const Login = () => {
             err: err.message,
           };
         }
-      }
-    });
+      });
+    }
+  };
 
   const handleOTP = async () => {
     if (otpRef.current.value.length === 6) {

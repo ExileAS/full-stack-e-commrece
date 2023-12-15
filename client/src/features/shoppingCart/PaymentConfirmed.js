@@ -36,11 +36,8 @@ const PaymentConfirmed = () => {
           headers: { "Content-Type": "application/json" },
         });
         const data = await res.json();
-        console.log(data);
-        if (data.err) {
-          return data;
-        }
         if (data.startedAt) dispatch(setStartedAt(data.startedAt));
+        return data;
       } catch (err) {
         setConfirmErr(err.message);
         return {

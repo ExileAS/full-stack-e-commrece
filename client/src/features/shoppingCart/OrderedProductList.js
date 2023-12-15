@@ -115,8 +115,12 @@ const OrderedProductsList = ({ confirmed }) => {
           dispatch(setOrderId(data.id));
           window.location.assign(`${data.url}`);
         }
+        return data;
       } catch (err) {
         console.log(err);
+        return {
+          err,
+        };
       }
     });
 
