@@ -12,6 +12,8 @@ const cleanupExpiredUsers = async () => {
 
     const query = {
       expireAt: { $exists: true, $lt: new Date() },
+      verified: false,
+      verifiedAt: { $exists: false },
     };
 
     const result = await collection.deleteMany(query);
