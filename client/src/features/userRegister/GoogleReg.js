@@ -31,9 +31,6 @@ const GoogleReg = () => {
         return data;
       } catch (err) {
         console.log(err);
-        return {
-          err: err.message,
-        };
       }
     });
   return (

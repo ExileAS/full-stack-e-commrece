@@ -1,10 +1,7 @@
 import { useContext, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login, setRemainingAttempts, setTempEmail } from "./userSlice";
-import {
-  clearCustomerInfo,
-  retrieveOrderedList,
-} from "../shoppingCart/shoppingCartSlice";
+import { retrieveOrderedList } from "../shoppingCart/shoppingCartSlice";
 import GoogleReg from "./GoogleReg";
 import { useNavigate, useParams } from "react-router-dom";
 import { csrfTokenContext } from "../../contexts/csrfTokenContext";
@@ -36,46 +33,43 @@ const Login = () => {
   const currUser = useSelector((state) => state.user.tempEmail);
 
   const handleLogin = () => {
-    if (email.length > 0 && password.length > 0) {
-      dispatch(clearCustomerInfo());
-      setEmailError("");
-      setPasswordErr("");
-      dispatch(setTempEmail(null));
-      exponentialBackoff(async () => {
-        try {
-          const res = await fetch(LOGIN_URL, {
-            method: "POST",
-            body: JSON.stringify({ email, password }),
-            headers: {
-              "Content-Type": "application/json",
-              "csrf-token": token,
-            },
-          });
-          const data = await res.json();
-
-          if (data.errors) {
-            setEmailError(data.errors.email);
-            setPasswordErr(data.errors.password);
-            if (data.errors.password) setForgotOption(true);
-          }
-          if (data.unverifiedEmail) {
-            setVerifyErr("please verify your account");
-            dispatch(setTempEmail(data.unverifiedEmail));
-          }
-          if (data.user) {
-            dispatch(login(data));
-            navigate("/products");
-            dispatch(retrieveOrderedList(data.user));
-          }
-          return data;
-        } catch (err) {
-          console.log(err);
-          return {
-            err: err.message,
-          };
-        }
-      });
+    if (email.length === 0 || password.length === 0) {
+      return;
     }
+    setEmailError("");
+    setPasswordErr("");
+    dispatch(setTempEmail(null));
+    exponentialBackoff(async () => {
+      try {
+        const res = await fetch(LOGIN_URL, {
+          method: "POST",
+          body: JSON.stringify({ email, password }),
+          headers: {
+            "Content-Type": "application/json",
+            "csrf-token": token,
+          },
+        });
+        const data = await res.json();
+
+        if (data.errors) {
+          setEmailError(data.errors.email);
+          setPasswordErr(data.errors.password);
+          if (data.errors.password) setForgotOption(true);
+        }
+        if (data.unverifiedEmail) {
+          setVerifyErr("please verify your account");
+          dispatch(setTempEmail(data.unverifiedEmail));
+        }
+        if (data.user) {
+          dispatch(login(data));
+          navigate("/products");
+          dispatch(retrieveOrderedList(data.user));
+        }
+        return data;
+      } catch (err) {
+        console.log(err);
+      }
+    });
   };
 
   const handleOTP = async () => {

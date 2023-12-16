@@ -98,16 +98,13 @@ const PasswordReset = () => {
         if (data.user) {
           setInfo("password reset success");
           navigate("/login");
-          return data.user;
         }
         if (data.err) {
           setErr(data.err);
         }
+        return data;
       } catch (err) {
         console.log(err);
-        return {
-          err,
-        };
       }
     });
   };

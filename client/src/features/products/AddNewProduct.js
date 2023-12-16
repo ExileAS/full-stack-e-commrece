@@ -90,9 +90,6 @@ export const AddNewProduct = () => {
           return info;
         } catch (err) {
           console.log(err);
-          return {
-            err,
-          };
         }
       });
     }
@@ -129,9 +126,6 @@ export const AddNewProduct = () => {
           return info;
         } catch (err) {
           console.log(err);
-          return {
-            err,
-          };
         }
       });
     }

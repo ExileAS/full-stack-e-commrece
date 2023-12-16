@@ -1,10 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {
-  clearCustomerInfo,
-  clearOrdered,
-  clearShoppingCart,
-} from "../shoppingCart/shoppingCartSlice";
+import { clearCustomerInfo } from "../shoppingCart/shoppingCartSlice";
 import { logout } from "./userSlice";
 import { getAllSelected, productUnSelected } from "../products/productsSlice";
 import { LOGOUT_URL } from "../utils/urlConstants";
@@ -18,9 +14,7 @@ const useLogout = () => {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
-    dispatch(clearOrdered());
     dispatch(logout());
-    dispatch(clearShoppingCart());
     dispatch(clearCustomerInfo());
     selected.forEach((item) =>
       dispatch(productUnSelected({ productId: item.id }))

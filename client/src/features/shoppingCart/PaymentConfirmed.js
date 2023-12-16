@@ -41,9 +41,6 @@ const PaymentConfirmed = () => {
         return data;
       } catch (err) {
         setConfirmErr(err.message);
-        return {
-          err,
-        };
       }
     }
   }, [currUser, confirmId, dispatch, id, orderId]);
