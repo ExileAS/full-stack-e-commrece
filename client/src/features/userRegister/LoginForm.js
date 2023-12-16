@@ -124,7 +124,6 @@ const Login = () => {
       setEmailError("please type your email");
       return;
     }
-
     const res = await fetch(REQUIRE_RESET_URL, {
       method: "POST",
       body: JSON.stringify({ email: email }),
