@@ -73,9 +73,12 @@ const Login = () => {
   };
 
   const handleOTP = async () => {
-    if (otpRef.current.value.length === 6) {
-      setLoading(true);
-      setVerifyErr("");
+    if (otpRef.current.value.length < 6) {
+      return;
+    }
+    setLoading(true);
+    setVerifyErr("");
+    try {
       const res = await fetch(VERIFY_OTP_URL, {
         method: "POST",
         body: JSON.stringify({ email: currUser, otp: otpRef.current?.value }),
@@ -93,23 +96,29 @@ const Login = () => {
           dispatch(setTempEmail(null));
         }
       }
+    } catch (err) {
+      console.log(err);
     }
   };
 
   const handleResend = async () => {
     setTimer("15");
-    const res = await fetch(RESEND_URL, {
-      method: "POST",
-      body: JSON.stringify({ email: currUser }),
-      headers: { "Content-Type": "application/json", "csrf-token": token },
-    });
-    const data = await res.json();
-    if (data.err) {
-      setVerifyErr(data.err);
-      dispatch(setTempEmail(null));
-    }
-    if (data.success) {
-      setResponse(data.success);
+    try {
+      const res = await fetch(RESEND_URL, {
+        method: "POST",
+        body: JSON.stringify({ email: currUser }),
+        headers: { "Content-Type": "application/json", "csrf-token": token },
+      });
+      const data = await res.json();
+      if (data.err) {
+        setVerifyErr(data.err);
+        dispatch(setTempEmail(null));
+      }
+      if (data.success) {
+        setResponse(data.success);
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -118,22 +127,26 @@ const Login = () => {
       setEmailError("please type your email");
       return;
     }
-    const res = await fetch(REQUIRE_RESET_URL, {
-      method: "POST",
-      body: JSON.stringify({ email: email }),
-      headers: { "Content-Type": "application/json", "csrf-token": token },
-    });
-    const data = await res.json();
-    if (res.status === 301) {
-      if (data.id && data.remainingAttempts) {
-        dispatch(setRemainingAttempts(data.remainingAttempts));
-        if (data.remainingAttempts > 0) {
-          navigate(`/passowrd-reset/${data.id}`);
+    try {
+      const res = await fetch(REQUIRE_RESET_URL, {
+        method: "POST",
+        body: JSON.stringify({ email: email }),
+        headers: { "Content-Type": "application/json", "csrf-token": token },
+      });
+      const data = await res.json();
+      if (res.status === 301) {
+        if (data.id && data.remainingAttempts) {
+          dispatch(setRemainingAttempts(data.remainingAttempts));
+          if (data.remainingAttempts > 0) {
+            navigate(`/passowrd-reset/${data.id}`);
+          }
         }
       }
-    }
-    if (data.err) {
-      setVerifyErr(data.err);
+      if (data.err) {
+        setVerifyErr(data.err);
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 

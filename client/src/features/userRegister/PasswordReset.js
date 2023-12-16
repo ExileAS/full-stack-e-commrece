@@ -38,21 +38,24 @@ const PasswordReset = () => {
       setErr("too many attempts \n try again later");
       return;
     }
-
-    const res = await fetch(RESET_URL, {
-      method: "POST",
-      body: JSON.stringify({ email: email, resetId: id }),
-      headers: { "Content-Type": "application/json", "csrf-token": token },
-    });
-    const data = await res.json();
-    console.log(data);
-    if (data.user) {
-      setInfo(`reset otp sent to ${email}`);
-      setShowOtp(true);
-      dispatch(setRemainingAttempts(data.remainingAttempts));
-    }
-    if (data.err) {
-      setErr(data.err);
+    try {
+      const res = await fetch(RESET_URL, {
+        method: "POST",
+        body: JSON.stringify({ email: email, resetId: id }),
+        headers: { "Content-Type": "application/json", "csrf-token": token },
+      });
+      const data = await res.json();
+      console.log(data);
+      if (data.user) {
+        setInfo(`reset otp sent to ${email}`);
+        setShowOtp(true);
+        dispatch(setRemainingAttempts(data.remainingAttempts));
+      }
+      if (data.err) {
+        setErr(data.err);
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 
