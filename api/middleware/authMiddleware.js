@@ -75,4 +75,6 @@ const requireResetToken = (req, res, next) => {
   }
 };
 
+// checkSellerToken -> adding, editing products and attatch isSeller where needed
+
 module.exports = { checkUser, requireAuth, requireResetToken, csrfProtection };

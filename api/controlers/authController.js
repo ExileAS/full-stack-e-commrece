@@ -1,4 +1,4 @@
-const userModel = require("../models/userModel");
+const { userModel } = require("../models/userModel");
 require("dotenv").config();
 const generateUniqueId = require("generate-unique-id");
 const { handleVerifyErrors } = require("../utils/userRegisterErrors");
@@ -7,6 +7,7 @@ const { encrypt, decrypt, passowrdHash } = require("../utils/textEncryption");
 const resetingModel = require("../models/resetingUsersModel");
 const { createResetToken } = require("../utils/tokens");
 const { sendToUser, mailOptions } = require("../services/mailer");
+const sellerModel = require("../models/sellerModel");
 
 const verify_user_url = async (req, res) => {
   const { verifyId, email } = req.params;
@@ -134,10 +135,10 @@ const resend_msg = async (req, res) => {
 };
 
 const create_reset_info = async (req, res) => {
-  const { email } = req.body;
-
+  const { email, isSeller } = req.body;
+  const model = isSeller ? sellerModel : userModel;
   try {
-    const user = await userModel.findOneAndUpdate(
+    const user = await model.findOneAndUpdate(
       { email: email, verified: true },
       { $set: { reseting: true } }
     );
@@ -230,15 +231,15 @@ const verify_reset_otp = async (req, res) => {
 };
 
 const confirm_reset = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, isSeller } = req.body;
   const resetToken = req.cookies.jwtReset;
-
+  const model = isSeller ? sellerModel : userModel;
   try {
     const hashedPassword = await passowrdHash(password);
-    const user = await userModel.findOne({ email, reseting: true });
+    const user = await model.findOne({ email, reseting: true });
     if (!user) throw new Error("user not found");
 
-    const resetUserPassword = await userModel.findOneAndUpdate(
+    const resetUserPassword = await model.findOneAndUpdate(
       { email: email, _id: user._id, reseting: true },
       { $set: { password: hashedPassword }, $unset: { reseting: 1 } }
     );

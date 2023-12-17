@@ -1,12 +1,11 @@
-const userModel = require("../models/userModel");
+const { userModel } = require("../models/userModel");
 const { createToken, createTempToken } = require("../utils/tokens");
 const { handleErrors } = require("../utils/userRegisterErrors");
 const { createSignupInfo } = require("../utils/createUserInfo");
 const { passowrdHash } = require("../utils/textEncryption");
 
 const signup_post = async (req, res) => {
-  const { email, password, sub, email_verified, isSeller, phoneNumber } =
-    req.body;
+  const { email, password, sub, email_verified } = req.body;
 
   try {
     if (email && password) {
@@ -15,8 +14,6 @@ const signup_post = async (req, res) => {
       const user = await userModel.create({
         ...info,
         password: hashedPassword,
-        role: isSeller ? "seller" : "customer",
-        phoneNumber: isSeller ? phoneNumber : null,
       });
       send();
       const { token, name, options } = createTempToken(user._id);

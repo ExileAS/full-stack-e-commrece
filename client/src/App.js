@@ -114,6 +114,7 @@ function App() {
             />
             <Route exact path="/signup" element={<SignUp />} />
             <Route exact path="/signupSeller" element={<SignUp />} />
+            <Route exact path="/loginSeller" element={<Login />} />
             <Route exact path="/login" element={<Login />} />
             <Route exact path="/login/:err" element={<Login />} />
           </Route>

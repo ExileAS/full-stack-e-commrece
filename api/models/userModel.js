@@ -34,7 +34,8 @@ const userSchema = new Schema({
           value
         );
       },
-      message: "please use a stronger password",
+      message:
+        "please use a stronger password \n (8+ characters with letters (uppercase included), numbers and symbols)",
     },
   },
   verified: {
@@ -136,4 +137,4 @@ userSchema.statics.login = async function (email, password) {
 
 const userModel = mongoose.model("user", userSchema);
 
-module.exports = userModel;
+module.exports = { userModel, order };

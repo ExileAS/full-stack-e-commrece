@@ -1,9 +1,9 @@
-const Product = require("../models/productModel");
+const { ProductModel } = require("../models/productModel");
 
 const handleAddMain = (updates) => {
   for (let id in updates) {
     async function update() {
-      const result = await Product.findOneAndUpdate(
+      const result = await ProductModel.findOneAndUpdate(
         { id: id },
         { onhand: updates[id] }
       );
@@ -16,7 +16,7 @@ const handleAddMain = (updates) => {
 const handlePatchDeleteMain = async (updates) => {
   for (let id in updates) {
     async function update() {
-      const result = await Product.findOneAndUpdate(
+      const result = await ProductModel.findOneAndUpdate(
         { id: id },
         { $inc: { onhand: updates[id] } }
       );

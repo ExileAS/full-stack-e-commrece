@@ -7,7 +7,7 @@ import { setTempEmail } from "./userSlice";
 import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 import { PhoneNumberInput } from "../../components/PhoneInput";
 import { isPossiblePhoneNumber } from "react-phone-number-input";
-import { SIGNUP_URL } from "../utils/urlConstants";
+import { SELLER_SIGNUP_URL, SIGNUP_URL } from "../utils/urlConstants";
 
 const SignUp = ({ err }) => {
   const tokenError = typeof err === "string" ? err : "";
@@ -19,6 +19,7 @@ const SignUp = ({ err }) => {
   const [passwordErr, setPasswordErr] = useState("");
   const [phoneNumber, setPhoneNumber] = useState(null);
   const [phoneNumberErr, setPhoneNumberErr] = useState("");
+  const [companyName, setCompanyName] = useState("");
   const location = useLocation();
   const isSeller = location.pathname === "/signupSeller";
   const dispatch = useDispatch();
@@ -36,10 +37,14 @@ const SignUp = ({ err }) => {
     dispatch(clearCustomerInfo());
     setEmailErr("");
     setPasswordErr("");
+    const url = isSeller ? SELLER_SIGNUP_URL : SIGNUP_URL;
+    const options = isSeller
+      ? { email, password, phoneNumber }
+      : { email, password };
     try {
-      const res = await fetch(SIGNUP_URL, {
+      const res = await fetch(url, {
         method: "POST",
-        body: JSON.stringify({ email, password, isSeller }),
+        body: JSON.stringify(options),
         headers: { "Content-Type": "application/json", "csrf-token": token },
       });
       const data = await res.json();
@@ -92,6 +97,11 @@ const SignUp = ({ err }) => {
                 setNumber={setPhoneNumber}
               />
               <p className="error">{phoneNumberErr}</p>
+              <input
+                type="text"
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+              />
             </div>
           )}
           <button className="button-17" onClick={handleSignup}>

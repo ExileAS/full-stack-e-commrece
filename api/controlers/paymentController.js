@@ -1,21 +1,27 @@
 const { OrderedProductModel } = require("../models/oderedProductsModel");
-const userModel = require("../models/userModel");
+const { userModel } = require("../models/userModel");
 const createStripeSession = require("../services/stripe");
 const logger = require("../logs/winstonLogger");
+const sellerModel = require("../models/sellerModel");
 
 module.exports.payment_post = async (req, res) => {
-  const { confirmId, totalAfterDiscount } = req.body;
+  const { confirmId, totalAfterDiscount, isSeller } = req.body;
   try {
     const order = await OrderedProductModel.findOne({ confirmId: confirmId });
     const session = await createStripeSession(order);
 
-    const test = await userModel.findOneAndUpdate(
-      { email: order.customerInfo.userEmail },
+    const model = isSeller ? sellerModel : userModel;
+
+    await model.findOneAndUpdate(
+      { email: order.customerInfo.userEmail, phoneNumber: { $exists: false } },
       { $set: { phoneNumber: order.customerInfo.phoneNumber } }
     );
     res.json({ url: session.url, id: order._id, totalAfterDiscount });
     console.log(order);
   } catch (err) {
+    logger.error(
+      `stripe sesion failed: \nconfirmId: ${confirmId} \nerror: ${err}`
+    );
     res.status(500).json({ err: err.message });
   }
 };
@@ -63,9 +69,10 @@ module.exports.confirm_payment = async (req, res) => {
 };
 
 module.exports.update_user_orders = async (req, res) => {
-  const { confirmId, currUser, order, totalPayment } = req.body;
+  const { confirmId, currUser, order, totalPayment, isSeller } = req.body;
+  const model = isSeller ? sellerModel : userModel;
   try {
-    const user = await userModel.findOne({ email: currUser });
+    const user = await model.findOne({ email: currUser });
     const existingOrder = user?.orders.find(
       (order) => order.orderId === confirmId
     );
@@ -77,7 +84,7 @@ module.exports.update_user_orders = async (req, res) => {
     };
     let userOrder;
     if (existingOrder) {
-      userOrder = await userModel.findOneAndUpdate(
+      userOrder = await model.findOneAndUpdate(
         {
           email: currUser,
           orders: {
@@ -89,7 +96,7 @@ module.exports.update_user_orders = async (req, res) => {
       );
     } else {
       console.log("new");
-      userOrder = await userModel.findOneAndUpdate(
+      userOrder = await model.findOneAndUpdate(
         { email: currUser },
         {
           $push: { orders: newOrder },

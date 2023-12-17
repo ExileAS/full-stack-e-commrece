@@ -40,6 +40,9 @@ const Navbar = () => {
                   <Link to={"/signupSeller"}>
                     <button className="button-33">Seller Signup</button>
                   </Link>
+                  <Link to={"/loginSeller"}>
+                    <button className="button-33">Seller Login</button>
+                  </Link>
                 </>
               ) : (
                 <>

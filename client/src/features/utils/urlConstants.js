@@ -29,6 +29,8 @@ export const GET_REVIEWS_URL = `${BASE_API_URL}/reviews`;
 export const ADD_REVIEW_URL = `${BASE_API_URL}/addReview`;
 export const EDIT_REVIEW_URL = `${BASE_API_URL}/editReview`;
 
+export const SELLER_SIGNUP_URL = `${BASE_API_URL}/signup-seller`;
+export const SELLER_LOGIN_URL = `${BASE_API_URL}/login-seller`;
 export const ADD_PRODUCT_URL = `${BASE_API_URL}/add-product`;
 export const EDIT_PRODUCT_URL = `${BASE_API_URL}/editProduct`;
 

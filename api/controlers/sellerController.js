@@ -1,11 +1,11 @@
-const Product = require("../models/productModel");
+const { ProductModel } = require("../models/productModel");
 const path = require("path");
 const fs = require("fs");
 const { detectExplicit } = require("../services/EdenAi");
 
 module.exports.get_all_sellers = async (req, res) => {
   try {
-    const allProducts = await Product.find();
+    const allProducts = await ProductModel.find();
     const sellers = allProducts.map(({ seller }) => seller);
     res.status(200).json({ sellerList: sellers });
   } catch (err) {
@@ -26,7 +26,7 @@ module.exports.product_post = async (req, res) => {
   }
   try {
     const date = new Date().toISOString();
-    const product = await Product.create({
+    const product = await ProductModel.create({
       ...productDetails,
       date,
       img: img.name,
@@ -40,7 +40,7 @@ module.exports.product_post = async (req, res) => {
 module.exports.edit_product = async (req, res) => {
   const { name, description, price, onhand, id, seller, category } = req.body;
   const { img } = req.files;
-  const existing = await Product.findOne({ id: id, seller: seller });
+  const existing = await ProductModel.findOne({ id: id, seller: seller });
   const prevImg = existing.img;
   const prevImgPath = path.join(__dirname, "..", "images" + "/" + prevImg);
   if (prevImg !== img.name) {
@@ -61,7 +61,7 @@ module.exports.edit_product = async (req, res) => {
   }
   const updates = { name, description, price, onhand, img: img.name, category };
   try {
-    const response = await Product.findOneAndUpdate(
+    const response = await ProductModel.findOneAndUpdate(
       { id: id, seller: seller },
       { $set: updates },
       { new: true, upsert: true }

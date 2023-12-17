@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login, setRemainingAttempts, setTempEmail } from "./userSlice";
 import { retrieveOrderedList } from "../shoppingCart/shoppingCartSlice";
 import GoogleReg from "./GoogleReg";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 import Timer from "../../components/Timer";
 import exponentialBackoff from "../utils/exponentialBackoff";
@@ -12,6 +12,7 @@ import {
   RESEND_URL,
   VERIFY_OTP_URL,
   REQUIRE_RESET_URL,
+  SELLER_LOGIN_URL,
 } from "../utils/urlConstants";
 
 const Login = () => {
@@ -31,6 +32,8 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const currUser = useSelector((state) => state.user.tempEmail);
+  const location = useLocation();
+  const isSeller = location.pathname === "/loginSeller";
 
   const handleLogin = () => {
     if (email.length === 0 || password.length === 0) {
@@ -39,9 +42,10 @@ const Login = () => {
     setEmailError("");
     setPasswordErr("");
     dispatch(setTempEmail(null));
+    const url = isSeller ? SELLER_LOGIN_URL : LOGIN_URL;
     exponentialBackoff(async () => {
       try {
-        const res = await fetch(LOGIN_URL, {
+        const res = await fetch(url, {
           method: "POST",
           body: JSON.stringify({ email, password }),
           headers: {

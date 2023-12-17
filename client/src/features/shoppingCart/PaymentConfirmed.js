@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import OrderedProductsList from "./OrderedProductList";
 import { useDispatch, useSelector } from "react-redux";
 import { confirmPayment, setOrderInfo, updateOrder } from "./shoppingCartSlice";
@@ -9,8 +9,10 @@ import {
   CONFIRM_PAYMENT_URL,
   UPDATE_USER_ORDERS_URL,
 } from "../utils/urlConstants";
+import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 
 const PaymentConfirmed = () => {
+  const token = useContext(csrfTokenContext);
   const confirmId = useSelector(
     (state) => state.shoppingCart.payedId || state.shoppingCart.confirmId
   );
@@ -37,6 +39,7 @@ const PaymentConfirmed = () => {
       dispatch(confirmPayment());
       try {
         await dispatch(updateOrder(true)).unwrap();
+        console.log("token is: ", token);
         const res = await fetch(CONFIRM_PAYMENT_URL, {
           method: "POST",
           body: JSON.stringify({ confirmId, currUser }),
@@ -71,7 +74,7 @@ const PaymentConfirmed = () => {
         console.log(err);
       }
     }
-  }, [currUser, confirmId, dispatch, id, orderId]);
+  }, [currUser, confirmId, dispatch, id, orderId, token]);
 
   return (
     <div>
