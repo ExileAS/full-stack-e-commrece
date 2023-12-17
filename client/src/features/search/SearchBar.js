@@ -22,7 +22,8 @@ const SearchBar = ({ data }) => {
     )
     .filter((product) => !productsInCart.includes(product))
     .sort(sortByRelevance(search))
-    .map((item) => <ProductExcerpt productId={item.id} key={item.id} />);
+    .map((item) => <ProductExcerpt productId={item.id} key={item.id} />)
+    .slice(0, 16);
 
   let searchResult = "";
   if (search.length > 0) {
