@@ -18,7 +18,6 @@ const signup_post = async (req, res) => {
         role: isSeller ? "seller" : "customer",
         phoneNumber: isSeller ? phoneNumber : null,
       });
-      await user.save();
       send();
       const { token, name, options } = createTempToken(user._id);
       res.cookie(name, token, options);

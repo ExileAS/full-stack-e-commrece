@@ -50,9 +50,10 @@ const userSchema = new Schema({
     },
     expireAt: {
       type: Date,
-
       default: function () {
-        return Date.now() + 1000 * 60 * 60 * 3;
+        if (!this.verified) {
+          return Date.now() + 1000 * 60 * 60 * 3;
+        }
       },
     },
   },
@@ -63,26 +64,36 @@ const userSchema = new Schema({
     },
     expireAt: {
       type: Date,
-
       default: function () {
-        return Date.now() + 1000 * 60 * 10;
+        if (!this.verified) {
+          return Date.now() + 1000 * 60 * 10;
+        }
       },
     },
   },
   expireAt: {
     type: Date,
-
     default: function () {
-      return Date.now() + 1000 * 60 * 60 * 24 * 2;
+      if (!this.verified) {
+        return Date.now() + 1000 * 60 * 60 * 24 * 2;
+      }
     },
   },
   verifyAttempts: {
     type: Number,
-    default: 0,
+    default: function () {
+      if (!this.verified) {
+        return 0;
+      }
+    },
   },
   resendAttempts: {
     type: Number,
-    default: 1,
+    default: function () {
+      if (!this.verified) {
+        return 1;
+      }
+    },
   },
   role: {
     type: String,

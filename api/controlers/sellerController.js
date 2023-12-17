@@ -31,8 +31,7 @@ module.exports.product_post = async (req, res) => {
       date,
       img: img.name,
     });
-    await product.save();
-    res.status(200).json({});
+    res.status(200).json(product);
   } catch (err) {
     res.status(400).json({ err: err.message });
   }

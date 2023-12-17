@@ -155,12 +155,12 @@ const create_reset_info = async (req, res) => {
         {
           $set: { iv: iv.toString("base64"), key: key.toString("base64") },
           $inc: { attempts: 1 },
-        }
+        },
+        { new: true }
       );
-      const saved = await updated.save();
       return res
         .status(301)
-        .json({ id: encryptedText, remainingAttempts: 3 - saved.attempts });
+        .json({ id: encryptedText, remainingAttempts: 3 - updated.attempts });
     }
     const userReset = await resetingModel.create({
       id: user._id,
@@ -168,7 +168,6 @@ const create_reset_info = async (req, res) => {
       iv: iv,
       key: key,
     });
-    const savedReset = await userReset.save();
     res.status(301).json({ id: encryptedText, remainingAttempts: 3 });
   } catch (err) {
     console.log(err);
@@ -200,9 +199,9 @@ const reset_password = async (req, res) => {
       {
         $set: { "OTP.otp": otp, "OTP.expireAt": Date.now() + 1000 * 60 * 8 },
         $inc: { attempts: 1 },
-      }
+      },
+      { new: true }
     );
-    await user.save();
     sendToUser({
       ...mailOptions,
       subject: "reset your password",
@@ -243,7 +242,6 @@ const confirm_reset = async (req, res) => {
       { email: email, _id: user._id, reseting: true },
       { $set: { password: hashedPassword }, $unset: { reseting: 1 } }
     );
-    await resetUserPassword.save();
     await resetingModel.findOneAndDelete({ email: email, id: user._id });
     if (resetToken) res.cookie("jwtReset", "", { maxAge: 1 });
     res.status(201).json({ user: user.email });

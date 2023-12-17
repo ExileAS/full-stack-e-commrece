@@ -124,11 +124,11 @@ const OrderedProductsList = ({ confirmed }) => {
 
   return (
     <div className="ordered-content" transition-style="in:square:center">
-      {productsUnconfirmed.length > 0 && (
+      {productsUnconfirmed?.length > 0 && (
         <div className="title">
           {" "}
           {confirmId && totalCost > 0 && !confirmed && (
-            <b>Order ID: {confirmId}</b>
+            <b className="info">Order ID: {confirmId}</b>
           )}
           {paymentMethod === "checkout" && (
             <div>
@@ -146,19 +146,31 @@ const OrderedProductsList = ({ confirmed }) => {
       <div>
         {totalCost > 0 ? (
           <div>
-            <b className="cost">total cost: {totalCost / 100} $</b>
-            <br />
-            <b className="fee">shipping Fee: {shippingFee / 100} $</b>
-            <br />
-            <b className="discount">discount% : {discountRatio}%</b>
-            <br />
-            <b className="total-with-discount">
-              total after discount: {(costAfterDiscount + shippingFee) / 100} $
-            </b>
+            {status === "success" ? (
+              <div>
+                <b className="cost">total cost: {totalCost / 100} $</b>
+                <br />
+                <b className="fee">shipping Fee: {shippingFee / 100} $</b>
+                <br />
+                <b className="discount">discount% : {discountRatio}%</b>
+                <br />
+                <b className="total-with-discount">
+                  total after discount:{" "}
+                  {(costAfterDiscount + shippingFee) / 100} $
+                </b>
+              </div>
+            ) : (
+              <div>
+                {status === "loading" ? (
+                  <Spinner />
+                ) : (
+                  <h2 className="error">error</h2>
+                )}
+              </div>
+            )}
           </div>
         ) : (
           <div>
-            {" "}
             {!confirmed && (
               <h2 className="nothing-ordered">Nothing ordered yet</h2>
             )}

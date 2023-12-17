@@ -23,25 +23,19 @@ const ConfirmOrderForm = () => {
   const userPhoneNumer = useSelector((state) => state.user.phoneNumber);
   const orderedInCart = useSelector(selectAllInCart);
   const currentOrdered = useSelector(selectAllOrdered);
-  const infoAvailable = JSON.stringify(info) !== JSON.stringify({});
-  const { firstName, lastName, adress } = infoAvailable && info;
+  const infoAvailable = info && JSON.stringify(info) !== JSON.stringify({});
+  const { firstName, lastName, adress } = infoAvailable
+    ? info
+    : { firstName: "", lastName: "", adress: "" };
   const userEmail = useSelector((state) => state.user.userEmail);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const emptyForm = {
-    firstName: "",
-    lastName: "",
-    adress: "",
-    paymentMethod: "",
-  };
 
-  const initialForm = infoAvailable
-    ? {
-        firstName,
-        lastName,
-        adress,
-      }
-    : emptyForm;
+  const initialForm = {
+    firstName,
+    lastName,
+    adress,
+  };
 
   const [formState, setFormState] = useState(initialForm);
   const [countryState, setCountryState] = useState({ country: "", region: "" });

@@ -15,21 +15,20 @@ module.exports.ordered_post = async (req, res) => {
   //console.log(updates);
   handleAddMain(updates);
 
-  const randomId = crypto.randomBytes(16).toString("hex");
-  const confirmId = randomId;
-
-  const productsOrdered = await OrderedProductModel.create({
-    confirmId,
-    list,
-    customerInfo,
-    delivered: false,
-    customerPayed: false,
-    shipmentStartedAt: verifiedUser ? Date.now() : null,
-  });
-  productsOrdered
-    .save()
-    .then((result) => res.status(200).json({ confirmId }))
-    .catch((err) => console.log(err));
+  const confirmId = crypto.randomBytes(16).toString("hex");
+  try {
+    const productsOrdered = await OrderedProductModel.create({
+      confirmId,
+      list,
+      customerInfo,
+      delivered: false,
+      customerPayed: false,
+      shipmentStartedAt: verifiedUser ? Date.now() : null,
+    });
+    res.status(200).json({ confirmId });
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 module.exports.retreive_ordered_post = async (req, res) => {

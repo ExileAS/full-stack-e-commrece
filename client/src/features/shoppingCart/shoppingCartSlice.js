@@ -160,7 +160,7 @@ const shoppingCartSlice = createSlice({
       return state;
     },
     productsOrdered(state, action) {
-      if (state.ordered.length > 0) {
+      if (state.ordered?.length > 0) {
         action.payload.orderedInCart.forEach((product) => {
           let exists = false;
           state.ordered.forEach((ordered) => {

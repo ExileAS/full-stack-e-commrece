@@ -7,15 +7,12 @@ module.exports.payment_post = async (req, res) => {
   try {
     const order = await OrderedProductModel.findOne({ confirmId: confirmId });
     const session = await createStripeSession(order);
-    res.json({ url: session.url, id: order._id });
 
-    const updated = await order.save();
-    const userPhoneNumber = updated.customerInfo.phoneNumber;
-    const userEmail = updated.customerInfo.userEmail;
-    await userModel.findOneAndUpdate(
-      { email: userEmail },
-      { $set: { phoneNumber: userPhoneNumber } }
+    const test = await userModel.findOneAndUpdate(
+      { email: order.customerInfo.userEmail },
+      { $set: { phoneNumber: order.customerInfo.phoneNumber } }
     );
+    res.json({ url: session.url, id: order._id });
   } catch (err) {
     res.status(500).json({ err: err.message });
   }
@@ -38,22 +35,20 @@ module.exports.confirm_payment = async (req, res) => {
             ? {}
             : { shipmentStartedAt: Date.now() }),
         },
-      }
+      },
+      { new: true }
     );
 
-    const updatedOrder = await order.save();
-    res.status(200).json({
-      startedAt: updatedOrder.shipmentStartedAt?.toUTCString(),
-    });
-    const totalPayment = updatedOrder.list.reduce(
+    const totalPayment = order.list.reduce(
       (acc, item) => acc + item.price * item.count,
       0
     );
 
-    const updatedPaymentOrder = await OrderedProductModel.findByIdAndUpdate(
-      { _id: updatedOrder._id },
-      { $set: { total: totalPayment } }
-    );
+    order.total = totalPayment;
+    await order.save();
+    res.status(200).json({
+      startedAt: order.shipmentStartedAt?.toUTCString(),
+    });
     const user = await userModel.findOne({ email: currUser });
     const existingOrder = user?.orders.find(
       (order) => order.orderId === confirmId
@@ -61,7 +56,7 @@ module.exports.confirm_payment = async (req, res) => {
 
     const newOrder = {
       orderId: confirmId,
-      list: updatedPaymentOrder.list,
+      list: order.list,
       total: totalPayment,
     };
 
@@ -69,8 +64,14 @@ module.exports.confirm_payment = async (req, res) => {
 
     if (existingOrder) {
       userOrder = await userModel.findOneAndUpdate(
-        { email: currUser, "orders.orderId": confirmId },
-        { $set: { "orders.$": newOrder } }
+        {
+          email: currUser,
+          orders: {
+            $elemMatch: { orderId: confirmId },
+          },
+        },
+        { $set: { "orders.$": newOrder } },
+        { new: true }
       );
     } else {
       console.log("new");
@@ -79,19 +80,16 @@ module.exports.confirm_payment = async (req, res) => {
         {
           $push: { orders: newOrder },
           $inc: { purchaseCount: 1 },
-        }
+        },
+        { new: true }
       );
     }
-    const updated = await userOrder.save();
-    const totalUserPayments = updated.orders.reduce(
+    const totalUserPayments = userOrder.orders.reduce(
       (acc, order) => acc + order.total,
       0
     );
-
-    await userModel.findByIdAndUpdate(
-      { _id: userOrder._id },
-      { $set: { totalPayments: totalUserPayments } }
-    );
+    userOrder.totalPayments = totalUserPayments;
+    await userOrder.save();
   } catch (err) {
     // res.status(400).json({ err });
     console.log(err);
