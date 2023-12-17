@@ -13,7 +13,7 @@ import ProductExcerpt from "../products/ProductExcerpt";
 import { useLayoutEffect, useState, useEffect, useContext } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { fetchProducts } from "../products/productsSlice";
-import { setOrderId } from "../userRegister/userSlice";
+import { setOrderId, setTotalDiscount } from "../userRegister/userSlice";
 import { Spinner } from "../../components/Spinner";
 import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 import exponentialBackoff from "../utils/exponentialBackoff";
@@ -36,6 +36,7 @@ const OrderedProductsList = ({ confirmed }) => {
   const [shippingFee, setShippingFee] = useState(120);
   const [discountRatio, setDiscountRatio] = useState(0);
   const [disableCheckout, setDisableCheckout] = useState(false);
+  const totalAfterDiscount = (costAfterDiscount + shippingFee) / 100;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { paymentMethod } = useParams();
@@ -108,12 +109,14 @@ const OrderedProductsList = ({ confirmed }) => {
           method: "POST",
           body: JSON.stringify({
             confirmId: confirmId,
+            totalAfterDiscount,
           }),
           headers: { "Content-Type": "application/json", "csrf-token": token },
         });
         const data = await res.json();
         if (data.url) {
           dispatch(setOrderId(data.id));
+          dispatch(setTotalDiscount(discountRatio));
           window.location.assign(`${data.url}`);
         }
         return data;
@@ -155,8 +158,7 @@ const OrderedProductsList = ({ confirmed }) => {
                 <b className="discount">discount% : {discountRatio}%</b>
                 <br />
                 <b className="total-with-discount">
-                  total after discount:{" "}
-                  {(costAfterDiscount + shippingFee) / 100} $
+                  total after discount:{totalAfterDiscount}$
                 </b>
               </div>
             ) : (

@@ -18,6 +18,7 @@ const initialState = {
   payedId: null,
   isSplit: false,
   shipmentStartedAt: null,
+  totalPayment: 0,
 };
 
 export const postOrdered = createAsyncThunk(
@@ -228,8 +229,9 @@ const shoppingCartSlice = createSlice({
       state.ordered = [];
       return state;
     },
-    setStartedAt(state, action) {
-      state.shipmentStartedAt = action.payload;
+    setOrderInfo(state, action) {
+      state.shipmentStartedAt = action.payload.startedAt;
+      state.totalPayment = action.payload.totalPayment || 0;
       return state;
     },
   },
@@ -280,7 +282,7 @@ export const {
   clearCustomerInfo,
   createOrderedList,
   confirmPayment,
-  setStartedAt,
+  setOrderInfo,
 } = shoppingCartSlice.actions;
 export const selectAllInCart = (state) => state.shoppingCart.cart;
 export const getTotalCost = (state) =>

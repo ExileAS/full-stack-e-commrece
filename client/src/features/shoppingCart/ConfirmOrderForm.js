@@ -6,7 +6,7 @@ import {
   productsOrdered,
   selectAllInCart,
   selectAllOrdered,
-  setStartedAt,
+  setOrderInfo,
   updateOrder,
 } from "./shoppingCartSlice";
 import { countNewOnhand } from "../products/productsSlice";
@@ -103,7 +103,9 @@ const ConfirmOrderForm = () => {
       if (currentOrdered.length === 0) {
         dispatch(postOrdered({ token, verifiedUser }));
         if (verifiedUser && formState.paymentMethod === "onReceiving") {
-          dispatch(setStartedAt(new Date(Date.now()).toUTCString()));
+          dispatch(
+            setOrderInfo({ startedAt: new Date(Date.now()).toUTCString() })
+          );
         }
       } else {
         dispatch(updateOrder(false));

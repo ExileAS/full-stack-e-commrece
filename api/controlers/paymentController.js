@@ -3,7 +3,7 @@ const userModel = require("../models/userModel");
 const createStripeSession = require("../services/stripe");
 
 module.exports.payment_post = async (req, res) => {
-  const { confirmId } = req.body;
+  const { confirmId, totalAfterDiscount } = req.body;
   try {
     const order = await OrderedProductModel.findOne({ confirmId: confirmId });
     const session = await createStripeSession(order);
@@ -12,7 +12,8 @@ module.exports.payment_post = async (req, res) => {
       { email: order.customerInfo.userEmail },
       { $set: { phoneNumber: order.customerInfo.phoneNumber } }
     );
-    res.json({ url: session.url, id: order._id });
+    console.log(session);
+    res.json({ url: session.url, id: order._id, totalAfterDiscount });
   } catch (err) {
     res.status(500).json({ err: err.message });
   }
@@ -48,7 +49,18 @@ module.exports.confirm_payment = async (req, res) => {
     await order.save();
     res.status(200).json({
       startedAt: order.shipmentStartedAt?.toUTCString(),
+      order,
+      totalPayment,
     });
+  } catch (err) {
+    // res.status(400).json({ err });
+    console.log(err);
+  }
+};
+
+module.exports.update_user_orders = async (req, res) => {
+  const { confirmId, currUser, order, totalPayment } = req.body;
+  try {
     const user = await userModel.findOne({ email: currUser });
     const existingOrder = user?.orders.find(
       (order) => order.orderId === confirmId
@@ -59,9 +71,7 @@ module.exports.confirm_payment = async (req, res) => {
       list: order.list,
       total: totalPayment,
     };
-
     let userOrder;
-
     if (existingOrder) {
       userOrder = await userModel.findOneAndUpdate(
         {
@@ -90,8 +100,9 @@ module.exports.confirm_payment = async (req, res) => {
     );
     userOrder.totalPayments = totalUserPayments;
     await userOrder.save();
+    res.status(201).json({ total: totalUserPayments });
   } catch (err) {
-    // res.status(400).json({ err });
     console.log(err);
+    res.status(400).json({ err: err.message });
   }
 };

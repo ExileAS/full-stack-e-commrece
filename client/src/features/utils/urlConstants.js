@@ -20,6 +20,7 @@ export const DELETE_ORDER_URL = `${BASE_API_URL}/deleteOrder`;
 
 export const PAYMENT_URL = `${BASE_API_URL}/payment`;
 export const CONFIRM_PAYMENT_URL = `${BASE_API_URL}/confirmPayment`;
+export const UPDATE_USER_ORDERS_URL = `${BASE_API_URL}/updateUserOrders`;
 
 export const GET_PRODUCTS_URL = `${BASE_API_URL}/all-products`;
 export const GET_SELLERS_URL = `${BASE_API_URL}/allSellers`;
