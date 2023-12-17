@@ -1,6 +1,7 @@
 const { OrderedProductModel } = require("../models/oderedProductsModel");
 const userModel = require("../models/userModel");
 const createStripeSession = require("../services/stripe");
+const logger = require("../logs/winstonLogger");
 
 module.exports.payment_post = async (req, res) => {
   const { confirmId, totalAfterDiscount } = req.body;
@@ -12,8 +13,8 @@ module.exports.payment_post = async (req, res) => {
       { email: order.customerInfo.userEmail },
       { $set: { phoneNumber: order.customerInfo.phoneNumber } }
     );
-    console.log(session);
     res.json({ url: session.url, id: order._id, totalAfterDiscount });
+    console.log(order);
   } catch (err) {
     res.status(500).json({ err: err.message });
   }
@@ -53,7 +54,10 @@ module.exports.confirm_payment = async (req, res) => {
       totalPayment,
     });
   } catch (err) {
-    // res.status(400).json({ err });
+    logger.error(
+      `payment confirmation failed: \nuser: ${currUser} \nconfirmId: ${confirmId} \nerror: ${err}`
+    );
+    res.status(400).json({ err });
     console.log(err);
   }
 };
