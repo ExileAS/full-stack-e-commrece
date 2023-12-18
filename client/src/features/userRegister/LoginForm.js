@@ -14,6 +14,10 @@ import {
   REQUIRE_RESET_URL,
   SELLER_LOGIN_URL,
 } from "../utils/urlConstants";
+import OtpField from "../../components/OtpField";
+import ResendButton from "../../components/ResendButton";
+import LoginInputs from "../../components/LoginInputs";
+import Loader from "../../components/Loader";
 
 const Login = () => {
   const token = useContext(csrfTokenContext);
@@ -159,24 +163,14 @@ const Login = () => {
       <div className="box">
         <form onSubmit={(e) => e.preventDefault()}>
           <span className="text-center">Login</span>
-          <div className="input-container">
-            <input
-              type="text"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <label htmlFor="email">Email</label>
-            <p className="error">{emailErr}</p>
-          </div>
-          <div className="input-container">
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <label htmlFor="password">Password</label>
-            <p className="error">{passwordErr}</p>
-          </div>
+          <LoginInputs
+            email={email}
+            setEmail={setEmail}
+            password={password}
+            setPassword={setPassword}
+            passwordErr={passwordErr}
+            emailErr={emailErr}
+          />
           {forgotOption && !verifyErr.length && (
             <div className="forgot" onClick={handleReset}>
               <b>Forgot Password</b>
@@ -191,16 +185,10 @@ const Login = () => {
         <div className="otp-container">
           {currUser && (
             <>
-              {loading && <h2 className="sent">Loading...</h2>}
-              {!loading && currUser && (
-                <input
-                  type="number"
-                  placeholder="type your otp..."
-                  className="input-otp"
-                  maxLength="6"
-                  onChange={handleOTP}
-                  ref={otpRef}
-                />
+              {loading ? (
+                <Loader />
+              ) : (
+                <OtpField handleOTP={handleOTP} otpRef={otpRef} />
               )}
             </>
           )}
@@ -223,16 +211,7 @@ const Login = () => {
               />
             )}
             {(timer === "00" || !timer) && (
-              <button
-                style={{
-                  textAlign: "center",
-                  marginLeft: "24px",
-                }}
-                className="button-7"
-                onClick={handleResend}
-              >
-                Resend
-              </button>
+              <ResendButton handleResend={handleResend} />
             )}
           </div>
         )}

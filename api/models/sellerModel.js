@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { default: isEmail } = require("validator/lib/isemail");
 const { productSchema } = require("./productModel");
 const { order } = require("./userModel");
 const Schema = mongoose.Schema;
@@ -6,8 +7,10 @@ const Schema = mongoose.Schema;
 const sellerSchema = new Schema({
   email: {
     type: String,
-    required: true,
+    required: [true, "please enter an email"],
+    lowercase: true,
     unique: true,
+    validate: [isEmail, "please enter a valid email"],
   },
   password: {
     type: String,
@@ -62,9 +65,6 @@ const sellerSchema = new Schema({
       }
     },
   },
-  encryptedEmail: {
-    type: String,
-  },
   reseting: {
     type: Boolean,
   },
@@ -94,4 +94,4 @@ module.exports = sellerModel;
 // 8- in the helper function validate seller doc and remove from user model.
 // 9- verified user with seller role will have their phone included
 // 10- we can check for that in the very last step so we can decide if this is a seller and should be moved to seller model
-// notes: attach isSeller to req.body with middleware that checks seller token.
+// notes: attach isSeller to req.body with middleware that checks seller token, remember to add cleanup for expired seller docs.

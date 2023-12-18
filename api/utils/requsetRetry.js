@@ -2,10 +2,10 @@ const makeRequestWithRetry = async (
   apiRequestFn,
   apiParams,
   validateFn,
-  maxRetries = 3
+  maxRetries = 5
 ) => {
   let retryCount = 0;
-  const maxDelay = 2000;
+  const maxDelay = 4000;
 
   while (retryCount < maxRetries) {
     try {
@@ -14,7 +14,7 @@ const makeRequestWithRetry = async (
       return validateFn(res);
     } catch (err) {
       console.error(`Error on attempt ${retryCount + 1}:`, err);
-      const delay = Math.pow(2, retryCount) * 1000;
+      const delay = Math.pow(2, retryCount) * 1000 + Math.random() * 1000;
       await new Promise((resolve) =>
         setTimeout(resolve, Math.min(delay, maxDelay))
       );

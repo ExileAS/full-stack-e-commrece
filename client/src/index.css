@@ -2392,3 +2392,7 @@ input[type="radio"] {
   margin-top: 18px;
   text-align: center;
 }
+
+.phone {
+  color: white;
+}

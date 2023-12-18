@@ -45,4 +45,24 @@ const createResetToken = (id) => {
   };
 };
 
-module.exports = { createToken, createTempToken, createResetToken };
+const createSellerToken = (id) => {
+  const token = jwt.sign({ id }, process.env.SELLER_KEY, {
+    expiresIn: 60 * 60 * 24 * 3,
+  });
+  return {
+    token,
+    name: "jwtSeller",
+    options: {
+      maxAge: 1000 * 60 * 60 * 24 * 3,
+      httpOnly: true,
+      sameSite: "strict",
+    },
+  };
+};
+
+module.exports = {
+  createToken,
+  createTempToken,
+  createResetToken,
+  createSellerToken,
+};
