@@ -21,7 +21,12 @@ const handleErrors = (err) => {
   return errors;
 };
 
-const handleVerifyErrors = (user, verifyMethod, resend = false) => {
+const handleVerifyErrors = (
+  user,
+  verifyMethod,
+  resend = false,
+  isSeller = false
+) => {
   let err;
   if (!user) {
     if (verifyMethod !== "url") {
@@ -36,7 +41,10 @@ const handleVerifyErrors = (user, verifyMethod, resend = false) => {
   const validOtp =
     resend || user.OTP.expireAt > Date.now() || verifyMethod === "url";
   const validUrl =
-    resend || user.verifyURL.expireAt > Date.now() || verifyMethod === "otp";
+    isSeller ||
+    resend ||
+    user.verifyURL.expireAt > Date.now() ||
+    verifyMethod === "otp";
   if (!validUser || !validOtp || !validUrl) {
     err = new Error("user or verify method expired");
     err.code = 403;

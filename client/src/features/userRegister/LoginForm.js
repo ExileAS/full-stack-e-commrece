@@ -81,7 +81,7 @@ const Login = () => {
   };
 
   const handleOTP = async () => {
-    if (otpRef.current.value.length < 6) {
+    if (otpRef.current.value.length !== 6) {
       return;
     }
     setLoading(true);

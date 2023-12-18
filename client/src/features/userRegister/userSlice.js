@@ -14,6 +14,7 @@ const initialState = {
   phoneNumber: null,
   resetAttemptsRemaining: 0,
   totalDiscount: 0,
+  currIsSeller: false,
 };
 
 const userSlice = createSlice({
@@ -71,6 +72,10 @@ const userSlice = createSlice({
       state.totalDiscount = action.payload;
       return state;
     },
+    setSellerPhone(state, action) {
+      state.phoneNumber = action.payload;
+      return state;
+    },
   },
 });
 
@@ -83,6 +88,7 @@ export const {
   setTempEmail,
   setRemainingAttempts,
   setTotalDiscount,
+  setSellerPhone,
 } = userSlice.actions;
 
 export default userSlice.reducer;

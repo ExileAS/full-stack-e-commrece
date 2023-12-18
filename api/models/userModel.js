@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const { default: isEmail } = require("validator/lib/isemail");
-const bcrypt = require("bcrypt");
+
+const loginStatic = require("../utils/loginStatic");
 const order = new Schema({
   orderId: {
     type: String,
@@ -121,19 +122,7 @@ const userSchema = new Schema({
   },
 });
 
-userSchema.statics.login = async function (email, password) {
-  const user = await this.findOne({ email });
-  if (user) {
-    const auth = await bcrypt.compare(password, user.password);
-    if (auth) {
-      return user;
-    } else {
-      throw Error("incorrect password");
-    }
-  } else {
-    throw Error("user not registered");
-  }
-};
+userSchema.statics.login = loginStatic;
 
 const userModel = mongoose.model("user", userSchema);
 

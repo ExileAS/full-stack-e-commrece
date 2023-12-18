@@ -4,8 +4,6 @@ import { GET_SELLERS_URL } from "../utils/urlConstants";
 const initialState = {
   status: "idle",
   sellers: [],
-  currIsSeller: false,
-  phoneNumber: null,
 };
 
 export const getAllSellers = createAsyncThunk("getAllSellers", async () => {
@@ -28,10 +26,6 @@ const sellersSlice = createSlice({
     addNewSeller(state, action) {
       const seller = state.sellers.find(({ id }) => action.payload.id === id);
       if (!seller) state.sellers.push(action.payload);
-      return state;
-    },
-    setPhoneNum(state, action) {
-      state.phoneNumber = action.payload;
       return state;
     },
   },
@@ -60,7 +54,7 @@ const sellersSlice = createSlice({
   },
 });
 
-export const { addNewSeller, setPhoneNum } = sellersSlice.actions;
+export const { addNewSeller } = sellersSlice.actions;
 
 export default sellersSlice.reducer;
 

@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const { default: isEmail } = require("validator/lib/isemail");
 const { productSchema } = require("./productModel");
 const { order } = require("./userModel");
+const loginStatic = require("../utils/loginStatic");
 const Schema = mongoose.Schema;
 
 const sellerSchema = new Schema({
@@ -44,7 +45,7 @@ const sellerSchema = new Schema({
       }
     },
   },
-  numberVerifyOtp: {
+  OTP: {
     otp: {
       type: Number,
     },
@@ -65,6 +66,14 @@ const sellerSchema = new Schema({
       }
     },
   },
+  resendAttempts: {
+    type: Number,
+    default: function () {
+      if (!this.verified) {
+        return 1;
+      }
+    },
+  },
   reseting: {
     type: Boolean,
   },
@@ -80,6 +89,8 @@ const sellerSchema = new Schema({
   },
 });
 
+sellerSchema.statics.login = loginStatic;
+
 const sellerModel = mongoose.model("seller", sellerSchema);
 
 module.exports = sellerModel;
@@ -94,4 +105,6 @@ module.exports = sellerModel;
 // 8- in the helper function validate seller doc and remove from user model.
 // 9- verified user with seller role will have their phone included
 // 10- we can check for that in the very last step so we can decide if this is a seller and should be moved to seller model
-// notes: attach isSeller to req.body with middleware that checks seller token, remember to add cleanup for expired seller docs.
+// notes: 1- attach isSeller to req.body with middleware that checks seller token
+// 2- remember to add cleanup for expired seller docs.
+// 3- create jwt and jwtSeller on login.

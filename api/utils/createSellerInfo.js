@@ -10,7 +10,7 @@ const createSellerSignupInfo = (email, companyName, phoneNumber) => {
     verified: false,
     companyName,
     phoneNumber,
-    numberVerifyOtp: {
+    OTP: {
       otp,
     },
   };

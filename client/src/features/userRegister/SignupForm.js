@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { clearCustomerInfo } from "../shoppingCart/shoppingCartSlice";
 import GoogleReg from "./GoogleReg";
 import { useLocation, useNavigate } from "react-router-dom";
-import { setTempEmail } from "./userSlice";
+import { setSellerPhone, setTempEmail } from "./userSlice";
 import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 import { PhoneNumberInput } from "../../components/PhoneInput";
 import { isPossiblePhoneNumber } from "react-phone-number-input";
@@ -11,7 +11,7 @@ import {
   RESEND_OTP_SELLER_URL,
   SELLER_SIGNUP_URL,
   SIGNUP_URL,
-  VERIFY_SELLER_OTP_URL,
+  VERIFY_OTP_URL,
 } from "../utils/urlConstants";
 import SignupInputs from "../../components/SignupInputs";
 import OtpField from "../../components/OtpField";
@@ -37,6 +37,7 @@ const SignUp = ({ err }) => {
   const [timer, setTimer] = useState("15");
   const otpRef = useRef({});
   const currUser = useSelector((state) => state.user.tempEmail);
+  const currPhoneNum = useSelector((state) => state.user.phoneNumber);
   const location = useLocation();
   const isSeller = location.pathname === "/signupSeller";
   const dispatch = useDispatch();
@@ -81,7 +82,7 @@ const SignUp = ({ err }) => {
       if (data.seller) {
         setShowOtp(true);
         dispatch(setTempEmail(email));
-        dispatch(setPhoneNumber(phoneNumber));
+        dispatch(setSellerPhone(phoneNumber));
       }
     } catch (err) {
       console.log(err);
@@ -89,15 +90,19 @@ const SignUp = ({ err }) => {
   };
 
   const handlePhoneOTP = async () => {
-    if (otpRef.current.value.length < 6) {
+    if (otpRef.current.value.length !== 8) {
       return;
     }
     setLoading(true);
     setVerifyErr("");
     try {
-      const res = await fetch(VERIFY_SELLER_OTP_URL, {
+      const res = await fetch(VERIFY_OTP_URL, {
         method: "POST",
-        body: JSON.stringify({ email: currUser, otp: otpRef.current?.value }),
+        body: JSON.stringify({
+          email: currUser,
+          otp: otpRef.current?.value,
+          isSeller,
+        }),
         headers: { "Content-Type": "application/json", "csrf-token": token },
       });
       const data = await res.json();
@@ -129,7 +134,6 @@ const SignUp = ({ err }) => {
       const data = await res.json();
       if (data.err) {
         setVerifyErr(data.err);
-        dispatch(setTempEmail(null));
       }
       if (data.success) {
         setResponse(data.success);
@@ -170,13 +174,15 @@ const SignUp = ({ err }) => {
               />
             </div>
           )}
-          <button className="button-17" onClick={handleSignup}>
-            Signup
-          </button>
+          {!loading && (
+            <button className="button-17" onClick={handleSignup}>
+              Signup
+            </button>
+          )}
           <br />
           {!isSeller && <GoogleReg />}
           <div className="otp-container">
-            {showOtp && (
+            {currUser && isSeller && (
               <>
                 {loading ? (
                   <Loader />
@@ -190,26 +196,28 @@ const SignUp = ({ err }) => {
           </div>
         </form>
         <br />
-        <div>
-          {currUser && (
-            <div>
-              <br />
-              <h2 className="timer-title">verification sent to </h2>
-              <p className="confirmed">******{phoneNumber.substring(6)}</p>
-              <br />
-            </div>
-          )}
-          {showOtp && Number(timer) > 0 && (
-            <Timer
-              start={Boolean(currUser)}
-              timer={timer}
-              setTimer={setTimer}
-            />
-          )}
-          {(timer === "00" || !timer) && (
-            <ResendButton handleResend={handleOtpResend} />
-          )}
-        </div>
+        {isSeller && (
+          <div>
+            {currUser && (
+              <div>
+                <br />
+                <h2 className="timer-title">verification sent to </h2>
+                <p className="confirmed">******{currPhoneNum.substring(6)}</p>
+                <br />
+              </div>
+            )}
+            {showOtp && Number(timer) > 0 && (
+              <Timer
+                start={Boolean(currUser)}
+                timer={timer}
+                setTimer={setTimer}
+              />
+            )}
+            {(timer === "00" || !timer) && (
+              <ResendButton handleResend={handleOtpResend} />
+            )}
+          </div>
+        )}
         {tokenError && (
           <div>
             <h3 className="error">{tokenError}</h3>

@@ -56,11 +56,12 @@ const verify_user_url = async (req, res) => {
 };
 
 const verify_user_otp = async (req, res) => {
-  const { otp, email } = req.body;
+  const { otp, email, isSeller } = req.body;
+  const model = isSeller ? sellerModel : userModel;
   try {
-    const user = await userModel.findOne({ email: email });
-    handleVerifyErrors(user, "otp");
-    const verifiedUser = await userModel.findOneAndUpdate(
+    const user = await model.findOne({ email: email });
+    handleVerifyErrors(user, "otp", false, isSeller);
+    const verifiedUser = await model.findOneAndUpdate(
       { _id: user._id, "OTP.otp": otp },
       {
         $set: { verified: true, verifiedAt: Date.now(), expireAt: null },
@@ -68,7 +69,7 @@ const verify_user_otp = async (req, res) => {
     );
     if (verifiedUser) {
       res.status(200).json({ success: "verified successfully!" });
-      const deletedUnwantedFields = await userModel.findOneAndUpdate(
+      const deletedUnwantedFields = await model.findOneAndUpdate(
         {
           _id: verifiedUser._id,
           verified: true,
@@ -87,7 +88,7 @@ const verify_user_otp = async (req, res) => {
       );
       console.log(deletedUnwantedFields);
     } else {
-      const failedVerify = await userModel.findOneAndUpdate(
+      const failedVerify = await model.findOneAndUpdate(
         { email: email },
         {
           $inc: { verifyAttempts: 1 },
@@ -97,7 +98,7 @@ const verify_user_otp = async (req, res) => {
     }
   } catch (err) {
     console.log(err.message);
-    res.status(err.code).json({ err: err.message });
+    res.status(err.code || 400).json({ err: err.message });
   }
 };
 
@@ -130,7 +131,7 @@ const resend_msg = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    res.status(err.code).json({ err: err.message });
+    res.status(err.code || 400).json({ err: err.message });
   }
 };
 
