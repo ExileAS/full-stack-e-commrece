@@ -106,10 +106,18 @@ const SignUp = ({ err }) => {
         headers: { "Content-Type": "application/json", "csrf-token": token },
       });
       const data = await res.json();
-      setLoading(false);
       if (data.success) {
         setResponse(data.success);
         dispatch(setTempEmail(currUser));
+        const res = await fetch(SIGNUP_URL, {
+          method: "POST",
+          body: JSON.stringify({ email: currUser, isSeller }),
+          headers: { "Content-Type": "application/json", "csrf-token": token },
+        });
+        const info = await res.json();
+        if (info.err) {
+          setTempEmail(null);
+        }
         navigate("/loginSeller");
       }
       if (data.err) {
@@ -118,6 +126,7 @@ const SignUp = ({ err }) => {
           dispatch(setTempEmail(null));
         }
       }
+      setLoading(false);
     } catch (err) {
       console.log(err);
     }
@@ -174,7 +183,7 @@ const SignUp = ({ err }) => {
               />
             </div>
           )}
-          {!loading && (
+          {!loading && !currUser && (
             <button className="button-17" onClick={handleSignup}>
               Signup
             </button>

@@ -8,6 +8,7 @@ const initialState = {
   google: false,
   userName: null,
   tempEmail: null,
+  tempPassword: null,
   purchaseCount: 0,
   totalPayments: 0,
   verifiedUser: false,
@@ -76,6 +77,11 @@ const userSlice = createSlice({
       state.phoneNumber = action.payload;
       return state;
     },
+    setTempPassword(state, action) {
+      state.tempPassword = action.payload;
+      return state;
+    },
+    clearUserInfo: () => initialState,
   },
 });
 
@@ -89,6 +95,7 @@ export const {
   setRemainingAttempts,
   setTotalDiscount,
   setSellerPhone,
+  clearUserInfo,
 } = userSlice.actions;
 
 export default userSlice.reducer;

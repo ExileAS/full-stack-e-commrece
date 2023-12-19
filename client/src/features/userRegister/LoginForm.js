@@ -179,7 +179,7 @@ const Login = () => {
           <button className="button-17" onClick={handleLogin}>
             Login
           </button>
-          <GoogleReg />
+          {!isSeller && <GoogleReg />}
         </form>
         <br />
         <div className="otp-container">
