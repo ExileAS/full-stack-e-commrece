@@ -35,7 +35,7 @@ const deleteFromUserModel = async (user) => {
     email: user.email,
     verified: true,
   });
-  if (user.role !== "seller" || !seller) {
+  if (!seller) {
     return;
   }
   const deleted = await userModel.findOneAndDelete({
@@ -43,6 +43,8 @@ const deleteFromUserModel = async (user) => {
     role: "seller",
     verified: true,
   });
+  console.log(deleted);
+  // dlt unwanted fields
 };
 
 module.exports = { handleDeleteRedundant, deleteFromUserModel };

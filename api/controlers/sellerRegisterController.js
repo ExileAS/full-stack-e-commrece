@@ -2,7 +2,7 @@ const sellerModel = require("../models/sellerModel");
 const { userModel } = require("../models/userModel");
 const createSellerSignupInfo = require("../utils/createSellerInfo");
 const { passowrdHash } = require("../utils/textEncryption");
-const { createTempToken } = require("../utils/tokens");
+const { createTempToken, createSellerToken } = require("../utils/tokens");
 const {
   handleErrors,
   handleVerifyErrors,
@@ -59,4 +59,34 @@ module.exports.resend_otp = async (req, res) => {
 
 // verified and doesnt exist in userModel -> login
 
-module.exports.seller_login = async (req, res) => {};
+module.exports.seller_login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await sellerModel.login(email, password);
+    const existsInUserModel = await userModel.findOne({ email });
+    if (user.verified && !existsInUserModel) {
+      const { token, name, options } = createToken(user._id);
+      const {
+        token: tokenSeller,
+        name: nameSeller,
+        options: optionsSeller,
+      } = createSellerToken(user._id);
+      res.cookie(name, token, options);
+      res.cookie(nameSeller, tokenSeller, optionsSeller);
+      res.cookie("jwtTemp", "", { maxAge: 1 });
+      res.status(200).json({
+        user: user.email,
+        purchaseCount: user.purchaseCount,
+        totalPayments: user.totalPayments,
+        phoneNumber: user.phoneNumber,
+      });
+    } else {
+      const { token, name, options } = createTempToken(user._id);
+      res.cookie(name, token, options);
+      res.status(401).json({ unverifiedEmail: user.email });
+    }
+  } catch (err) {
+    const errors = handleErrors(err);
+    res.status(400).json({ errors });
+  }
+};

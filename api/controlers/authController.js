@@ -9,6 +9,7 @@ const { createResetToken } = require("../utils/tokens");
 const { sendToUser, mailOptions } = require("../services/mailer");
 const sellerModel = require("../models/sellerModel");
 const { deleteFromUserModel } = require("../helpers/deleteRedundantDocs");
+const deleteUnwantedFields = require("../helpers/deleteUnwantedFields");
 
 const verify_user_url = async (req, res) => {
   const { verifyId, email } = req.params;
@@ -23,25 +24,12 @@ const verify_user_url = async (req, res) => {
       }
     );
     if (verifiedUser) {
-      if (user.role) await deleteFromUserModel(user);
+      if (user.role) {
+        user.role === "customer" &&
+          (await deleteUnwantedFields(userModel, email));
+        user.role === "seller" && (await deleteFromUserModel(user)); // if user is a seller
+      }
       res.send("<h2>Verified Succesfully</h2>");
-      const deletedUnwantedFields = await userModel.findOneAndUpdate(
-        {
-          _id: verifiedUser._id,
-          verified: true,
-          encryptedEmail: email,
-        },
-        {
-          $unset: {
-            verifyURL: 1,
-            OTP: 1,
-            verifyAttempts: 1,
-            resendAttempts: 1,
-            encryptedEmail: 1,
-            expireAt: 1,
-          },
-        }
-      );
     } else {
       const failedVerify = await userModel.findOneAndUpdate(
         { email: email },
@@ -70,26 +58,12 @@ const verify_user_otp = async (req, res) => {
       }
     );
     if (verifiedUser) {
-      if (user.role) await deleteFromUserModel(user);
+      if (user.role) {
+        user.role === "customer" &&
+          (await deleteUnwantedFields(userModel, email));
+        user.role === "seller" && (await deleteFromUserModel(user)); // if user is a seller
+      }
       res.status(200).json({ success: "verified successfully!" });
-      const deletedUnwantedFields = await model.findOneAndUpdate(
-        {
-          _id: verifiedUser._id,
-          verified: true,
-          email: email,
-        },
-        {
-          $unset: {
-            verifyURL: 1,
-            OTP: 1,
-            verifyAttempts: 1,
-            resendAttempts: 1,
-            encryptedEmail: 1,
-            expireAt: 1,
-          },
-        }
-      );
-      console.log(deletedUnwantedFields);
     } else {
       const failedVerify = await model.findOneAndUpdate(
         { email: email },
