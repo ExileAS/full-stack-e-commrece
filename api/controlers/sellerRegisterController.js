@@ -3,17 +3,17 @@ const { userModel } = require("../models/userModel");
 const createSellerSignupInfo = require("../utils/createSellerInfo");
 const { passowrdHash } = require("../utils/textEncryption");
 const { createTempToken } = require("../utils/tokens");
-const { handleErrors } = require("../utils/userRegisterErrors");
+const {
+  handleErrors,
+  handleVerifyErrors,
+} = require("../helpers/userRegisterErrors");
 
 // signup, login, logout, verify phoneNum otp.
 module.exports.signup_seller = async (req, res) => {
   const { email, password, companyName, phoneNumber } = req.body;
 
   try {
-    const existsInUserModel = await userModel.findOne({ email });
-    if (existsInUserModel) {
-      throw new Error("email already exists");
-    }
+    await userModel.checkDup(email);
     const hashedPassword = await passowrdHash(password);
     const { info, send } = createSellerSignupInfo(
       email,
@@ -34,3 +34,29 @@ module.exports.signup_seller = async (req, res) => {
     console.log(err);
   }
 };
+
+module.exports.resend_otp = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const seller = await sellerModel.findOne({ email });
+    handleVerifyErrors(seller, "", true);
+    const { info, send } = createSellerSignupInfo(
+      email,
+      "",
+      seller.phoneNumber
+    );
+    const OTP = info.OTP;
+    seller.OTP = OTP;
+    await seller.save();
+    await send();
+    res.status(200).json({ success: "verification resent" });
+  } catch (err) {
+    res.status(err.code || 400);
+    console.log(err);
+  }
+};
+
+// verified and doesnt exist in userModel -> login
+
+module.exports.seller_login = async (req, res) => {};

@@ -1,13 +1,14 @@
 const { userModel } = require("../models/userModel");
 require("dotenv").config();
 const generateUniqueId = require("generate-unique-id");
-const { handleVerifyErrors } = require("../utils/userRegisterErrors");
+const { handleVerifyErrors } = require("../helpers/userRegisterErrors");
 const { createSignupInfo } = require("../utils/createUserInfo");
 const { encrypt, decrypt, passowrdHash } = require("../utils/textEncryption");
 const resetingModel = require("../models/resetingUsersModel");
 const { createResetToken } = require("../utils/tokens");
 const { sendToUser, mailOptions } = require("../services/mailer");
 const sellerModel = require("../models/sellerModel");
+const { deleteFromUserModel } = require("../helpers/deleteRedundantDocs");
 
 const verify_user_url = async (req, res) => {
   const { verifyId, email } = req.params;
@@ -22,6 +23,7 @@ const verify_user_url = async (req, res) => {
       }
     );
     if (verifiedUser) {
+      if (user.role) await deleteFromUserModel(user);
       res.send("<h2>Verified Succesfully</h2>");
       const deletedUnwantedFields = await userModel.findOneAndUpdate(
         {
@@ -68,6 +70,7 @@ const verify_user_otp = async (req, res) => {
       }
     );
     if (verifiedUser) {
+      if (user.role) await deleteFromUserModel(user);
       res.status(200).json({ success: "verified successfully!" });
       const deletedUnwantedFields = await model.findOneAndUpdate(
         {

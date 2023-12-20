@@ -1,22 +1,20 @@
 const { ProductModel } = require("../models/productModel");
 
+// try promise.all()
+
 const handleAddMain = (updates) => {
-  for (let id in updates) {
+  for (const id in updates) {
     async function update() {
-      const result = await ProductModel.findOneAndUpdate(
-        { id: id },
-        { onhand: updates[id] }
-      );
-      //console.log(result);
+      await ProductModel.findOneAndUpdate({ id: id }, { onhand: updates[id] });
     }
     update();
   }
 };
 
 const handlePatchDeleteMain = async (updates) => {
-  for (let id in updates) {
+  for (const id in updates) {
     async function update() {
-      const result = await ProductModel.findOneAndUpdate(
+      await ProductModel.findOneAndUpdate(
         { id: id },
         { $inc: { onhand: updates[id] } }
       );

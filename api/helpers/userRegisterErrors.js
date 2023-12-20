@@ -41,21 +41,21 @@ const handleVerifyErrors = (
   const validOtp =
     resend || user.OTP.expireAt > Date.now() || verifyMethod === "url";
   const validUrl =
-    isSeller ||
     resend ||
+    isSeller ||
     user.verifyURL.expireAt > Date.now() ||
     verifyMethod === "otp";
   if (!validUser || !validOtp || !validUrl) {
     err = new Error("user or verify method expired");
     err.code = 403;
   }
-  if (user.verified) {
-    err = new Error("already verified");
-    err.code = 409;
-  }
   if (user.verifyAttempts > 4 || user.resendAttempts > 4) {
     err = new Error("too many attempts!");
     err.code = 429;
+  }
+  if (user.verified) {
+    err = new Error("already verified");
+    err.code = 409;
   }
   if (err) throw err;
 };

@@ -24,23 +24,6 @@ const cleanupExpiredUsers = async () => {
   }
 };
 
-const cleanExit = async () => {
-  console.log("Shutting down node server");
-
-  try {
-    await mongoose.connection.close();
-    console.log("MongoDB connection closed");
-
-    server.close(() => {
-      console.log("Server closed");
-      process.exit(0);
-    });
-  } catch (error) {
-    console.error("Error during shutdown:", error);
-    process.exit(1);
-  }
-};
-
 const cleanAccountResets = async () => {
   try {
     const db = mongoose.connection;
@@ -61,6 +44,23 @@ const cleanAccountResets = async () => {
     console.log(`${result.deletedCount} documents deleted during cleanup`);
   } catch (error) {
     console.error("Error during cleanup:", error);
+  }
+};
+
+const cleanExit = async () => {
+  console.log("Shutting down node server");
+
+  try {
+    await mongoose.connection.close();
+    console.log("MongoDB connection closed");
+
+    server.close(() => {
+      console.log("Server closed");
+      process.exit(0);
+    });
+  } catch (error) {
+    console.error("Error during shutdown:", error);
+    process.exit(1);
   }
 };
 

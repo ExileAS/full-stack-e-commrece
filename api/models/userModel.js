@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const { default: isEmail } = require("validator/lib/isemail");
 
-const loginStatic = require("../utils/loginStatic");
+const { loginStatic, checkForDuplicate } = require("../helpers/staticMethods");
 const order = new Schema({
   orderId: {
     type: String,
@@ -122,7 +122,13 @@ const userSchema = new Schema({
   },
 });
 
-userSchema.statics.login = loginStatic;
+userSchema.statics.login = async function (email, password) {
+  await loginStatic(email, password, this);
+};
+
+userSchema.statics.checkDup = async function (email) {
+  await checkForDuplicate(email, this);
+};
 
 const userModel = mongoose.model("user", userSchema);
 

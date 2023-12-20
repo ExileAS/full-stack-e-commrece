@@ -3,8 +3,8 @@ const crypto = require("crypto");
 const {
   handleAddMain,
   handlePatchDeleteMain,
-} = require("../utils/mainProductsUpdates");
-const { handleDeleteRedundant } = require("../utils/deleteRedundantOrders");
+} = require("../helpers/mainProductsUpdates");
+const { handleDeleteRedundant } = require("../helpers/deleteRedundantDocs");
 
 module.exports.ordered_post = async (req, res) => {
   const { list, customerInfo, verifiedUser } = req.body;

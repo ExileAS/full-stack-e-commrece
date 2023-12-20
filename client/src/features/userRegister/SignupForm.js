@@ -152,6 +152,8 @@ const SignUp = ({ err }) => {
     }
   };
 
+  console.log(currUser);
+
   return (
     <div className="bg-img">
       <div className="box">
@@ -183,7 +185,7 @@ const SignUp = ({ err }) => {
               />
             </div>
           )}
-          {!loading && !currUser && (
+          {!loading && (
             <button className="button-17" onClick={handleSignup}>
               Signup
             </button>
