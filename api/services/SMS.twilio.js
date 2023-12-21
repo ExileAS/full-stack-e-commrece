@@ -8,9 +8,9 @@ const client = require("twilio")(accountSid, authToken, {
   maxRetries: 3,
 });
 
-const sendSMS = async (phoneNumber, otp) => {
+const sendSMS = async (phoneNumber, otp, url) => {
   const message = await client.messages.create({
-    body: `verify your seller phone number \nusing this otp: \n${otp}`,
+    body: `verify your seller phone number \nusing this otp: \n${otp}\n or with URL:\n${url}`,
     to: phoneNumber,
     from: senderNum,
   });

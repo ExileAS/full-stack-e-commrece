@@ -8,7 +8,6 @@ const resetingModel = require("../models/resetingUsersModel");
 const { createResetToken } = require("../utils/tokens");
 const { sendToUser, mailOptions } = require("../services/mailer");
 const sellerModel = require("../models/sellerModel");
-const { deleteFromUserModel } = require("../helpers/deleteRedundantDocs");
 const deleteUnwantedFields = require("../helpers/deleteUnwantedFields");
 
 const verify_user_url = async (req, res) => {
@@ -24,11 +23,7 @@ const verify_user_url = async (req, res) => {
       }
     );
     if (verifiedUser) {
-      if (user.role) {
-        user.role === "customer" &&
-          (await deleteUnwantedFields(userModel, email));
-        user.role === "seller" && (await deleteFromUserModel(user)); // if user is a seller
-      }
+      await deleteUnwantedFields(userModel, email);
       res.send("<h2>Verified Succesfully</h2>");
     } else {
       const failedVerify = await userModel.findOneAndUpdate(
@@ -58,11 +53,7 @@ const verify_user_otp = async (req, res) => {
       }
     );
     if (verifiedUser) {
-      if (user.role) {
-        user.role === "customer" &&
-          (await deleteUnwantedFields(userModel, email));
-        user.role === "seller" && (await deleteFromUserModel(user)); // if user is a seller
-      }
+      await deleteUnwantedFields(userModel, email);
       res.status(200).json({ success: "verified successfully!" });
     } else {
       const failedVerify = await model.findOneAndUpdate(
@@ -210,7 +201,6 @@ const verify_reset_otp = async (req, res) => {
 
 const confirm_reset = async (req, res) => {
   const { email, password, isSeller } = req.body;
-  const resetToken = req.cookies.jwtReset;
   const model = isSeller ? sellerModel : userModel;
   try {
     const hashedPassword = await passowrdHash(password);
@@ -222,7 +212,7 @@ const confirm_reset = async (req, res) => {
       { $set: { password: hashedPassword }, $unset: { reseting: 1 } }
     );
     await resetingModel.findOneAndDelete({ email: email, id: user._id });
-    if (resetToken) res.cookie("jwtReset", "", { maxAge: 1 });
+    res.cookie("jwtReset", "", { maxAge: 1 });
     res.status(201).json({ user: user.email });
   } catch (err) {
     console.log(err);

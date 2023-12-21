@@ -1,6 +1,4 @@
 const { OrderedProductModel } = require("../models/oderedProductsModel");
-const sellerModel = require("../models/sellerModel");
-const { userModel } = require("../models/userModel");
 
 const handleDeleteRedundant = async (info, list, confirmId) => {
   const { userEmail } = info;
@@ -30,21 +28,4 @@ const handleDeleteRedundant = async (info, list, confirmId) => {
   }
 };
 
-const deleteFromUserModel = async (user) => {
-  const seller = await sellerModel.findOne({
-    email: user.email,
-    verified: true,
-  });
-  if (!seller) {
-    return;
-  }
-  const deleted = await userModel.findOneAndDelete({
-    email: user.email,
-    role: "seller",
-    verified: true,
-  });
-  console.log(deleted);
-  // dlt unwanted fields
-};
-
-module.exports = { handleDeleteRedundant, deleteFromUserModel };
+module.exports = { handleDeleteRedundant };

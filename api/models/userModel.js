@@ -99,7 +99,6 @@ const userSchema = new Schema({
   },
   role: {
     type: String,
-    default: "customer",
   },
   phoneNumber: {
     type: String,
@@ -132,4 +131,4 @@ userSchema.statics.checkDup = async function (email) {
 
 const userModel = mongoose.model("user", userSchema);
 
-module.exports = { userModel, order };
+module.exports = { userModel, order, userSchema };

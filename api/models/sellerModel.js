@@ -1,51 +1,22 @@
 const mongoose = require("mongoose");
 const { default: isEmail } = require("validator/lib/isemail");
 const { productSchema } = require("./productModel");
-const { order } = require("./userModel");
+const { userSchema } = require("./userModel");
 const { loginStatic, checkForDuplicate } = require("../helpers/staticMethods");
 const Schema = mongoose.Schema;
 
 const sellerSchema = new Schema({
-  email: {
-    type: String,
-    required: [true, "please enter an email"],
-    lowercase: true,
-    unique: true,
-    validate: [isEmail, "please enter a valid email"],
-  },
-  password: {
-    type: String,
-    required: true,
-    validate: {
-      validator: function (value) {
-        return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*]).{8,}$/.test(
-          value
-        );
-      },
-      message:
-        "please use a stronger password \n (8+ characters with letters (uppercase included), numbers and symbols)",
-    },
-  },
+  ...userSchema.obj,
   verified: {
     type: Boolean,
-    default: false,
-  },
-  phoneNumber: {
-    type: String,
-    required: true,
+    default: function () {
+      return !this.phoneURL && !this.verifyURL && !this.expireAt;
+    },
   },
   companyName: {
     type: String,
   },
-  expireAt: {
-    type: Date,
-    default: function () {
-      if (!this.verified) {
-        return Date.now() + 1000 * 60 * 60 * 24 * 2;
-      }
-    },
-  },
-  OTP: {
+  phoneOTP: {
     otp: {
       type: Number,
     },
@@ -58,6 +29,23 @@ const sellerSchema = new Schema({
       },
     },
   },
+  phoneURL: {
+    url: {
+      type: String,
+    },
+    expireAt: {
+      type: Date,
+      default: function () {
+        if (!this.verified) {
+          return Date.now() + 1000 * 60 * 20;
+        }
+      },
+    },
+    verified: {
+      type: Boolean,
+      default: false,
+    },
+  },
   verifyAttempts: {
     type: Number,
     default: function () {
@@ -65,6 +53,7 @@ const sellerSchema = new Schema({
         return 0;
       }
     },
+    max: 5,
   },
   resendAttempts: {
     type: Number,
@@ -73,20 +62,9 @@ const sellerSchema = new Schema({
         return 1;
       }
     },
-  },
-  reseting: {
-    type: Boolean,
+    max: 5,
   },
   products: [productSchema],
-  orders: [order],
-  purchaseCount: {
-    type: Number,
-    default: 0,
-  },
-  totalPayments: {
-    type: Number,
-    default: 0,
-  },
 });
 
 sellerSchema.statics.login = async function (email, password) {

@@ -23,6 +23,7 @@ module.exports.signup_seller = async (req, res) => {
     const seller = await sellerModel.create({
       ...info,
       password: hashedPassword,
+      role: "seller",
     });
     await send();
     const { name, token, options } = createTempToken(seller._id);
@@ -63,8 +64,7 @@ module.exports.seller_login = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await sellerModel.login(email, password);
-    const existsInUserModel = await userModel.findOne({ email });
-    if (user.verified && !existsInUserModel) {
+    if (user.verified) {
       const { token, name, options } = createToken(user._id);
       const {
         token: tokenSeller,
