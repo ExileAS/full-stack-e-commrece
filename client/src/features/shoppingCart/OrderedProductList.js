@@ -212,7 +212,6 @@ const OrderedProductsList = ({ confirmed }) => {
                     dispatch(clearOrdered());
                     await dispatch(clearInDB(confirmId)).unwrap();
                     navigate("/products");
-                    window.location.reload(true);
                   }}
                 >
                   <b className="cancel-text" disabled={disableCheckout}>
