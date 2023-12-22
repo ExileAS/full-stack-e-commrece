@@ -13,7 +13,6 @@ import {
   VERIFY_OTP_URL,
   REQUIRE_RESET_URL,
   SELLER_LOGIN_URL,
-  VERIFY_SELLER_EMAIL_OTP_URL,
 } from "../utils/urlConstants";
 import OtpField from "../../components/OtpField";
 import ResendButton from "../../components/ResendButton";
@@ -68,10 +67,9 @@ const Login = () => {
     if (otpRef.current.value.length !== 6) {
       return;
     }
-    const url = isSeller ? VERIFY_SELLER_EMAIL_OTP_URL : VERIFY_OTP_URL;
     try {
-      const data = await fetchGetPost(url, {
-        body: { email: currUser, otp: otpRef.current?.value },
+      const data = await fetchGetPost(VERIFY_OTP_URL, {
+        body: { email: currUser, otp: otpRef.current?.value, isSeller },
         token,
       });
       if (data.info || (resErr && resErr !== "wrong OTP")) {
@@ -86,7 +84,7 @@ const Login = () => {
     setTimer("15");
     try {
       const data = await fetchGetPost(RESEND_URL, {
-        body: { email: currUser },
+        body: { email: currUser, isSeller },
         token,
       });
       if (data.err) {
@@ -104,7 +102,7 @@ const Login = () => {
     }
     try {
       const data = await fetchGetPost(REQUIRE_RESET_URL, {
-        body: { email: email },
+        body: { email: email, isSeller },
         token,
       });
       if (data.id && data.remainingAttempts) {

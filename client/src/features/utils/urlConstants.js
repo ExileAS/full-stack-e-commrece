@@ -30,7 +30,6 @@ export const ADD_REVIEW_URL = `${BASE_API_URL}/addReview`;
 export const EDIT_REVIEW_URL = `${BASE_API_URL}/editReview`;
 
 export const SELLER_SIGNUP_URL = `${BASE_API_URL}/signup-seller`;
-export const VERIFY_SELLER_EMAIL_OTP_URL = `${BASE_API_URL}/verify-seller-otp`;
 export const VERIFY_SELLER_PHONE_URL = `${BASE_API_URL}/verify-seller-phone`;
 export const RESEND_OTP_SELLER_URL = `${BASE_API_URL}/resend-seller-otp`;
 export const SELLER_LOGIN_URL = `${BASE_API_URL}/login-seller`;

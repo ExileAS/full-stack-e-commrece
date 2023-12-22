@@ -2,7 +2,11 @@ const sellerModel = require("../models/sellerModel");
 const { userModel } = require("../models/userModel");
 const createSellerSignupInfo = require("../utils/createSellerInfo");
 const { passowrdHash } = require("../utils/textEncryption");
-const { createTempToken, createSellerToken } = require("../utils/tokens");
+const {
+  createTempToken,
+  createSellerToken,
+  createToken,
+} = require("../utils/tokens");
 const {
   handleErrors,
   handlePhoneVerifyErrors,
@@ -60,7 +64,6 @@ module.exports.resend_otp = async (req, res) => {
 
 module.exports.seller_login = async (req, res) => {
   const { email, password } = req.body;
-
   try {
     const user = await sellerModel.login(email, password);
     if (user.verified && user.phoneNumber.verified) {
@@ -86,6 +89,7 @@ module.exports.seller_login = async (req, res) => {
       res.status(401).json({ unverifiedEmail: user.email });
     }
   } catch (err) {
+    console.log(err);
     const errors = handleErrors(err);
     res.status(400).json({ errors });
   }
@@ -129,13 +133,14 @@ module.exports.verify_phone_url = async (req, res) => {
       throw new Error("invalid url");
     }
 
-    await sellerModel.findOneAndUpdate(
-      { email },
+    const test = await sellerModel.findByIdAndUpdate(
+      { _id: seller._id },
       {
         $unset: { phoneOTP: 1, phoneURL: 1 },
         $set: { "phoneNumber.verified": true },
       }
     );
+    console.log(test);
     res.status(200).send("<h2>Verified Succesfully</h2>");
   } catch (err) {
     console.log(err);

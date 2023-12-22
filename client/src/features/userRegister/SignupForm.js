@@ -87,6 +87,9 @@ const SignUp = ({ err }) => {
         token,
       });
       console.log(data);
+      if (data.info) {
+        navigate("/loginSeller");
+      }
     } catch (err) {
       console.log(err);
     }

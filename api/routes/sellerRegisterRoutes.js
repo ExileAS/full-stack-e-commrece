@@ -29,7 +29,8 @@ router.post(
   requireAuth,
   verify_phone_otp
 );
-router.post(
+// :verifyId&:email
+router.get(
   `/shoppingbag/verify-phone-seller/:verifyId&:email`,
   verify_phone_url
 );

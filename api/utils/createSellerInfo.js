@@ -11,7 +11,7 @@ const createSellerSignupInfo = (email, companyName, phoneNumber) => {
     length: 8,
     useLetters: false,
   });
-  const url = `${process.env.SERVER_URI}/shoppingBag/verifyUser/${URLID}&${encryptedEmail}`;
+  const url = `${process.env.SERVER_URI}/shoppingBag/verify-phone-seller/${URLID}&${encryptedEmail}`;
   const info = {
     email,
     verified: false,

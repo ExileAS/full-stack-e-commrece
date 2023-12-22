@@ -4,7 +4,6 @@ async function loginStatic(email, password, that) {
   if (user) {
     const auth = await bcrypt.compare(password, user.password);
     if (auth) {
-      console.log(user);
       return user;
     } else {
       throw Error("incorrect password");

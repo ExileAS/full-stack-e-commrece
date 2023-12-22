@@ -13,7 +13,6 @@ const deleteUnwantedFields = require("../helpers/deleteUnwantedFields");
 const verify_user_url = async (req, res) => {
   const { verifyId, email } = req.params;
   const url = `${process.env.SERVER_URI}/shoppingBag/verifyUser/${verifyId}&${email}`;
-  console.log(verifyId.length);
   const model = verifyId.length === 90 ? sellerModel : userModel;
   try {
     const user = await model.findOne({ encryptedEmail: email });
