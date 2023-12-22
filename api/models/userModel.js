@@ -105,7 +105,6 @@ const userSchema = new Schema({
   },
   phoneNumber: {
     type: String,
-    default: null,
   },
   purchaseCount: {
     type: Number,

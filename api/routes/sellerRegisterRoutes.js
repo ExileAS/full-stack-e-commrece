@@ -5,6 +5,8 @@ const {
   signup_seller,
   resend_otp,
   seller_login,
+  verify_phone_otp,
+  verify_phone_url,
 } = require("../controlers/sellerRegisterController");
 const { csrfProtection, requireAuth } = require("../middleware/authMiddleware");
 const { clearTokens } = require("../middleware/tokenClearer");
@@ -20,5 +22,15 @@ router.post(
   limiter,
   clearTokens,
   seller_login
+);
+router.post(
+  "/api/verify-seller-phone",
+  csrfProtection,
+  requireAuth,
+  verify_phone_otp
+);
+router.post(
+  `/shoppingbag/verify-phone-seller/:verifyId&:email`,
+  verify_phone_url
 );
 module.exports = router;

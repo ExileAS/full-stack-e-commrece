@@ -12,8 +12,18 @@ const sellerSchema = new Schema({
   ...userSchema.obj,
   verified: {
     type: Boolean,
-    default: function () {
-      return !this.phoneURL && !this.verifyURL && !this.expireAt;
+    // default: function () {
+    //   return !this.phoneURL && !this.verifyURL && !this.expireAt;
+    // },
+    default: false,
+  },
+  phoneNumber: {
+    number: {
+      type: String,
+    },
+    verified: {
+      type: Boolean,
+      default: false,
     },
   },
   companyName: {
@@ -44,10 +54,6 @@ const sellerSchema = new Schema({
         }
       },
     },
-    verified: {
-      type: Boolean,
-      default: false,
-    },
   },
   verifyAttempts: {
     type: Number,
@@ -56,7 +62,7 @@ const sellerSchema = new Schema({
         return 0;
       }
     },
-    max: 5,
+    max: 7,
   },
   resendAttempts: {
     type: Number,
@@ -65,7 +71,7 @@ const sellerSchema = new Schema({
         return 1;
       }
     },
-    max: 5,
+    max: 7,
   },
   products: [productSchema],
 });

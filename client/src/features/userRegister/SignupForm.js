@@ -29,10 +29,10 @@ const SignUp = ({ err }) => {
   const [phoneNumber, setPhoneNumber] = useState(null);
   const [phoneNumberErr, setPhoneNumberErr] = useState("");
   const [companyName, setCompanyName] = useState("");
-  const [showOtp, setShowOtp] = useState(false);
   const [timer, setTimer] = useState("15");
   const otpRef = useRef({});
   const currUser = useSelector((state) => state.user.tempEmail);
+  const currIsSeller = useSelector((state) => state.user.currIsSeller);
   const currPhoneNum = useSelector((state) => state.user.phoneNumber);
   const location = useLocation();
   const isSeller = location.pathname === "/signupSeller";
@@ -66,7 +66,6 @@ const SignUp = ({ err }) => {
         navigate("/login");
       }
       if (data.seller) {
-        setShowOtp(true);
         dispatch(setTempEmail(email));
         dispatch(setSellerPhone(phoneNumber));
       }
@@ -84,7 +83,6 @@ const SignUp = ({ err }) => {
         body: {
           email: currUser,
           otp: otpRef.current?.value,
-          isSeller,
         },
         token,
       });
@@ -146,7 +144,7 @@ const SignUp = ({ err }) => {
           <br />
           {!isSeller && <GoogleReg />}
           <div className="otp-container">
-            {currUser && isSeller && (
+            {currIsSeller && (
               <>
                 {loading ? (
                   <Loader />
@@ -165,12 +163,18 @@ const SignUp = ({ err }) => {
             {currUser && (
               <div>
                 <br />
-                <h2 className="timer-title">verification sent to </h2>
-                <p className="confirmed">******{currPhoneNum.substring(6)}</p>
+                {currPhoneNum && (
+                  <>
+                    <h2 className="timer-title">verification sent to </h2>
+                    <p className="confirmed">
+                      ******{currPhoneNum.substring(6)}
+                    </p>
+                  </>
+                )}
                 <br />
               </div>
             )}
-            {showOtp && Number(timer) > 0 && (
+            {currIsSeller && Number(timer) > 0 && (
               <Timer
                 start={Boolean(currUser)}
                 timer={timer}

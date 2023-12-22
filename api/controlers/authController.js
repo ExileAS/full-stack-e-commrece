@@ -45,7 +45,7 @@ const verify_user_otp = async (req, res) => {
 
   try {
     const user = await userModel.findOne({ email: email });
-    handleVerifyErrors(user, "otp", false, isSeller);
+    handleVerifyErrors(user, "otp");
     const verifiedUser = await userModel.findOneAndUpdate(
       { _id: user._id, "OTP.otp": otp },
       {
@@ -62,7 +62,7 @@ const verify_user_otp = async (req, res) => {
           $inc: { verifyAttempts: 1 },
         }
       );
-      res.status(400).json({ err: "wrong otp" });
+      res.status(400).json({ err: "wrong OTP" });
     }
   } catch (err) {
     console.log(err.message);

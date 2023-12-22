@@ -74,7 +74,7 @@ const Login = () => {
         body: { email: currUser, otp: otpRef.current?.value },
         token,
       });
-      if (data.info || (resErr && resErr !== "wrong otp")) {
+      if (data.info || (resErr && resErr !== "wrong OTP")) {
         dispatch(setTempEmail(null));
       }
     } catch (err) {

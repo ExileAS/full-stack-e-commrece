@@ -5,7 +5,7 @@ const { passowrdHash } = require("../utils/textEncryption");
 const { createTempToken, createSellerToken } = require("../utils/tokens");
 const {
   handleErrors,
-  handleVerifyErrors,
+  handlePhoneVerifyErrors,
 } = require("../helpers/userRegisterErrors");
 
 module.exports.signup_seller = async (req, res) => {
@@ -40,17 +40,18 @@ module.exports.resend_otp = async (req, res) => {
 
   try {
     const seller = await sellerModel.findOne({ email });
-    handleVerifyErrors(seller, "", true);
+    handlePhoneVerifyErrors(seller, "", true);
     const { info, send } = createSellerSignupInfo(
       email,
       "",
-      seller.phoneNumber
+      seller.phoneNumber.number
     );
-    const OTP = info.OTP;
-    seller.OTP = OTP;
+    seller.phoneOTP = info.phoneOTP;
+    seller.phoneURL = info.phoneURL;
+    seller.resendAttempts++;
     await seller.save();
     await send();
-    res.status(200).json({ success: "verification resent" });
+    res.status(200).json({ info: "verification resent" });
   } catch (err) {
     res.status(err.code || 400);
     console.log(err);
@@ -62,7 +63,7 @@ module.exports.seller_login = async (req, res) => {
 
   try {
     const user = await sellerModel.login(email, password);
-    if (user.verified) {
+    if (user.verified && user.phoneNumber.verified) {
       const { token, name, options } = createToken(user._id);
       const {
         token: tokenSeller,
@@ -86,5 +87,57 @@ module.exports.seller_login = async (req, res) => {
   } catch (err) {
     const errors = handleErrors(err);
     res.status(400).json({ errors });
+  }
+};
+
+module.exports.verify_phone_otp = async (req, res) => {
+  const { email, otp } = req.body;
+
+  try {
+    const seller = await sellerModel.findOne({ email });
+    handlePhoneVerifyErrors(seller, "otp");
+    if (seller.phoneOTP.otp !== otp) {
+      seller.verifyAttempts++;
+      await seller.save();
+      throw new Error("wrong OTP");
+    }
+
+    await sellerModel.findOneAndUpdate(
+      { email },
+      {
+        $unset: { phoneURL: 1, phoneOTP: 1 },
+        $set: { "phoneNumber.verified": true },
+      }
+    );
+    res.status(200).json({ info: "verified successfully!" });
+  } catch (err) {
+    res.status(400).json({ err: err.message });
+    console.log(err);
+  }
+};
+
+module.exports.verify_phone_url = async (req, res) => {
+  const { verifyId, email } = req.params;
+  const url = `${process.env.SERVER_URI}/shoppingBag/verify-phone-seller/${verifyId}&${email}`;
+  try {
+    const seller = await sellerModel.findOne({ encryptedEmail: email });
+    handlePhoneVerifyErrors(seller, "url");
+    if (seller.phoneURL.url !== url) {
+      seller.verifyAttempts++;
+      await seller.save();
+      throw new Error("invalid url");
+    }
+
+    await sellerModel.findOneAndUpdate(
+      { email },
+      {
+        $unset: { phoneOTP: 1, phoneURL: 1 },
+        $set: { "phoneNumber.verified": true },
+      }
+    );
+    res.status(200).send("<h2>Verified Succesfully</h2>");
+  } catch (err) {
+    console.log(err);
+    res.send(`<h2>${err.message}</h2>`);
   }
 };

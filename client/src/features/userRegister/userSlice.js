@@ -75,6 +75,7 @@ const userSlice = createSlice({
     },
     setSellerPhone(state, action) {
       state.phoneNumber = action.payload;
+      state.currIsSeller = true;
       return state;
     },
     setTempPassword(state, action) {

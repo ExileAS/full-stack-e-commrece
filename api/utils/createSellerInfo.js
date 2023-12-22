@@ -16,7 +16,9 @@ const createSellerSignupInfo = (email, companyName, phoneNumber) => {
     email,
     verified: false,
     companyName,
-    phoneNumber,
+    phoneNumber: {
+      number: phoneNumber,
+    },
     phoneOTP: {
       otp,
     },
