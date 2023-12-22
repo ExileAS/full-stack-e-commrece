@@ -194,7 +194,6 @@ const shoppingCartSlice = createSlice({
       }
       product.count--;
     },
-    clearCustomerInfo: () => initialState,
     createOrderedList(state, action) {
       state.ordered = action.payload;
       return state;
@@ -234,6 +233,7 @@ const shoppingCartSlice = createSlice({
       state.totalPayment = action.payload.totalPayment || 0;
       return state;
     },
+    clearCustomerInfo: () => initialState,
   },
   extraReducers(builder) {
     builder

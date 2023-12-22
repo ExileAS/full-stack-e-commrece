@@ -55,9 +55,11 @@ const productsSlice = createSlice({
             (product.onhand -= ordered.count);
         });
       });
+      return state;
     },
     setProductState(state, action) {
       state.products = action.payload;
+      return state;
     },
     attatchReviews(state, action) {
       state.products = state.products.map((product) => {
@@ -71,6 +73,7 @@ const productsSlice = createSlice({
       });
       return state;
     },
+    clearProducts: () => initialState,
   },
   extraReducers(builder) {
     builder
@@ -102,6 +105,7 @@ export const {
   setProductState,
   countNewOnhand,
   attatchReviews,
+  clearProducts,
 } = productsSlice.actions;
 
 export default productsSlice.reducer;
