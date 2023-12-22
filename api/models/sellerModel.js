@@ -31,7 +31,7 @@ const sellerSchema = new Schema({
   },
   phoneOTP: {
     otp: {
-      type: Number,
+      type: String,
     },
     expireAt: {
       type: Date,

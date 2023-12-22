@@ -30,18 +30,18 @@ const userSlice = createSlice({
       return state;
     },
     login(state, action) {
+      const payload = action.payload;
       state.loggedIn = true;
       state.tempId = "";
-      state.userEmail = action.payload.user;
-      state.purchaseCount = action.payload.purchaseCount;
-      state.totalPayments = action.payload.totalPayments;
+      state.userEmail = payload.user || payload.seller;
+      state.purchaseCount = payload.purchaseCount;
+      state.totalPayments = payload.totalPayments;
       state.verifiedUser =
-        action.payload.purchaseCount >= 3 &&
-        action.payload.totalPayments / 100 >= 3000;
+        payload.purchaseCount >= 3 && payload.totalPayments / 100 >= 3000;
       state.userName =
         state.userEmail.substring(0, state.userEmail.indexOf("@")) +
         (state.verifiedUser ? "☆" : "");
-      state.phoneNumber = action.payload.phoneNumber;
+      state.phoneNumber = payload.phoneNumber;
       return state;
     },
     setOrderId(state, action) {

@@ -65,6 +65,7 @@ const ConfirmOrderForm = () => {
     ].every(Boolean) &&
     Number(phoneNumber) &&
     isPossiblePhoneNumber(phoneNumber);
+  console.log(userEmail);
 
   const invalidPhoneNumber =
     formState.paymentMethod === "onReceiving" &&

@@ -161,6 +161,7 @@ const shoppingCartSlice = createSlice({
       return state;
     },
     productsOrdered(state, action) {
+      console.log(state.ordered);
       if (state.ordered?.length > 0) {
         action.payload.orderedInCart.forEach((product) => {
           let exists = false;
@@ -245,26 +246,28 @@ const shoppingCartSlice = createSlice({
       })
       .addCase(retrieveOrderedList.fulfilled, (state, action) => {
         if (!action.payload) return;
-        state.customerInfo = action.payload.customerInfo;
-        if (action.payload.isSplit) {
+        const payload = action.payload;
+        state.customerInfo = payload.customerInfo;
+        if (payload.isSplit) {
           state.isSplit = true;
-          state.ordered = action.payload.orderedUnpaid;
-          state.payedOrder = action.payload.orderedPaid;
-          state.confirmId = action.payload.orderId;
-          state.payedId = action.payload.payedId;
-          state.shipmentStartedAt = action.payload.startedAt;
-          return;
+          state.ordered = payload.orderedUnpaid || [];
+          state.payedOrder = payload.orderedPaid || [];
+          state.confirmId = payload.orderId;
+          state.payedId = payload.payedId;
+          state.shipmentStartedAt = payload.startedAt;
+          return state;
         }
-        if (action.payload.payed) {
-          state.payedOrder = action.payload.ordered;
-          state.payedId = action.payload.orderId;
+        if (payload.payed) {
+          state.payedOrder = payload.ordered || [];
+          state.payedId = payload.orderId;
           state.isSplit = false;
-          state.shipmentStartedAt = action.payload.startedAt;
+          state.shipmentStartedAt = payload.startedAt;
         } else {
-          state.ordered = action.payload.ordered;
-          state.confirmId = action.payload.orderId;
+          state.ordered = payload.ordered || [];
+          state.confirmId = payload.orderId;
           state.isSplit = false;
         }
+        return state;
       });
   },
 });

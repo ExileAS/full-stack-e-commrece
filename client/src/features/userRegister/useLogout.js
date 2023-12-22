@@ -4,17 +4,25 @@ import { clearCustomerInfo } from "../shoppingCart/shoppingCartSlice";
 import { clearUserInfo } from "./userSlice";
 import { clearProducts } from "../products/productsSlice";
 import { LOGOUT_URL } from "../utils/urlConstants";
+import { persistor } from "../../app/store";
+import { useCallback } from "react";
 
 const useLogout = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const handleLogout = async (err) => {
-    await fetch(LOGOUT_URL);
-    dispatch(clearUserInfo());
-    dispatch(clearCustomerInfo());
-    dispatch(clearProducts());
-    navigate(`/login/${err}`);
-  };
+  const handleLogout = useCallback(
+    async (err) => {
+      await fetch(LOGOUT_URL);
+      persistor.pause();
+      await persistor.flush();
+      persistor.purge();
+      dispatch(clearUserInfo());
+      dispatch(clearCustomerInfo());
+      dispatch(clearProducts());
+      navigate(`/login/${err}`);
+    },
+    [dispatch, navigate]
+  );
   return handleLogout;
 };
 
