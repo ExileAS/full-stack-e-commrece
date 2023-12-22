@@ -6,7 +6,7 @@ import {
   selectProductById,
 } from "./productsSlice";
 import { useNavigate, useParams } from "react-router-dom";
-import TimeAgo from "./TimeAgo";
+import TimeAgo from "../../components/TimeAgo";
 import {
   addToShoppingCart,
   checkAdded,

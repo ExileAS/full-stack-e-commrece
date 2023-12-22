@@ -6,7 +6,7 @@ import {
   decrementInCart,
   clearShoppingCart,
 } from "./shoppingCartSlice";
-import TimeAgo from "../products/TimeAgo";
+import TimeAgo from "../../components/TimeAgo";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
