@@ -11,6 +11,7 @@ const {
   handleErrors,
   handlePhoneVerifyErrors,
 } = require("../helpers/userRegisterErrors");
+const { limiter } = require("../middleware/rateLimiter");
 
 module.exports.signup_seller = async (req, res) => {
   const { email, password, companyName, phoneNumber } = req.body;
@@ -83,6 +84,7 @@ module.exports.seller_login = async (req, res) => {
         phoneNumber: user.phoneNumber,
         listings: user.listings,
       });
+      limiter.resetKey(req.ip);
     } else {
       const { token, name, options } = createTempToken(user._id);
       res.cookie(name, token, options);

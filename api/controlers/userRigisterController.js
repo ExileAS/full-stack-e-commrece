@@ -4,6 +4,7 @@ const { handleErrors } = require("../helpers/userRegisterErrors");
 const { createSignupInfo } = require("../utils/createUserInfo");
 const { passowrdHash } = require("../utils/textEncryption");
 const sellerModel = require("../models/sellerModel");
+const { limiter } = require("../middleware/rateLimiter");
 
 const signup_post = async (req, res) => {
   const { email, password, sub, email_verified } = req.body;
@@ -54,6 +55,7 @@ const login_post = async (req, res) => {
         totalPayments: user.totalPayments,
         phoneNumber: user.phoneNumber,
       });
+      limiter.resetKey(req.ip);
     } else {
       const { token, name, options } = createTempToken(user._id);
       res.cookie(name, token, options);
