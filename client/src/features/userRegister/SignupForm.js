@@ -11,13 +11,14 @@ import {
   RESEND_OTP_SELLER_URL,
   SELLER_SIGNUP_URL,
   SIGNUP_URL,
-  VERIFY_OTP_URL,
+  VERIFY_SELLER_PHONE_URL,
 } from "../utils/urlConstants";
 import SignupInputs from "../../components/SignupInputs";
 import OtpField from "../../components/OtpField";
 import Loader from "../../components/Loader";
 import ResendButton from "../../components/ResendButton";
 import Timer from "../../components/Timer";
+import useFetch from "../utils/useFetch";
 
 const SignUp = ({ err }) => {
   const tokenError = typeof err === "string" ? err : "";
@@ -25,15 +26,15 @@ const SignUp = ({ err }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
-  const [emailErr, setEmailErr] = useState("");
-  const [passwordErr, setPasswordErr] = useState("");
+  // const [emailErr, setEmailErr] = useState("");
+  // const [passwordErr, setPasswordErr] = useState("");
   const [phoneNumber, setPhoneNumber] = useState(null);
   const [phoneNumberErr, setPhoneNumberErr] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [showOtp, setShowOtp] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [verifyErr, setVerifyErr] = useState("");
-  const [response, setResponse] = useState("");
+  // const [loading, setLoading] = useState(false);
+  // const [verifyErr, setVerifyErr] = useState("");
+  // const [response, setResponse] = useState("");
   const [timer, setTimer] = useState("15");
   const otpRef = useRef({});
   const currUser = useSelector((state) => state.user.tempEmail);
@@ -42,39 +43,29 @@ const SignUp = ({ err }) => {
   const isSeller = location.pathname === "/signupSeller";
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { fetchGetPost, loading, setResErr, resErr, successInfo } = useFetch();
 
   const canSubmitSeller = phoneNumber && isPossiblePhoneNumber(phoneNumber);
+
   const handleSignup = async () => {
     if (isSeller && !canSubmitSeller) {
       setPhoneNumberErr("please enter a valid phone number");
       return;
     }
     if (password !== passwordConfirm) {
-      setPasswordErr("password confirmation incorrect");
+      setResErr({ password: "password confirmation incorrect" });
       return;
     }
     dispatch(clearCustomerInfo());
-    setEmailErr("");
-    setPasswordErr("");
     const url = isSeller ? SELLER_SIGNUP_URL : SIGNUP_URL;
     const options = isSeller
       ? { email, password, phoneNumber, companyName: companyName || "none" }
       : { email, password };
     try {
-      const res = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify(options),
-        headers: { "Content-Type": "application/json", "csrf-token": token },
+      const data = await fetchGetPost(url, {
+        body: options,
+        token,
       });
-      const data = await res.json();
-      console.log(data);
-      if (data.errors) {
-        setEmailErr(data.errors.email);
-        setPasswordErr(data.errors.password);
-        if (!data.errors["email"] && !data.errors["password"]) {
-          setEmailErr(data.err);
-        }
-      }
       if (data.user) {
         dispatch(setTempEmail(email));
         navigate("/login");
@@ -93,40 +84,15 @@ const SignUp = ({ err }) => {
     if (otpRef.current.value.length !== 8) {
       return;
     }
-    setLoading(true);
-    setVerifyErr("");
     try {
-      const res = await fetch(VERIFY_OTP_URL, {
-        method: "POST",
-        body: JSON.stringify({
+      const data = await fetchGetPost(VERIFY_SELLER_PHONE_URL, {
+        body: {
           email: currUser,
           otp: otpRef.current?.value,
           isSeller,
-        }),
-        headers: { "Content-Type": "application/json", "csrf-token": token },
+        },
+        token,
       });
-      const data = await res.json();
-      if (data.success) {
-        setResponse(data.success);
-        dispatch(setTempEmail(currUser));
-        const res = await fetch(SIGNUP_URL, {
-          method: "POST",
-          body: JSON.stringify({ email: currUser, isSeller }),
-          headers: { "Content-Type": "application/json", "csrf-token": token },
-        });
-        const info = await res.json();
-        if (info.err) {
-          setTempEmail(null);
-        }
-        navigate("/loginSeller");
-      }
-      if (data.err) {
-        setVerifyErr(data.err);
-        if (data.err !== "wrong otp") {
-          dispatch(setTempEmail(null));
-        }
-      }
-      setLoading(false);
     } catch (err) {
       console.log(err);
     }
@@ -135,24 +101,14 @@ const SignUp = ({ err }) => {
   const handleOtpResend = async () => {
     setTimer("15");
     try {
-      const res = await fetch(RESEND_OTP_SELLER_URL, {
-        method: "POST",
-        body: JSON.stringify({ email: currUser }),
-        headers: { "Content-Type": "application/json", "csrf-token": token },
+      const data = await fetchGetPost(RESEND_OTP_SELLER_URL, {
+        body: { email: currUser },
+        token,
       });
-      const data = await res.json();
-      if (data.err) {
-        setVerifyErr(data.err);
-      }
-      if (data.success) {
-        setResponse(data.success);
-      }
     } catch (err) {
       console.log(err);
     }
   };
-
-  console.log(currUser);
 
   return (
     <div className="bg-img">
@@ -162,10 +118,10 @@ const SignUp = ({ err }) => {
           <SignupInputs
             email={email}
             setEmail={setEmail}
-            emailErr={emailErr}
+            emailErr={resErr.email}
             password={password}
             setPassword={setPassword}
-            passwordErr={passwordErr}
+            passwordErr={resErr.password}
             passwordConfirm={passwordConfirm}
             setPasswordConfirm={setPasswordConfirm}
           />
@@ -202,8 +158,8 @@ const SignUp = ({ err }) => {
                 )}
               </>
             )}
-            <div className="confirmed">{response}</div>
-            <p className="error">{verifyErr}</p>
+            <div className="confirmed">{successInfo}</div>
+            {typeof resErr === "string" && <p className="error">{resErr}</p>}
           </div>
         </form>
         <br />

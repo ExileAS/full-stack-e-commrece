@@ -1,4 +1,6 @@
-const OtpField = ({ handleOTP, otpRef }) => {
+import React from "react";
+
+const OtpField = React.memo(({ handleOTP, otpRef }) => {
   return (
     <div>
       <input
@@ -10,6 +12,6 @@ const OtpField = ({ handleOTP, otpRef }) => {
       />
     </div>
   );
-};
+});
 
 export default OtpField;

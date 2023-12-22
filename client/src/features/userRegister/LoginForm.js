@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from "react";
+import React, { useCallback, useContext, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login, setRemainingAttempts, setTempEmail } from "./userSlice";
 import { retrieveOrderedList } from "../shoppingCart/shoppingCartSlice";
@@ -13,22 +13,18 @@ import {
   VERIFY_OTP_URL,
   REQUIRE_RESET_URL,
   SELLER_LOGIN_URL,
+  VERIFY_SELLER_EMAIL_OTP_URL,
 } from "../utils/urlConstants";
 import OtpField from "../../components/OtpField";
 import ResendButton from "../../components/ResendButton";
 import LoginInputs from "../../components/LoginInputs";
 import Loader from "../../components/Loader";
+import useFetch from "../utils/useFetch";
 
 const Login = () => {
   const token = useContext(csrfTokenContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [emailErr, setEmailError] = useState("");
-  const [passwordErr, setPasswordErr] = useState("");
-  const [verifyErr, setVerifyErr] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [forgotOption, setForgotOption] = useState(false);
-  const [response, setResponse] = useState("");
   const [timer, setTimer] = useState("15");
   const otpRef = useRef({});
   const { err } = useParams();
@@ -38,36 +34,24 @@ const Login = () => {
   const currUser = useSelector((state) => state.user.tempEmail);
   const location = useLocation();
   const isSeller = location.pathname === "/loginSeller";
+  const { fetchGetPost, loading, setResErr, resErr, successInfo } = useFetch();
 
   const handleLogin = () => {
-    if (email.length === 0 || password.length === 0) {
+    if (!email.length || !password.length) {
+      setResErr({
+        email: !email.length && "please type your email",
+        password: !password.length && "please type your password",
+      });
       return;
     }
-    setEmailError("");
-    setPasswordErr("");
     dispatch(setTempEmail(null));
     const url = isSeller ? SELLER_LOGIN_URL : LOGIN_URL;
     exponentialBackoff(async () => {
       try {
-        const res = await fetch(url, {
-          method: "POST",
-          body: JSON.stringify({ email, password }),
-          headers: {
-            "Content-Type": "application/json",
-            "csrf-token": token,
-          },
+        const data = await fetchGetPost(url, {
+          body: { email, password },
+          token,
         });
-        const data = await res.json();
-
-        if (data.errors) {
-          setEmailError(data.errors.email);
-          setPasswordErr(data.errors.password);
-          if (data.errors.password) setForgotOption(true);
-        }
-        if (data.unverifiedEmail) {
-          setVerifyErr("please verify your account");
-          dispatch(setTempEmail(data.unverifiedEmail));
-        }
         if (data.user) {
           dispatch(login(data));
           navigate("/products");
@@ -80,50 +64,33 @@ const Login = () => {
     });
   };
 
-  const handleOTP = async () => {
+  const handleOTP = useCallback(async () => {
     if (otpRef.current.value.length !== 6) {
       return;
     }
-    setLoading(true);
-    setVerifyErr("");
+    const url = isSeller ? VERIFY_SELLER_EMAIL_OTP_URL : VERIFY_OTP_URL;
     try {
-      const res = await fetch(VERIFY_OTP_URL, {
-        method: "POST",
-        body: JSON.stringify({ email: currUser, otp: otpRef.current?.value }),
-        headers: { "Content-Type": "application/json", "csrf-token": token },
+      const data = await fetchGetPost(url, {
+        body: { email: currUser, otp: otpRef.current?.value },
+        token,
       });
-      const data = await res.json();
-      setLoading(false);
-      if (data.success) {
-        setResponse(data.success);
+      if (data.info || (resErr && resErr !== "wrong otp")) {
         dispatch(setTempEmail(null));
-      }
-      if (data.err) {
-        setVerifyErr(data.err);
-        if (data.err !== "wrong otp") {
-          dispatch(setTempEmail(null));
-        }
       }
     } catch (err) {
       console.log(err);
     }
-  };
+  }, [currUser, dispatch, fetchGetPost, isSeller, resErr, token]);
 
   const handleResend = async () => {
     setTimer("15");
     try {
-      const res = await fetch(RESEND_URL, {
-        method: "POST",
-        body: JSON.stringify({ email: currUser }),
-        headers: { "Content-Type": "application/json", "csrf-token": token },
+      const data = await fetchGetPost(RESEND_URL, {
+        body: { email: currUser },
+        token,
       });
-      const data = await res.json();
       if (data.err) {
-        setVerifyErr(data.err);
         dispatch(setTempEmail(null));
-      }
-      if (data.success) {
-        setResponse(data.success);
       }
     } catch (err) {
       console.log(err);
@@ -132,26 +99,19 @@ const Login = () => {
 
   const handleReset = async () => {
     if (!email) {
-      setEmailError("please type your email");
+      setResErr({ ...resErr, email: "please type your email" });
       return;
     }
     try {
-      const res = await fetch(REQUIRE_RESET_URL, {
-        method: "POST",
-        body: JSON.stringify({ email: email }),
-        headers: { "Content-Type": "application/json", "csrf-token": token },
+      const data = await fetchGetPost(REQUIRE_RESET_URL, {
+        body: { email: email },
+        token,
       });
-      const data = await res.json();
-      if (res.status === 301) {
-        if (data.id && data.remainingAttempts) {
-          dispatch(setRemainingAttempts(data.remainingAttempts));
-          if (data.remainingAttempts > 0) {
-            navigate(`/passowrd-reset/${data.id}`);
-          }
+      if (data.id && data.remainingAttempts) {
+        dispatch(setRemainingAttempts(data.remainingAttempts));
+        if (data.remainingAttempts > 0) {
+          navigate(`/passowrd-reset/${data.id}`);
         }
-      }
-      if (data.err) {
-        setVerifyErr(data.err);
       }
     } catch (err) {
       console.log(err);
@@ -168,10 +128,10 @@ const Login = () => {
             setEmail={setEmail}
             password={password}
             setPassword={setPassword}
-            passwordErr={passwordErr}
-            emailErr={emailErr}
+            passwordErr={resErr.password}
+            emailErr={resErr.email}
           />
-          {forgotOption && !verifyErr.length && (
+          {resErr.password && (
             <div className="forgot" onClick={handleReset}>
               <b>Forgot Password</b>
             </div>
@@ -192,8 +152,7 @@ const Login = () => {
               )}
             </>
           )}
-          <div className="confirmed">{response}</div>
-          <p className="error">{verifyErr}</p>
+          <div className="confirmed">{successInfo}</div>
         </div>
         {currUser && (
           <div>
@@ -215,6 +174,7 @@ const Login = () => {
             )}
           </div>
         )}
+        {typeof resErr === "string" && <b className="error">{resErr}</b>}
         {showErr && (
           <div>
             <h2 className="error">{err}</h2>

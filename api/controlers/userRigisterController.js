@@ -35,7 +35,7 @@ const signup_post = async (req, res) => {
     }
   } catch (err) {
     const errors = handleErrors(err);
-    res.status(400).json({ errors, err: err.message });
+    res.status(400).json({ errors });
   }
 };
 

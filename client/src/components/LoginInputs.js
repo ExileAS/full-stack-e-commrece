@@ -8,7 +8,6 @@ const LoginInputs = ({
 }) => {
   return (
     <>
-      {" "}
       <div className="input-container">
         <input
           type="text"

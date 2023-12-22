@@ -68,7 +68,7 @@ const sellerSchema = new Schema({
 });
 
 sellerSchema.statics.login = async function (email, password) {
-  await loginStatic(email, password, this);
+  return await loginStatic(email, password, this);
 };
 
 sellerSchema.statics.checkDup = async function (email) {

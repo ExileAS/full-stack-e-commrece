@@ -122,7 +122,7 @@ const userSchema = new Schema({
 });
 
 userSchema.statics.login = async function (email, password) {
-  await loginStatic(email, password, this);
+  return await loginStatic(email, password, this);
 };
 
 userSchema.statics.checkDup = async function (email) {

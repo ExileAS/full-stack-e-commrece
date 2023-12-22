@@ -43,8 +43,10 @@ const verify_user_url = async (req, res) => {
 const verify_user_otp = async (req, res) => {
   const { otp, email, isSeller } = req.body;
   const model = isSeller ? sellerModel : userModel;
+  console.log("EMAIL: ", email);
   try {
     const user = await model.findOne({ email: email });
+    console.log("USERIS: ", user);
     handleVerifyErrors(user, "otp", false, isSeller);
     const verifiedUser = await model.findOneAndUpdate(
       { _id: user._id, "OTP.otp": otp },
@@ -54,7 +56,7 @@ const verify_user_otp = async (req, res) => {
     );
     if (verifiedUser) {
       await deleteUnwantedFields(userModel, email);
-      res.status(200).json({ success: "verified successfully!" });
+      res.status(200).json({ info: "verified successfully!" });
     } else {
       const failedVerify = await model.findOneAndUpdate(
         { email: email },
@@ -91,7 +93,7 @@ const resend_msg = async (req, res) => {
     );
     if (existingUser) {
       send();
-      res.status(200).json({ success: "verification resent" });
+      res.status(200).json({ info: "verification resent" });
     } else {
       res
         .status(404)
