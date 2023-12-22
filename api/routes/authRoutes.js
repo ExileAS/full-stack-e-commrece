@@ -16,7 +16,7 @@ const {
 
 const router = Router();
 
-router.get(`/shoppingbag/verifyUser/:verifyId&:email`, verify_user_url);
+router.get("/shoppingbag/verifyUser/:verifyId&:email", verify_user_url);
 router.post("/api/verifyOTP", csrfProtection, requireAuth, verify_user_otp);
 router.post(
   "/api/resend",

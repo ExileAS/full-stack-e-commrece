@@ -13,20 +13,22 @@ const deleteUnwantedFields = require("../helpers/deleteUnwantedFields");
 const verify_user_url = async (req, res) => {
   const { verifyId, email } = req.params;
   const url = `${process.env.SERVER_URI}/shoppingBag/verifyUser/${verifyId}&${email}`;
+  console.log(verifyId.length);
+  const model = verifyId.length === 90 ? sellerModel : userModel;
   try {
-    const user = await userModel.findOne({ encryptedEmail: email });
+    const user = await model.findOne({ encryptedEmail: email });
     handleVerifyErrors(user, "url");
-    const verifiedUser = await userModel.findOneAndUpdate(
+    const verifiedUser = await model.findOneAndUpdate(
       { _id: user._id, "verifyURL.url": url },
       {
-        $set: { verified: true, verifiedAt: Date.now(), expireAt: null },
+        $set: { verified: true, verifiedAt: Date.now() },
       }
     );
     if (verifiedUser) {
-      await deleteUnwantedFields(userModel, email);
+      await deleteUnwantedFields(model, email);
       res.send("<h2>Verified Succesfully</h2>");
     } else {
-      const failedVerify = await userModel.findOneAndUpdate(
+      const failedVerify = await model.findOneAndUpdate(
         { email: email },
         {
           $inc: { verifyAttempts: 1 },
@@ -41,19 +43,19 @@ const verify_user_url = async (req, res) => {
 };
 
 const verify_user_otp = async (req, res) => {
-  const { otp, email } = req.body;
-
+  const { otp, email, isSeller } = req.body;
+  const model = isSeller ? sellerModel : userModel;
   try {
-    const user = await userModel.findOne({ email: email });
+    const user = await model.findOne({ email: email });
     handleVerifyErrors(user, "otp");
-    const verifiedUser = await userModel.findOneAndUpdate(
+    const verifiedUser = await model.findOneAndUpdate(
       { _id: user._id, "OTP.otp": otp },
       {
-        $set: { verified: true, verifiedAt: Date.now(), expireAt: null },
+        $set: { verified: true, verifiedAt: Date.now() },
       }
     );
     if (verifiedUser) {
-      await deleteUnwantedFields(userModel, email);
+      await deleteUnwantedFields(model, email);
       res.status(200).json({ info: "verified successfully!" });
     } else {
       const failedVerify = await model.findOneAndUpdate(
@@ -71,14 +73,14 @@ const verify_user_otp = async (req, res) => {
 };
 
 const resend_email_verification = async (req, res) => {
-  const { email } = req.body;
-
+  const { email, isSeller } = req.body;
+  const model = isSeller ? sellerModel : userModel;
   try {
-    const user = await userModel.findOne({ email: email });
+    const user = await model.findOne({ email: email });
     handleVerifyErrors(user, "", true);
-    const { info, send } = createSignupInfo(email);
+    const { info, send } = createSignupInfo(email, isSeller);
     const { verifyURL, OTP, encryptedEmail } = info;
-    const existingUser = await userModel.findOneAndUpdate(
+    const existingUser = await model.findOneAndUpdate(
       { _id: user._id, email: email },
       {
         $set: {

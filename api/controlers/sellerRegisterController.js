@@ -78,6 +78,7 @@ module.exports.seller_login = async (req, res) => {
         purchaseCount: user.purchaseCount,
         totalPayments: user.totalPayments,
         phoneNumber: user.phoneNumber,
+        listings: user.listings,
       });
     } else {
       const { token, name, options } = createTempToken(user._id);

@@ -73,7 +73,7 @@ const sellerSchema = new Schema({
     },
     max: 7,
   },
-  products: [productSchema],
+  listings: [productSchema],
 });
 
 sellerSchema.statics.login = async function (email, password) {
