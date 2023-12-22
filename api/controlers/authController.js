@@ -41,14 +41,12 @@ const verify_user_url = async (req, res) => {
 };
 
 const verify_user_otp = async (req, res) => {
-  const { otp, email, isSeller } = req.body;
-  const model = isSeller ? sellerModel : userModel;
-  console.log("EMAIL: ", email);
+  const { otp, email } = req.body;
+
   try {
-    const user = await model.findOne({ email: email });
-    console.log("USERIS: ", user);
+    const user = await userModel.findOne({ email: email });
     handleVerifyErrors(user, "otp", false, isSeller);
-    const verifiedUser = await model.findOneAndUpdate(
+    const verifiedUser = await userModel.findOneAndUpdate(
       { _id: user._id, "OTP.otp": otp },
       {
         $set: { verified: true, verifiedAt: Date.now(), expireAt: null },
@@ -72,7 +70,7 @@ const verify_user_otp = async (req, res) => {
   }
 };
 
-const resend_msg = async (req, res) => {
+const resend_email_verification = async (req, res) => {
   const { email } = req.body;
 
   try {
@@ -223,7 +221,7 @@ const confirm_reset = async (req, res) => {
 };
 
 module.exports = {
-  resend_msg,
+  resend_email_verification,
   verify_user_otp,
   verify_user_url,
   create_reset_info,

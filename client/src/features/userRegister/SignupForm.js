@@ -26,15 +26,10 @@ const SignUp = ({ err }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
-  // const [emailErr, setEmailErr] = useState("");
-  // const [passwordErr, setPasswordErr] = useState("");
   const [phoneNumber, setPhoneNumber] = useState(null);
   const [phoneNumberErr, setPhoneNumberErr] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [showOtp, setShowOtp] = useState(false);
-  // const [loading, setLoading] = useState(false);
-  // const [verifyErr, setVerifyErr] = useState("");
-  // const [response, setResponse] = useState("");
   const [timer, setTimer] = useState("15");
   const otpRef = useRef({});
   const currUser = useSelector((state) => state.user.tempEmail);
@@ -93,6 +88,7 @@ const SignUp = ({ err }) => {
         },
         token,
       });
+      console.log(data);
     } catch (err) {
       console.log(err);
     }
@@ -105,6 +101,7 @@ const SignUp = ({ err }) => {
         body: { email: currUser },
         token,
       });
+      console.log(data);
     } catch (err) {
       console.log(err);
     }

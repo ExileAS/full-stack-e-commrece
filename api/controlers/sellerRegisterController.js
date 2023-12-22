@@ -8,7 +8,6 @@ const {
   handleVerifyErrors,
 } = require("../helpers/userRegisterErrors");
 
-// signup, login, logout, verify phoneNum otp.
 module.exports.signup_seller = async (req, res) => {
   const { email, password, companyName, phoneNumber } = req.body;
 
@@ -58,10 +57,9 @@ module.exports.resend_otp = async (req, res) => {
   }
 };
 
-// verified and doesnt exist in userModel -> login
-
 module.exports.seller_login = async (req, res) => {
   const { email, password } = req.body;
+
   try {
     const user = await sellerModel.login(email, password);
     if (user.verified) {

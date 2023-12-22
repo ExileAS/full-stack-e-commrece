@@ -2,7 +2,10 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const { default: isEmail } = require("validator/lib/isemail");
 
-const { loginStatic, checkForDuplicate } = require("../helpers/staticMethods");
+const {
+  loginStatic,
+  checkForDuplicate,
+} = require("../helpers/staticSchemaMethods");
 const order = new Schema({
   orderId: {
     type: String,
