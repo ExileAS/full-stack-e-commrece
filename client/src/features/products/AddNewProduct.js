@@ -2,11 +2,14 @@ import { useContext, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { generateId, selectProductById } from "../products/productsSlice";
+import {
+  fetchProducts,
+  generateId,
+  selectProductById,
+} from "../products/productsSlice";
 import { addNewSeller, generateIdSeller } from "../sellers/sellersSlice";
 import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 import Loader from "../../components/Loader";
-import exponentialBackoff from "../utils/exponentialBackoff";
 import { ADD_PRODUCT_URL, EDIT_PRODUCT_URL } from "../utils/urlConstants";
 
 export const AddNewProduct = () => {
@@ -20,7 +23,8 @@ export const AddNewProduct = () => {
   const id = useSelector((state) => generateId(state));
   const sellerId = useSelector((state) => generateIdSeller(state));
   const currUser = useSelector((state) => state.user.userEmail);
-  const userName = currUser.substring(0, currUser.indexOf("@"));
+  const currIsSeller = useSelector((state) => state.user.currIsSeller);
+  const userName = currUser?.substring(0, currUser.indexOf("@"));
 
   const [img, setImage] = useState(null);
   const [formState, setFormState] = useState({
@@ -41,93 +45,103 @@ export const AddNewProduct = () => {
   if (currProduct) {
     sellerEdit = currProduct.seller === userName;
   }
-  const canAdd =
-    [
-      formState.productName,
-      formState.description,
-      formState.price,
-      formState.amountToSell,
-      img,
-      formState.category,
-    ].every(Boolean) &&
-    formState.price >= 100 &&
-    Number.isInteger(formState.amountToSell) &&
-    formState.amountToSell > 0;
+  const canAdd = [
+    currUser,
+    currIsSeller,
+    formState.productName,
+    formState.description,
+    formState.price,
+    formState.amountToSell,
+    img,
+    formState.category,
+    formState.price >= 100,
+    Number.isInteger(formState.amountToSell),
+    formState.amountToSell > 0,
+  ].every(Boolean);
 
   const [status, setStatus] = useState("idle");
-  const handleProductAdded = () => {
-    if (canAdd) {
-      setStatus("pending");
-      exponentialBackoff(async () => {
-        try {
-          const res = await axios.post(
-            ADD_PRODUCT_URL,
-            {
-              name: formState.productName,
-              description: formState.description,
-              price: formState.price,
-              onhand: formState.amountToSell,
-              id,
-              seller: userName,
-              category: formState.category,
-              img: img,
-            },
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-                "x-rapidapi-host": "file-upload8.p.rapidapi.com",
-                "csrf-token": token,
-              },
-            }
-          );
-          const info = await res.json();
-          if (res.ok) {
-            dispatch(addNewSeller({ name: userName, id: sellerId }));
-            navigate("/products");
-            window.location.reload(true);
-            setStatus("success");
-          }
-          return info;
-        } catch (err) {
-          console.log(err);
+  const [err, setErr] = useState("");
+  const handleProductAdded = async () => {
+    if (!canAdd) {
+      setErr("Please Fill out The Details Form");
+      return;
+    }
+    setErr("");
+    setStatus("pending");
+    try {
+      const res = await axios.post(
+        ADD_PRODUCT_URL,
+        {
+          name: formState.productName,
+          description: formState.description,
+          price: formState.price,
+          onhand: formState.amountToSell,
+          id,
+          seller: userName,
+          category: formState.category,
+          img: img,
+        },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "x-rapidapi-host": "file-upload8.p.rapidapi.com",
+            "csrf-token": token,
+          },
         }
-      });
+      );
+      if (res.data) {
+        setStatus("success");
+        setFormState({});
+        // dispatch(addNewProduct(res.data.product));
+        await dispatch(fetchProducts()).unwrap();
+        dispatch(addNewSeller({ name: userName, id: sellerId }));
+        navigate("/products");
+        return;
+      }
+      setErr(res.err);
+    } catch (err) {
+      console.log(err);
     }
   };
 
   const handleEdit = async () => {
-    if (canAdd && sellerEdit) {
-      exponentialBackoff(async () => {
-        try {
-          const res = await axios.patch(
-            EDIT_PRODUCT_URL,
-            {
-              name: formState.productName,
-              description: formState.description,
-              price: formState.price,
-              onhand: formState.amountToSell,
-              id: productId,
-              seller: userName,
-              category: formState.category,
-              img: img,
-            },
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-                "x-rapidapi-host": "file-upload8.p.rapidapi.com",
-                "csrf-token": token,
-              },
-            }
-          );
-          const info = await res.json();
-          setStatus("success");
-          navigate("/products");
-          window.location.reload(true);
-          return info;
-        } catch (err) {
-          console.log(err);
+    if (!canAdd || !sellerEdit) {
+      setErr("Please Fill out The Details Form");
+      return;
+    }
+    setErr("");
+    try {
+      const res = await axios.patch(
+        EDIT_PRODUCT_URL,
+        {
+          name: formState.productName,
+          description: formState.description,
+          price: formState.price,
+          onhand: formState.amountToSell,
+          id: productId,
+          seller: userName,
+          category: formState.category,
+          img: img,
+        },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "x-rapidapi-host": "file-upload8.p.rapidapi.com",
+            "csrf-token": token,
+          },
         }
-      });
+      );
+      if (res.data) {
+        setStatus("success");
+        setFormState({});
+        // dispatch(editExisting(res.data.product));
+        await dispatch(fetchProducts()).unwrap();
+        navigate("/products");
+        return;
+      }
+      setErr(res.err);
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -260,6 +274,7 @@ export const AddNewProduct = () => {
               </div>
             </div>
           </div>
+          <b className="error">{err}</b>
         </form>
       </div>
     </div>

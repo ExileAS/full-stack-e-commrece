@@ -66,29 +66,29 @@ module.exports.resend_otp = async (req, res) => {
 module.exports.seller_login = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await sellerModel.login(email, password);
-    if (user.verified && user.phoneNumber.verified) {
-      const { token, name, options } = createToken(user._id);
+    const seller = await sellerModel.login(email, password);
+    if (seller.verified && seller.phoneNumber.verified) {
+      const { token, name, options } = createToken(seller._id);
       const {
         token: tokenSeller,
         name: nameSeller,
         options: optionsSeller,
-      } = createSellerToken(user._id);
+      } = createSellerToken(seller._id);
       res.cookie(name, token, options);
       res.cookie(nameSeller, tokenSeller, optionsSeller);
       res.cookie("jwtTemp", "", { maxAge: 1 });
       res.status(200).json({
-        user: user.email,
-        purchaseCount: user.purchaseCount,
-        totalPayments: user.totalPayments,
-        phoneNumber: user.phoneNumber,
-        listings: user.listings,
+        user: seller.email,
+        purchaseCount: seller.purchaseCount,
+        totalPayments: seller.totalPayments,
+        phoneNumber: seller.phoneNumber,
+        listings: seller.listings,
       });
       limiter.resetKey(req.ip);
     } else {
-      const { token, name, options } = createTempToken(user._id);
+      const { token, name, options } = createTempToken(seller._id);
       res.cookie(name, token, options);
-      res.status(401).json({ unverifiedEmail: user.email });
+      res.status(401).json({ unverifiedEmail: seller.email });
     }
   } catch (err) {
     console.log(err);

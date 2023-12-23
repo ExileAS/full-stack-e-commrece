@@ -46,6 +46,12 @@ const userSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  specialCustomer: {
+    type: Boolean,
+    default: function () {
+      return this.totalPayments > 300_000;
+    },
+  },
   verifiedAt: {
     type: Date,
   },

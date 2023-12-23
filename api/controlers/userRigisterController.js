@@ -54,6 +54,7 @@ const login_post = async (req, res) => {
         purchaseCount: user.purchaseCount,
         totalPayments: user.totalPayments,
         phoneNumber: user.phoneNumber,
+        specialCustomer: user.specialCustomer,
       });
       limiter.resetKey(req.ip);
     } else {

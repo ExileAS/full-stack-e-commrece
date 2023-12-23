@@ -42,6 +42,21 @@ const productsSlice = createSlice({
         product.selected = false;
       }
     },
+    addNewProduct(state, action) {
+      state.products.push(action.payload);
+      return state;
+    },
+    editExisting(state, action) {
+      const existing = state.products.find(
+        ({ id }) => id === action.payload.id
+      );
+      if (existing) {
+        state.products = state.products.filter(
+          ({ id }) => id !== existing.id || action.payload
+        );
+      }
+      return state;
+    },
     removeProduct(state, action) {
       const { id } = action.payload;
       state = state.products.filter((product) => product.id !== id);
@@ -106,6 +121,8 @@ export const {
   countNewOnhand,
   attatchReviews,
   clearProducts,
+  addNewProduct,
+  editExisting,
 } = productsSlice.actions;
 
 export default productsSlice.reducer;

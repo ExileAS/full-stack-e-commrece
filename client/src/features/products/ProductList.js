@@ -18,6 +18,7 @@ const ProductsList = () => {
   const status = useSelector((state) => state.products.status);
   const logged = useSelector((state) => state.user.loggedIn);
   const reviewStatus = useSelector((state) => state.review.status);
+  const currIsSeller = useSelector((state) => state.user.currIsSeller);
   const reviews = useSelector(getAllReviews);
   const loadedRef = useRef(false);
   useEffect(() => {
@@ -73,7 +74,7 @@ const ProductsList = () => {
       <img src={bagSrc} alt="store-logo" className="main-logo" />
       <br />
 
-      {logged && (
+      {logged && currIsSeller && (
         <button className="button-63">
           <Link to="/products/addProduct" className="inner-link">
             Add Product

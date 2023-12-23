@@ -5,17 +5,17 @@ const initialState = {
   userEmail: null,
   loggedIn: false,
   userOrderId: null,
-  google: false,
+  googleAccount: false,
   userName: null,
   tempEmail: null,
-  tempPassword: null,
   purchaseCount: 0,
   totalPayments: 0,
-  verifiedUser: false,
+  isVIP: false,
   phoneNumber: null,
   resetAttemptsRemaining: 0,
   totalDiscount: 0,
   currIsSeller: false,
+  listings: [],
 };
 
 const userSlice = createSlice({
@@ -25,7 +25,7 @@ const userSlice = createSlice({
     logout(state, action) {
       state.loggedIn = false;
       state.userEmail = null;
-      state.google = false;
+      state.googleAccount = false;
       state.userName = null;
       return state;
     },
@@ -33,15 +33,16 @@ const userSlice = createSlice({
       const payload = action.payload;
       state.loggedIn = true;
       state.tempId = "";
-      state.userEmail = payload.user || payload.seller;
+      state.userEmail = payload.user;
       state.purchaseCount = payload.purchaseCount;
       state.totalPayments = payload.totalPayments;
-      state.verifiedUser =
-        payload.purchaseCount >= 3 && payload.totalPayments / 100 >= 3000;
+      state.isVIP = payload.specialCustomer;
       state.userName =
-        state.userEmail.substring(0, state.userEmail.indexOf("@")) +
-        (state.verifiedUser ? "☆" : "");
+        payload.user.substring(0, payload.user.indexOf("@")) +
+        (state.isVIP ? "★" : "");
       state.phoneNumber = payload.phoneNumber;
+      state.listings = payload.listings || [];
+      state.currIsSeller = Boolean(payload.listings);
       return state;
     },
     setOrderId(state, action) {
@@ -53,7 +54,7 @@ const userSlice = createSlice({
       if (user) {
         state.loggedIn = true;
         state.userEmail = user.email;
-        state.google = true;
+        state.googleAccount = true;
         state.userName = state.userEmail.substring(
           0,
           state.userEmail.indexOf("@")
