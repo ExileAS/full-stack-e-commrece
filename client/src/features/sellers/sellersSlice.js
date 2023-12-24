@@ -22,13 +22,7 @@ export const getAllSellers = createAsyncThunk("getAllSellers", async () => {
 const sellersSlice = createSlice({
   initialState,
   name: "sellers",
-  reducers: {
-    addNewSeller(state, action) {
-      const seller = state.sellers.find(({ id }) => action.payload.id === id);
-      if (!seller) state.sellers.push(action.payload);
-      return state;
-    },
-  },
+  reducers: {},
   extraReducers(builder) {
     builder
       .addCase(getAllSellers.fulfilled, (state, action) => {
@@ -54,8 +48,6 @@ const sellersSlice = createSlice({
   },
 });
 
-export const { addNewSeller } = sellersSlice.actions;
-
 export default sellersSlice.reducer;
 
 export const selectAllSellers = (state) => state.sellers.sellers;
@@ -63,12 +55,3 @@ export const selectSellerById = (state, id) =>
   state.sellers.sellers.find((seller) => seller.id === id);
 export const getIdByName = (state, name) =>
   state.sellers.sellers.find((seller) => seller.name === name)?.id;
-
-export const generateIdSeller = (state) => {
-  const sellers = state.sellers.sellers;
-  let max = 0;
-  sellers.forEach((element) => {
-    max = max > Number(element.id) ? max : Number(element.id);
-  });
-  return `${1 + max}`;
-};

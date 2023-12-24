@@ -7,7 +7,6 @@ import {
   generateId,
   selectProductById,
 } from "../products/productsSlice";
-import { addNewSeller, generateIdSeller } from "../sellers/sellersSlice";
 import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 import Loader from "../../components/Loader";
 import { ADD_PRODUCT_URL, EDIT_PRODUCT_URL } from "../utils/urlConstants";
@@ -21,7 +20,6 @@ export const AddNewProduct = () => {
     selectProductById(state, productId)
   );
   const id = useSelector((state) => generateId(state));
-  const sellerId = useSelector((state) => generateIdSeller(state));
   const currUser = useSelector((state) => state.user.userEmail);
   const currIsSeller = useSelector((state) => state.user.currIsSeller);
   const userName = currUser?.substring(0, currUser.indexOf("@"));
@@ -94,7 +92,6 @@ export const AddNewProduct = () => {
         setFormState({});
         // dispatch(addNewProduct(res.data.product));
         await dispatch(fetchProducts()).unwrap();
-        dispatch(addNewSeller({ name: userName, id: sellerId }));
         navigate("/products");
         return;
       }
