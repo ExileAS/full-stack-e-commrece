@@ -59,7 +59,6 @@ export const ReviewStars = React.memo(
           })
         );
       } else {
-        console.log("EDITING");
         dispatch(
           editReviewDb({
             rating,

@@ -12,7 +12,6 @@ module.exports.ordered_post = async (req, res) => {
   list.forEach(({ id, onhand }) => {
     updates[id] = onhand;
   });
-  //console.log(updates);
   handleAddMain(updates);
 
   const confirmId = crypto.randomBytes(16).toString("hex");
@@ -42,7 +41,6 @@ module.exports.retreive_ordered_post = async (req, res) => {
         "customerInfo.userEmail": userEmail,
         customerPayed: false,
       });
-      // console.log(unpaidOrder);
       if (unpaidOrder) {
         if (unpaidOrder.delivered && orderedByUser.delivered) {
           res.status(200).json({ orderInfo: "delivered" });
@@ -116,7 +114,7 @@ module.exports.update_order_patch = async (req, res) => {
         res.status(200).json({ newId });
       }
     } else {
-      console.log("no order found");
+      res.status(404).json({ info: "no order found" });
     }
   } catch (err) {
     console.log(err);

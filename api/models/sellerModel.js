@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { default: isEmail } = require("validator/lib/isemail");
 const { productSchema } = require("./productModel");
 const { userSchema } = require("./userModel");
 const {
@@ -10,12 +9,18 @@ const Schema = mongoose.Schema;
 
 const sellerSchema = new Schema({
   ...userSchema.obj,
+  // overrides:
   verified: {
     type: Boolean,
-    // default: function () {
-    //   return !this.phoneURL && !this.verifyURL && !this.expireAt;
-    // },
     default: false,
+  },
+  verifiedAt: {
+    type: Date,
+    default: function () {
+      if (this.verified && this.phoneNumber.verified) {
+        return Date.now();
+      }
+    },
   },
   phoneNumber: {
     number: {
@@ -26,6 +31,7 @@ const sellerSchema = new Schema({
       default: false,
     },
   },
+  // new:
   companyName: {
     type: String,
   },
@@ -54,24 +60,6 @@ const sellerSchema = new Schema({
         }
       },
     },
-  },
-  verifyAttempts: {
-    type: Number,
-    default: function () {
-      if (!this.verified) {
-        return 0;
-      }
-    },
-    max: 7,
-  },
-  resendAttempts: {
-    type: Number,
-    default: function () {
-      if (!this.verified) {
-        return 1;
-      }
-    },
-    max: 7,
   },
   listings: [productSchema],
 });

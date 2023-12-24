@@ -45,7 +45,6 @@ const PasswordReset = () => {
         headers: { "Content-Type": "application/json", "csrf-token": token },
       });
       const data = await res.json();
-      console.log(data);
       if (data.user) {
         setInfo(`reset otp sent to ${email}`);
         setShowOtp(true);

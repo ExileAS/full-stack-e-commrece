@@ -16,10 +16,8 @@ async function loginStatic(email, password, that) {
 async function checkForDuplicate(email, that) {
   const duplicate = await that.findOne({ email });
   if (duplicate) {
-    console.log("dulpicate!");
     throw new Error("Email Already Exists!");
   }
-  console.log("unique");
 }
 
 module.exports = { loginStatic, checkForDuplicate };

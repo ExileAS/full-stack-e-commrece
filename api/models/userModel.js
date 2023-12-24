@@ -97,6 +97,7 @@ const userSchema = new Schema({
         return 0;
       }
     },
+    max: 7,
   },
   resendAttempts: {
     type: Number,
@@ -105,6 +106,7 @@ const userSchema = new Schema({
         return 1;
       }
     },
+    max: 7,
   },
   role: {
     type: String,

@@ -35,7 +35,7 @@ module.exports.signup_seller = async (req, res) => {
     res.status(201).json({ seller: seller.email });
   } catch (err) {
     const errors = handleErrors(err);
-    res.status(400).json({ err: err.message, errors });
+    res.status(400).json({ errors });
     console.log(err);
   }
 };
@@ -58,7 +58,7 @@ module.exports.resend_otp = async (req, res) => {
     await send();
     res.status(200).json({ info: "verification resent" });
   } catch (err) {
-    res.status(err.code || 400);
+    res.status(err.code || 400).json({ err: err.message });
     console.log(err);
   }
 };
@@ -104,13 +104,12 @@ module.exports.verify_phone_otp = async (req, res) => {
     const seller = await sellerModel.findOne({ email });
     handlePhoneVerifyErrors(seller, "otp");
     if (seller.phoneOTP.otp !== otp) {
-      console.log(otp, seller.phoneOTP.otp);
       seller.verifyAttempts++;
       await seller.save();
       throw new Error("wrong OTP");
     }
 
-    const test = await sellerModel.findOneAndUpdate(
+    await sellerModel.findOneAndUpdate(
       { email },
       {
         $unset: { phoneURL: 1, phoneOTP: 1 },
@@ -118,7 +117,6 @@ module.exports.verify_phone_otp = async (req, res) => {
       },
       { new: true }
     );
-    console.log(test);
     res.status(200).json({ info: "verified successfully!" });
   } catch (err) {
     res.status(400).json({ err: err.message });
@@ -138,7 +136,7 @@ module.exports.verify_phone_url = async (req, res) => {
       throw new Error("invalid url");
     }
 
-    const test = await sellerModel.findByIdAndUpdate(
+    await sellerModel.findByIdAndUpdate(
       { _id: seller._id },
       {
         $unset: { phoneOTP: 1, phoneURL: 1 },
@@ -146,7 +144,6 @@ module.exports.verify_phone_url = async (req, res) => {
       },
       { new: true }
     );
-    console.log(test);
     res.status(200).send("<h2>Verified Succesfully</h2>");
   } catch (err) {
     console.log(err);

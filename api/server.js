@@ -19,6 +19,7 @@ const {
   cleanupExpiredUsers,
   cleanExit,
   cleanAccountResets,
+  cleanupExpiredSellers,
 } = require("./utils/cleanup");
 const morgan = require("morgan");
 
@@ -44,6 +45,7 @@ mongoose
     app.listen(PORT);
     console.log(`listening on port ${PORT}`);
     cron.schedule("0 0 */2 * *", cleanupExpiredUsers);
+    cron.schedule("0 0 */3 * *", cleanupExpiredSellers);
     cron.schedule("0 */12 * * *", cleanAccountResets);
     process.on("SIGINT", cleanExit);
   })

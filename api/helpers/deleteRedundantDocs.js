@@ -19,7 +19,6 @@ const handleDeleteRedundant = async (info, list, confirmId) => {
     }
 
     if (count === existingList.length) {
-      //console.log("deleted");
       const res = await OrderedProductModel.deleteOne({ _id: existingId });
       return existingOrder.confirmId;
     }

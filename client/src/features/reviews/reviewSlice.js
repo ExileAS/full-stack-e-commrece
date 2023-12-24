@@ -38,7 +38,7 @@ export const addReviewDb = createAsyncThunk(
         headers: { "Content-Type": "application/json" },
       });
       const data = await res.json();
-      console.log("added: ", data);
+      return data;
     } catch (err) {
       console.log(err);
     }
@@ -60,7 +60,7 @@ export const editReviewDb = createAsyncThunk(
         headers: { "Content-Type": "application/json" },
       });
       const data = await res.json();
-      console.log("edited: ", data);
+      return data;
     } catch (err) {
       console.log(err);
     }

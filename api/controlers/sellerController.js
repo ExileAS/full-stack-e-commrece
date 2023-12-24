@@ -31,7 +31,6 @@ module.exports.product_post = async (req, res) => {
       date,
       img: img.name,
     });
-    console.log(product.img);
     res.status(200).json({ product });
   } catch (err) {
     res.status(400).json({ err: err.message });

@@ -18,9 +18,37 @@ const cleanupExpiredUsers = async () => {
 
     const result = await collection.deleteMany(query);
 
-    console.log(`${result.deletedCount} documents deleted during cleanup`);
+    console.log(`${result.deletedCount} documents deleted during user cleanup`);
   } catch (error) {
-    console.error("Error during cleanup:", error);
+    console.error("Error during user cleanup:", error);
+  }
+};
+
+const cleanupExpiredSellers = async () => {
+  try {
+    const db = mongoose.connection;
+
+    if (db.readyState !== 1) {
+      console.error("MongoDB connection is not ready");
+      return;
+    }
+
+    const collection = db.collection("sellers");
+
+    const query = {
+      expireAt: { $exists: true, $lt: new Date() },
+      verified: false,
+      "phoneNumber.verified": false,
+      verifiedAt: { $exists: false },
+    };
+
+    const result = await collection.deleteMany(query);
+
+    console.log(
+      `${result.deletedCount} documents deleted during seller cleanup`
+    );
+  } catch (error) {
+    console.error("Error during seller cleanup:", error);
   }
 };
 
@@ -68,4 +96,5 @@ module.exports = {
   cleanupExpiredUsers,
   cleanExit,
   cleanAccountResets,
+  cleanupExpiredSellers,
 };

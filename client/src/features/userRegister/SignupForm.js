@@ -9,6 +9,7 @@ import { PhoneNumberInput } from "../../components/PhoneInput";
 import { isPossiblePhoneNumber } from "react-phone-number-input";
 import {
   RESEND_OTP_SELLER_URL,
+  RESEND_URL,
   SELLER_SIGNUP_URL,
   SIGNUP_URL,
   VERIFY_SELLER_PHONE_URL,
@@ -86,8 +87,11 @@ const SignUp = ({ err }) => {
         },
         token,
       });
-      console.log(data);
       if (data.info) {
+        await fetchGetPost(RESEND_URL, {
+          body: { email: currUser, isSeller },
+          token,
+        });
         navigate("/loginSeller");
       }
     } catch (err) {
@@ -102,7 +106,9 @@ const SignUp = ({ err }) => {
         body: { email: currUser },
         token,
       });
-      console.log(data);
+      if (data.err) {
+        setResErr(data.err);
+      }
     } catch (err) {
       console.log(err);
     }

@@ -1,5 +1,5 @@
 const deleteUnwantedFields = async (model, email) => {
-  const updatedDoc = await model.findOneAndUpdate(
+  await model.findOneAndUpdate(
     {
       verified: true,
       email: email,
@@ -15,7 +15,6 @@ const deleteUnwantedFields = async (model, email) => {
       },
     }
   );
-  console.log(updatedDoc);
 };
 
 module.exports = deleteUnwantedFields;

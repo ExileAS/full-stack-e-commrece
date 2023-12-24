@@ -39,7 +39,6 @@ const PaymentConfirmed = () => {
       dispatch(confirmPayment());
       try {
         await dispatch(updateOrder(true)).unwrap();
-        console.log("token is: ", token);
         const res = await fetch(CONFIRM_PAYMENT_URL, {
           method: "POST",
           body: JSON.stringify({ confirmId, currUser }),
@@ -69,7 +68,7 @@ const PaymentConfirmed = () => {
           headers: { "Content-Type": "application/json" },
         });
         const data = await res.json();
-        console.log(data);
+        return data;
       } catch (err) {
         console.log(err);
       }

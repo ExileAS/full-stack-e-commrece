@@ -17,7 +17,6 @@ module.exports.payment_post = async (req, res) => {
       { $set: { phoneNumber: order.customerInfo.phoneNumber } }
     );
     res.json({ url: session.url, id: order._id, totalAfterDiscount });
-    console.log(order);
   } catch (err) {
     logger.error(
       `stripe sesion failed: \nconfirmId: ${confirmId} \nerror: ${err}`

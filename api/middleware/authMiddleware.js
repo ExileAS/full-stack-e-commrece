@@ -89,14 +89,14 @@ const requireSellerToken = (req, res, next) => {
   if (token) {
     jwt.verify(token, process.env.SELLER_KEY, async (err, decodedToken) => {
       if (err) {
-        res.status(400).json({ err: "invalid token" });
+        res.status(400).json({ err: "invalid seller token" });
       } else {
         req.body.isSeller = true;
         next();
       }
     });
   } else {
-    res.status(400).json({ err: "no token" });
+    res.status(400).json({ err: "no seller token" });
   }
 };
 
