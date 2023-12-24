@@ -75,7 +75,6 @@ const requireResetToken = (req, res, next) => {
   }
 };
 
-// checkSellerToken -> adding, editing products and attatch isSeller where needed
 const requireSellerToken = (req, res, next) => {
   const token = req.cookies.jwtSeller;
   const validOrigin = req.headers?.referer.startsWith(

@@ -57,13 +57,6 @@ input[type="number"] {
   padding: 4px;
 }
 
-.discreption {
-  color: black;
-  background-color: aliceblue;
-  padding: 8px;
-  box-sizing: content-box;
-}
-
 .add-button {
   border-radius: 12px;
   border-color: lightblue;
@@ -280,8 +273,7 @@ nav a:hover {
 }
 
 .name,
-.price,
-.discreption {
+.price {
   font-family: inherit;
   font-size: 100%;
   width: 150px;
@@ -289,35 +281,6 @@ nav a:hover {
   margin: 2px;
   margin-bottom: 0;
   box-sizing: border-box;
-}
-
-.option {
-  font-size: medium;
-}
-
-.add-more-button {
-  padding: 2px;
-  padding-top: 1px;
-  padding-bottom: 1px;
-  color: rgb(37, 220, 20);
-  font-size: x-large;
-  margin: 4px;
-}
-
-.add-more-button:hover {
-  cursor: pointer;
-}
-
-.decrement-button {
-  padding-left: 5px;
-  padding-right: 5px;
-  color: rgb(220, 20, 20);
-  font-size: x-large;
-  margin: 4px;
-}
-
-.decrement-button:hover {
-  cursor: pointer;
 }
 
 .badge {
@@ -334,48 +297,11 @@ nav a:hover {
   background-color: #f8f9fa;
 }
 
-.clear-button {
-  padding-left: 5px;
-  padding-right: 5px;
-  color: rgb(220, 20, 20);
-  font-size: x-large;
-  margin: 15px;
-  margin-left: 43%;
-}
-
-.clear-button:hover {
-  cursor: pointer;
-}
-
-.place-order {
-  padding-left: 5px;
-  padding-right: 5px;
-  color: rgb(20, 147, 220);
-  font-size: x-large;
-  margin: 20px;
-  margin-left: 12px;
-}
-
-.cancel-order {
-  padding-left: 5px;
-  padding-right: 5px;
-  color: rgb(220, 20, 20);
-  font-size: large;
-  margin: 15px;
-  margin-left: 10px;
-}
-
 .nothing-ordered {
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
   font-style: italic;
   text-align: center;
   color: rgb(61, 91, 21);
-}
-
-.landing-title {
-  text-align: center;
-  color: rgb(0, 128, 255);
-  height: 100%;
 }
 
 .landing-page {
@@ -397,34 +323,6 @@ html {
   margin-left: auto;
   margin-right: auto;
   margin-top: -1%;
-}
-
-.search-box {
-  padding-top: 2px;
-  padding-bottom: 0;
-  font-size: x-large;
-  color: #481499;
-  background: transparent
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' class='bi bi-search' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'%3E%3C/path%3E%3C/svg%3E")
-    no-repeat 13px center;
-}
-
-.all-products {
-  color: #481499;
-}
-
-.select-user {
-  width: 160px;
-  height: 25px;
-}
-
-.select-user:hover {
-  cursor: pointer;
-}
-
-.confirm-title {
-  font-size: larger;
-  color: rgb(0, 255, 191);
 }
 
 .adress,
@@ -457,43 +355,7 @@ html {
   color: darkgreen;
 }
 
-.category-name {
-  font-size: xx-large;
-  color: rgba(0, 255, 0, 0.452);
-}
-
-.signup {
-  border-radius: 12px;
-  border-color: lightblue;
-  background-color: rgb(0, 255, 149);
-  margin: 8px;
-  margin-left: 9px;
-  position: relative;
-  display: inline-block;
-  font-size: large;
-  padding: 10px;
-  color: black;
-}
-
-.login {
-  border-radius: 12px;
-  border-color: lightblue;
-  background-color: rgb(0, 255, 149);
-  margin: 8px;
-  margin-left: 9px;
-  position: relative;
-  display: inline-block;
-  font-size: large;
-  padding: 10px;
-  color: black;
-}
-
-.login,
-.signup:hover {
-  cursor: pointer;
-}
-
-.welcome {
+.logged-as {
   color: #b34ff9;
   font-family: "Times New Roman", Times, serif;
   margin: 8px;
@@ -505,24 +367,12 @@ html {
   color: #203e75;
 }
 
-.cancel-shipment :hover {
-  cursor: pointer;
-}
-
 .cancel-text {
   color: crimson;
 }
 
 .Selected-Nav {
   color: rgba(220, 20, 60, 0.712) !important;
-}
-
-.seller-link {
-  text-decoration: none;
-}
-
-.place-order:hover {
-  cursor: pointer;
 }
 
 .sortby {
@@ -533,53 +383,13 @@ html {
   margin-right: auto;
 }
 
-.sortopts {
-  margin: 4px;
-  padding: 2px;
-}
-
 .orderopts {
   padding: 2px;
-}
-
-.search-categories {
-  margin: 2px;
 }
 
 .confirmed {
   color: green;
   position: relative;
-}
-
-.checkout {
-  border-radius: 12px;
-  border-color: lightblue;
-  background-color: rgb(217, 0, 255);
-  margin: 12px;
-  margin-left: 9px;
-  position: relative;
-  display: inline-block;
-  font-size: larger;
-  padding: 15px;
-  color: black;
-}
-
-.checkout:hover {
-  cursor: pointer;
-  color: rgb(0, 51, 255);
-}
-
-.cancel-shipment {
-  border-radius: 10px;
-  border-color: lightblue;
-  background-color: rgba(255, 255, 255, 0);
-  margin: 10px;
-  margin-left: 9px;
-  position: relative;
-  display: inline-block;
-  font-size: large;
-  padding: 12px;
-  color: black;
 }
 
 .add-all {
@@ -600,10 +410,6 @@ html {
 
 .add-all-div {
   text-align: center;
-}
-
-.cancel-shipment:hover {
-  cursor: pointer;
 }
 
 .spinner {
@@ -741,26 +547,6 @@ html {
 
 [transition-style="in:circle:top-left"] {
   animation: 1s cubic-bezier(0.25, 1, 0.3, 1) circle-in-top-left both;
-}
-
-.loading {
-  color: rgb(0, 128, 255);
-}
-
-.signup-form {
-  text-align: center;
-  align-items: center;
-  align-content: center;
-  align-self: center;
-}
-
-.login-form {
-  text-align: center;
-}
-
-.signup-button {
-  margin-top: 12px;
-  margin-bottom: 10px;
 }
 
 .button-17 {
@@ -938,18 +724,6 @@ html {
     font-size: 24px;
     min-width: 196px;
   }
-}
-
-.item-link {
-  text-decoration: none;
-}
-
-.item-link :hover {
-  color: crimson;
-}
-
-img {
-  width: 16px;
 }
 
 .search-input {
@@ -2300,11 +2074,6 @@ input[type="radio"] {
 .input-otp {
   color: white;
   background-color: white;
-}
-
-.sent {
-  color: #178033;
-  margin-bottom: 8px;
 }
 
 .timer {

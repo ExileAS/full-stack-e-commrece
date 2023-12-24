@@ -37,5 +37,4 @@ export const ADD_PRODUCT_URL = `${BASE_API_URL}/add-product`;
 export const EDIT_PRODUCT_URL = `${BASE_API_URL}/editProduct`;
 
 export const CHECK_TOKEN_URL = `${BASE_API_URL}/checkToken`;
-// export const REQUIRE_AUTH_URL = `${BASE_API_URL}/requireAuth`;
 export const CREATE_CSRF_URL = `${BASE_API_URL}/csrf-create-token`;

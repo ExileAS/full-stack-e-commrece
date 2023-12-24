@@ -13,12 +13,6 @@ const limiter = rateLimit({
   headers: true,
 });
 
-// const resetLimiter = (req, res) => {
-//   if(req.successfullLogin) {
-//     limiter.resetKey(req.ip);
-//   }
-// }
-
 module.exports = {
   limiter,
 };

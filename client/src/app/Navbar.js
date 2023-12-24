@@ -46,7 +46,7 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
-                  <h2 className="welcome">Logged as {user}</h2>
+                  <h2 className="logged-as">Logged as {user}</h2>
                   <button
                     className="button-81"
                     onClick={() => handleLogout("")}
