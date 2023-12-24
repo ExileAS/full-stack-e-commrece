@@ -68,8 +68,9 @@ module.exports.confirm_payment = async (req, res) => {
 };
 
 module.exports.update_user_orders = async (req, res) => {
-  const { confirmId, currUser, order, totalPayment, isSeller } = req.body;
-  const model = isSeller ? sellerModel : userModel;
+  const { confirmId, currUser, order, totalPayment, isSeller, isGoogle } =
+    req.body;
+  const model = isSeller ? sellerModel : isGoogle ? "" : userModel;
   try {
     const user = await model.findOne({ email: currUser });
     const existingOrder = user?.orders.find(
