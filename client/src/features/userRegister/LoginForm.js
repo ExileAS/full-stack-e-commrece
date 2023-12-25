@@ -120,7 +120,7 @@ const Login = () => {
     <div className="bg-img">
       <div className="box">
         <form onSubmit={(e) => e.preventDefault()}>
-          <span className="text-center">Login</span>
+          <span className="text-center">Login {isSeller && "As a Seller"}</span>
           <LoginInputs
             email={email}
             setEmail={setEmail}

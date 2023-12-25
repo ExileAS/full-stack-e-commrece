@@ -37,8 +37,8 @@ const useFetch = () => {
         if (data.errors) {
           setResErr(data.errors);
         }
-        if (data.info) {
-          setSuccessInfo(data.info);
+        if (data.info || data.success) {
+          setSuccessInfo(data.info || data.success);
         }
         if (data.unverifiedEmail) {
           setResErr("please verify your account");

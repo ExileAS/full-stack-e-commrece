@@ -34,10 +34,7 @@ function App() {
       checkToken();
     }
     async function checkToken() {
-      const res = await fetch(CHECK_TOKEN_URL, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
+      const res = await fetch(CHECK_TOKEN_URL);
       const data = await res.json();
       if (!res.ok) {
         console.log(data.err);

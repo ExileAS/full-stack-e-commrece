@@ -9,15 +9,13 @@ import {
   RESET_CONFIRM_URL,
   VERIFY_RESET_OTP_URL,
 } from "../utils/urlConstants";
+import useFetch from "../utils/useFetch";
 
 const PasswordReset = () => {
   const token = useContext(csrfTokenContext);
   const [email, setEmail] = useState("");
   const [showOtp, setShowOtp] = useState(false);
-  const [err, setErr] = useState("");
   const [info, setInfo] = useState();
-  const [loading, setLoading] = useState(false);
-  const [otpSuccess, setOtpSuccess] = useState(false);
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [passwordErr, setPasswordErr] = useState("");
@@ -28,30 +26,26 @@ const PasswordReset = () => {
   );
   const otpRef = useRef({});
   const { id } = useParams();
+  const { resErr, setResErr, loading, fetchGetPost, successInfo } = useFetch();
 
   const handleReset = async () => {
     if (!email || !email.includes("@") || !email.includes(".com")) {
-      setErr("please type your email");
+      setResErr("please type your email");
       return;
     }
     if (remainingAttempts <= 0) {
-      setErr("too many attempts \n try again later");
+      setResErr("too many attempts \n try again later");
       return;
     }
     try {
-      const res = await fetch(RESET_URL, {
-        method: "POST",
-        body: JSON.stringify({ email: email, resetId: id }),
-        headers: { "Content-Type": "application/json", "csrf-token": token },
+      const data = await fetchGetPost(RESET_URL, {
+        body: { email: email, resetId: id },
+        token,
       });
-      const data = await res.json();
       if (data.user) {
         setInfo(`reset otp sent to ${email}`);
         setShowOtp(true);
         dispatch(setRemainingAttempts(data.remainingAttempts));
-      }
-      if (data.err) {
-        setErr(data.err);
       }
     } catch (err) {
       console.log(err);
@@ -60,23 +54,14 @@ const PasswordReset = () => {
 
   const handleOTP = async () => {
     if (otpRef.current.value.length === 6) {
-      setLoading(true);
-      setErr("");
       try {
-        const res = await fetch(VERIFY_RESET_OTP_URL, {
-          method: "POST",
-          body: JSON.stringify({ email: email, otp: otpRef.current?.value }),
-          headers: { "Content-Type": "application/json", "csrf-token": token },
+        const data = await fetchGetPost(VERIFY_RESET_OTP_URL, {
+          body: { email: email, otp: otpRef.current?.value },
+          token,
         });
-        const data = await res.json();
-        setLoading(false);
         if (data.success) {
-          setOtpSuccess(true);
           setInfo(data.success);
           setShowOtp(false);
-        }
-        if (data.err) {
-          setErr(data.err);
         }
       } catch (err) {
         console.log(err);
@@ -91,18 +76,13 @@ const PasswordReset = () => {
     }
     exponentialBackoff(async () => {
       try {
-        const res = await fetch(RESET_CONFIRM_URL, {
-          method: "POST",
-          body: JSON.stringify({ email, password }),
-          headers: { "Content-Type": "application/json", "csrf-token": token },
+        const data = await fetchGetPost(RESET_CONFIRM_URL, {
+          body: { email, password },
+          token,
         });
-        const data = await res.json();
         if (data.user) {
           setInfo("password reset success");
           navigate("/login");
-        }
-        if (data.err) {
-          setErr(data.err);
         }
         return data;
       } catch (err) {
@@ -139,22 +119,24 @@ const PasswordReset = () => {
                 />
               </div>
             )}
-            {!showOtp && !otpSuccess && (
+            {!showOtp && !successInfo && (
               <div>
                 <button className="button-7" onClick={handleReset}>
                   Send
                 </button>
-                <p className="error">{err}</p>
+                {typeof resErr === "string" && (
+                  <p className="error">{resErr}</p>
+                )}
               </div>
             )}
           </div>
         )}
         <br />
-        {!otpSuccess && (
+        {!successInfo && (
           <b className="error">Remaining Attempts: {remainingAttempts}</b>
         )}
         <div>
-          {otpSuccess && (
+          {successInfo && (
             <div className="input-container">
               <input
                 type="password"

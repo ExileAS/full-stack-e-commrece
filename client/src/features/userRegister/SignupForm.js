@@ -118,7 +118,9 @@ const SignUp = ({ err }) => {
     <div className="bg-img">
       <div className="box">
         <form onSubmit={(e) => e.preventDefault()}>
-          <span className="text-center">Signup</span>
+          <span className="text-center">
+            Signup {isSeller && "As a Seller"}
+          </span>
           <SignupInputs
             email={email}
             setEmail={setEmail}
