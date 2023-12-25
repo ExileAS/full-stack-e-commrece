@@ -13,18 +13,6 @@ const limiter = rateLimit({
   headers: true,
 });
 
-const resetLimiter = rateLimit({
-  windowMs: 2 * 60 * 60 * 1000,
-  max: 3,
-  handler: (req, res) => {
-    res.status(429).json({
-      err: "Too many attempts please try again later.",
-    });
-  },
-  headers: true,
-});
-
 module.exports = {
   limiter,
-  resetLimiter,
 };
