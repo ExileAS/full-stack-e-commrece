@@ -19,6 +19,7 @@ const PasswordReset = () => {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [passwordErr, setPasswordErr] = useState("");
+  const [otpRemaining, setOtpRemaining] = useState();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const remainingAttempts = useSelector(
@@ -63,6 +64,9 @@ const PasswordReset = () => {
           setInfo(data.success);
           setShowOtp(false);
         }
+        if (data.remainingAttempts) {
+          setOtpRemaining(data.remainingAttempts);
+        }
       } catch (err) {
         console.log(err);
       }
@@ -104,10 +108,11 @@ const PasswordReset = () => {
           />
           <label htmlFor="email">Email</label>
         </div>
+        {successInfo && <h3 className="info">{info}</h3>}
+        {typeof resErr === "string" && <p className="error">{resErr}</p>}
         {!loading && (
           <div>
-            <h3 className="info">{info}</h3>
-            {showOtp && (
+            {showOtp && otpRemaining > 0 && (
               <div>
                 <input
                   type="number"
@@ -117,23 +122,26 @@ const PasswordReset = () => {
                   ref={otpRef}
                   onChange={handleOTP}
                 />
+                <br />
+                {otpRemaining && (
+                  <p className="error">Remaining Attempts: {otpRemaining}</p>
+                )}
               </div>
             )}
-            {!showOtp && !successInfo && (
+            {!successInfo && remainingAttempts > 0 && (
               <div>
                 <button className="button-7" onClick={handleReset}>
                   Send
                 </button>
-                {typeof resErr === "string" && (
-                  <p className="error">{resErr}</p>
-                )}
               </div>
             )}
           </div>
         )}
         <br />
         {!successInfo && (
-          <b className="error">Remaining Attempts: {remainingAttempts}</b>
+          <p className="error">
+            Remaining Resend Attempts: {remainingAttempts}
+          </p>
         )}
         <div>
           {successInfo && (

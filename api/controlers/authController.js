@@ -187,9 +187,9 @@ const reset_password = async (req, res) => {
 
 const verify_reset_otp = async (req, res) => {
   const { email, otp } = req.body;
-
+  let user;
   try {
-    const user = await resetingModel.findOne({ email: email });
+    user = await resetingModel.findOne({ email: email });
     const invalidAttempt =
       !user ||
       user.OTP.expireAt < Date.now() ||
@@ -199,12 +199,16 @@ const verify_reset_otp = async (req, res) => {
       throw new Error("too many attempts or expired");
     }
     if (user.OTP.otp !== otp) {
+      user.OTP.attempts++;
+      await user.save();
       throw new Error("wrong otp");
     }
     res.status(200).json({ success: "type your new password" });
   } catch (err) {
     console.log(err);
-    res.status(403).json({ err: err.message });
+    res
+      .status(403)
+      .json({ err: err.message, remainingAttempts: 3 - user.OTP.attempts });
   }
 };
 

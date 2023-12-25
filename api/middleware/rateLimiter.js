@@ -1,8 +1,8 @@
 const rateLimit = require("express-rate-limit");
 
 const limiter = rateLimit({
-  windowMs: 20 * 60 * 1000,
-  max: 6,
+  windowMs: 60 * 60 * 1000,
+  max: 4,
   handler: (req, res) => {
     res.status(429).json({
       errors: {
@@ -13,6 +13,18 @@ const limiter = rateLimit({
   headers: true,
 });
 
+const resetLimiter = rateLimit({
+  windowMs: 2 * 60 * 60 * 1000,
+  max: 3,
+  handler: (req, res) => {
+    res.status(429).json({
+      err: "Too many attempts please try again later.",
+    });
+  },
+  headers: true,
+});
+
 module.exports = {
   limiter,
+  resetLimiter,
 };

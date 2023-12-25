@@ -13,6 +13,7 @@ const {
   csrfProtection,
   requireResetToken,
 } = require("../middleware/authMiddleware");
+const { resetLimiter } = require("../middleware/rateLimiter");
 
 const router = Router();
 
@@ -28,6 +29,7 @@ router.post("/api/requireReset", csrfProtection, create_reset_info);
 router.post(
   "/api/resetUserPass",
   csrfProtection,
+  resetLimiter,
   requireResetToken,
   reset_password
 );
