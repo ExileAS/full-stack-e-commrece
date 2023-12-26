@@ -51,7 +51,7 @@ const ProductExcerpt = React.memo(
               {product.name.substring(0, 15)} {count > 1 && <b>x{count}</b>}
             </h2>
             <div className="product-img">
-              <img src={product.img} alt="" className="laptop" />
+              <img src={product.img} alt="" className="laptop" loading="lazy" />
             </div>
           </Link>
           <ReviewStars

@@ -33,7 +33,7 @@ const LandingPage = () => {
   return (
     <div className="container-landing">
       <div className="avatar">
-        <img src={logo} alt="" className="landing-logo" />
+        <img src={logo} alt="" className="landing-logo" loading="lazy" />
       </div>
       <div className="content-landing">
         <h1 className="title-landing">Welcome To Shopping Bag</h1>

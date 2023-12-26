@@ -77,7 +77,7 @@ export const ProductDetails = React.memo(
           <h2 className="title-text">
             {product.name} {amount > 1 && <b>x{amount}</b>}
           </h2>
-          <img src={product.img} alt="" className="laptop" />
+          <img src={product.img} alt="" className="laptop" loading="lazy" />
           <br />
           <b className="price">{product.price / 100} $</b>
           <p className="description">{product.description}</p>
