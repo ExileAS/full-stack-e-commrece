@@ -1,4 +1,5 @@
 E-commerce application with MERN-stack (React, node, express and mongodb)
+```
 
 How to run:
 1- clone the repository: git clone https://github.com/ExileAS/full-stack-e-commrece.git
@@ -42,9 +43,9 @@ GENERATE_SOURCEMAP=false
 REACT_APP_PUBLIC_GOOGLE_API_TOKEN           # google OAuth 2.0 api token
 REACT_APP_PROXY_DEV                         # root server url
 
-
 ** How to create .env variables files:
 Create a new file named .env in the /api directory.
 Create a new file named .env in the /client directory.
 Copy the list of environment variables above into the .env files.
 Replace each placeholder value with your actual credentials or keys.
+```
