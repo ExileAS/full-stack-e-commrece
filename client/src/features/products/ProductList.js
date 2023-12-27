@@ -53,11 +53,12 @@ const ProductsList = () => {
         </div>
       );
     content = filtered.length ? (
-      filtered.map((product) => (
+      filtered.map((product, ind) => (
         <ProductExcerpt
           productId={product.id}
           key={product.id}
           mainPage={true}
+          ind={ind}
         />
       ))
     ) : (

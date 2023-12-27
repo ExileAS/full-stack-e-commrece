@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const ProductExcerpt = React.memo(
-  ({ productId, count, orderedList, mainPage, confirmed }) => {
+  ({ productId, count, orderedList, mainPage, confirmed, ind }) => {
     const logged = useSelector((state) => state.user.userEmail);
     const dispatch = useDispatch();
     const product = useSelector((state) => selectProductById(state, productId));
@@ -51,7 +51,12 @@ const ProductExcerpt = React.memo(
               {product.name.substring(0, 15)} {count > 1 && <b>x{count}</b>}
             </h2>
             <div className="product-img">
-              <img src={product.img} alt="" className="laptop" loading="lazy" />
+              <img
+                src={product.img}
+                alt=""
+                className="laptop"
+                loading={ind > 7 ? "lazy" : "eager"}
+              />
             </div>
           </Link>
           <ReviewStars
