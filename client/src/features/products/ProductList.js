@@ -71,7 +71,7 @@ const ProductsList = () => {
   return (
     <div className="container">
       <SearchBar data={products} categories={categories} />
-      <img src={bagSrc} alt="store-logo" className="main-logo" loading="lazy" />
+      <img src={bagSrc} alt="store-logo" className="main-logo" />
       <br />
 
       {logged && currIsSeller && (

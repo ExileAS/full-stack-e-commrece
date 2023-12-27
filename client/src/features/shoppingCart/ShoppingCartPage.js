@@ -48,7 +48,7 @@ const ShoppingCartPage = () => {
             {product.name} x{product.count}
           </h2>
         </Link>
-        <img src={product.img} alt="" className="laptop" />
+        <img src={product.img} alt="" className="laptop" loading="lazy" />
         <br />
         <b value={product.price} className="description">
           {product.price / 100} $
