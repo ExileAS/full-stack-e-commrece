@@ -10,6 +10,9 @@ services:
       - mern-e-commerce
     depends_on:
       - express-api
+    volumes:
+      - ./client/:/frontend/src/app
+      - /frontend/src/app/node_modules
   express-api:
     image: e-commerce-api
     build: ./api/
@@ -19,6 +22,9 @@ services:
       - mern-e-commerce
     depends_on:
       - mongodb
+    volumes:
+      - ./api/:/backend/src/app
+      - /backend/src/app/node_modules
   mongodb:
     image: mongo
     ports:
