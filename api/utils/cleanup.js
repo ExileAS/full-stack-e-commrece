@@ -75,7 +75,7 @@ const cleanAccountResets = async () => {
   }
 };
 
-const cleanExit = async () => {
+const cleanExit = async (server) => {
   console.log("Shutting down node server");
 
   try {
