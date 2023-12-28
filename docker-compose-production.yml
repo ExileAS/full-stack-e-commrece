@@ -2,7 +2,7 @@ version: "3"
 services:
   react-app:
     image: react-e-commerce
-    build: ./client/
+    restart: unless-stopped
     stdin_open: true
     ports:
       - "3000:3000"
@@ -10,21 +10,11 @@ services:
       - mern-e-commerce
   express-api:
     image: e-commerce-api
-    build: ./api/
+    restart: unless-stopped
     ports:
       - "8000:8000"
     networks:
       - mern-e-commerce
-    depends_on:
-      - mongodb
-  mongodb:
-    image: mongo
-    ports:
-      - "27017:27017"
-    networks:
-      - mern-e-commerce
-    volumes:
-      - mongo-data:/data/db
 networks:
   mern-e-commerce:
     driver: bridge
