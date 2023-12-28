@@ -8,6 +8,8 @@ services:
       - "3000:3000"
     networks:
       - mern-e-commerce
+    depends_on:
+      - express-api
   express-api:
     image: e-commerce-api
     build: ./api/
