@@ -42,7 +42,7 @@ const MoreLikeThis = () => {
       <Link to={"/products/" + product.id} className="product-title">
         <h2>{product.name}</h2>
       </Link>
-      <img src={product.img} alt="" className="laptop" />
+      <img src={product.img} alt="" className="laptop" loading="lazy" />
       <br />
       <b className="price">{product.price} $</b>
       <p className="description">

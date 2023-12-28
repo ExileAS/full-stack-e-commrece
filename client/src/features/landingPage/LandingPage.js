@@ -13,27 +13,28 @@ const LandingPage = () => {
   const dispatch = useDispatch();
 
   useRunOnce({
-    fn: () =>
-      exponentialBackoff(async () => {
+    fn: async () => {
+      await exponentialBackoff(async () => {
         try {
           const data = await Promise.all([
             dispatch(fetchProducts()).unwrap(),
             dispatch(getAllSellers()).unwrap(),
             dispatch(fetchReviews()).unwrap(),
           ]);
-          naviate("/products");
           return data;
         } catch (err) {
           console.log(err);
         }
-      }),
+      });
+      naviate("/products");
+    },
     sessionKey: "1",
   });
 
   return (
     <div className="container-landing">
       <div className="avatar">
-        <img src={logo} alt="" className="landing-logo" loading="lazy" />
+        <img src={logo} alt="" className="landing-logo" />
       </div>
       <div className="content-landing">
         <h1 className="title-landing">Welcome To Shopping Bag</h1>

@@ -53,11 +53,12 @@ const ProductsList = () => {
         </div>
       );
     content = filtered.length ? (
-      filtered.map((product) => (
+      filtered.map((product, ind) => (
         <ProductExcerpt
           productId={product.id}
           key={product.id}
           mainPage={true}
+          ind={ind}
         />
       ))
     ) : (
@@ -71,7 +72,7 @@ const ProductsList = () => {
   return (
     <div className="container">
       <SearchBar data={products} categories={categories} />
-      <img src={bagSrc} alt="store-logo" className="main-logo" loading="lazy" />
+      <img src={bagSrc} alt="store-logo" className="main-logo" />
       <br />
 
       {logged && currIsSeller && (
