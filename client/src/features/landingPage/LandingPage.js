@@ -13,20 +13,21 @@ const LandingPage = () => {
   const dispatch = useDispatch();
 
   useRunOnce({
-    fn: () =>
-      exponentialBackoff(async () => {
+    fn: async () => {
+      await exponentialBackoff(async () => {
         try {
           const data = await Promise.all([
             dispatch(fetchProducts()).unwrap(),
             dispatch(getAllSellers()).unwrap(),
             dispatch(fetchReviews()).unwrap(),
           ]);
-          naviate("/products");
           return data;
         } catch (err) {
           console.log(err);
         }
-      }),
+      });
+      naviate("/products");
+    },
     sessionKey: "1",
   });
 

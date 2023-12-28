@@ -42,12 +42,12 @@ mongoose
   .connect(process.env.MONGODB_URI)
   .then((result) => {
     const PORT = process.env.PORT || 3007;
-    app.listen(PORT);
+    const server = app.listen(PORT);
     console.log(`listening on port ${PORT}`);
     cron.schedule("0 0 */2 * *", cleanupExpiredUsers);
     cron.schedule("0 0 */3 * *", cleanupExpiredSellers);
     cron.schedule("0 */12 * * *", cleanAccountResets);
-    process.on("SIGINT", cleanExit);
+    process.on("SIGINT", () => cleanExit(server));
   })
   .catch((err) => console.log(err));
 
