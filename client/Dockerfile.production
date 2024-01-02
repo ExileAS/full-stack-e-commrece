@@ -1,0 +1,19 @@
+## first stage
+FROM node:18
+
+WORKDIR /frontend/src/app
+
+COPY ./package.json ./
+COPY ./package-lock.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npm run build-docker-client
+
+## second stage
+FROM caddy:latest
+
+ARG CADDYFILE
+COPY ${CADDYFILE} /etc/caddy/Caddyfile

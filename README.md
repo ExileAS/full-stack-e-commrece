@@ -5,7 +5,7 @@ How to run:
 
 2- from the root folder: cd ./api -> npm i
 
-3- run: nodemon server (or node server)
+3- run: npm run server or nodemon server (or node server)
 
 4- wait for mongodb connection. a message will be logged in the terminal with the server port number.
 
