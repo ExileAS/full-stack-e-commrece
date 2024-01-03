@@ -1,4 +1,4 @@
-export const BASE_API_URL = "/api";
+export const BASE_API_URL = `${process.env.REACT_APP_PROXY_HOST}/api`;
 
 export const SIGNUP_URL = `${BASE_API_URL}/signup`;
 export const LOGOUT_URL = `${BASE_API_URL}/logout`;

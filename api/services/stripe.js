@@ -16,8 +16,8 @@ const createStripeSession = async (order) => {
         quantity: product.count,
       };
     }),
-    success_url: `http://localhost:3000/products/ordered/confirmed/${order._id}`,
-    cancel_url: "http://localhost:3000/products/ordered/checkout",
+    success_url: `${process.env.CLIENT_URI_PROD}/products/ordered/confirmed/${order._id}`,
+    cancel_url: `${process.env.CLIENT_URI_PROD}/products/ordered/checkout`,
   });
   return session;
 };
