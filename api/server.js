@@ -24,7 +24,7 @@ const {
 const morgan = require("morgan");
 
 const corsOptions = {
-  origin: process.env.CLIENT_URI_DEV,
+  origin: process.env.CLIENT_URI_PROD,
   methods: ["GET", "PUT", "POST", "PATCH", "DELETE"],
   credentials: true,
 };
