@@ -1,5 +1,5 @@
 ## first stage
-FROM node:18
+FROM node:18 AS builder
 
 WORKDIR /frontend/src/app
 
@@ -10,10 +10,19 @@ RUN npm install
 
 COPY . .
 
+ARG BASE_URL
+ENV REACT_APP_BASE_URL=${BASE_URL}
+
 RUN npm run build-docker-client
 
 ## second stage
 FROM caddy:latest
 
 ARG CADDYFILE
-COPY ${CADDYFILE} /etc/caddy/Caddyfile
+COPY ./Caddyfile.production /etc/caddy/Caddyfile
+
+COPY --from=builder /usr/src/app/build/ /srv
+
+EXPOSE 80
+
+EXPOSE 443

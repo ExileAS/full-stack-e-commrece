@@ -3,7 +3,6 @@ services:
   react-app:
     image: react-e-commerce-production
     restart: unless-stopped
-    stdin_open: true
     ports:
       - "80:80"
       - "443:443"
@@ -12,6 +11,7 @@ services:
   express-api:
     image: e-commerce-api-production
     restart: unless-stopped
+    env_file: ./api/.env
     ports:
       - "8000:8000"
     networks:
