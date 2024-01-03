@@ -105,7 +105,7 @@ const productsSlice = createSlice({
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.status = "success";
-        const res = action.payload.result.map((product) => {
+        const res = action.payload?.result.map((product) => {
           product.img = `${process.env.REACT_APP_PROXY_HOST}/images/${product.img}`;
           return product;
         });

@@ -27,14 +27,14 @@ const sellersSlice = createSlice({
     builder
       .addCase(getAllSellers.fulfilled, (state, action) => {
         state.status = "success";
-        state.sellers = Array.from(new Set([...action.payload.sellerList])).map(
-          (seller, ind) => {
-            return {
-              name: seller,
-              id: `${ind}`,
-            };
-          }
-        );
+        state.sellers = Array.from(
+          new Set([...action.payload?.sellerList])
+        ).map((seller, ind) => {
+          return {
+            name: seller,
+            id: `${ind}`,
+          };
+        });
         return state;
       })
       .addCase(getAllSellers.pending, (state, action) => {
