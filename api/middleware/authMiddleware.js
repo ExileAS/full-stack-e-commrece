@@ -77,7 +77,7 @@ const requireSellerToken = (req, res, next) => {
 };
 
 const verifyOrigin = (req, res) => {
-  const validOrigin = req.headers?.referer.startsWith(
+  const validOrigin = req.headers?.referer?.startsWith(
     process.env.CLIENT_URI_PROD
   );
   if (!validOrigin) {
