@@ -126,7 +126,7 @@ module.exports.verify_phone_otp = async (req, res) => {
 
 module.exports.verify_phone_url = async (req, res) => {
   const { verifyId, email } = req.params;
-  const url = `${process.env.SERVER_URI}/shoppingBag/verify-phone-seller/${verifyId}&${email}`;
+  const url = `${process.env.SERVER_URI_PROD}/shoppingBag/verify-phone-seller/${verifyId}&${email}`;
   try {
     const seller = await sellerModel.findOne({ encryptedEmail: email });
     handlePhoneVerifyErrors(seller, "url");

@@ -6,7 +6,7 @@ const csrfProtection = csrf({ cookie: true });
 const checkUser = (req, res, next) => {
   const token = req.cookies.jwt;
   const validOrigin = req.headers?.referer.startsWith(
-    process.env.CLIENT_URI_DEV
+    process.env.CLIENT_URI_PROD
   );
   if (!validOrigin) {
     res.status(403).json({ err: "invalid origin" });
@@ -32,7 +32,7 @@ const checkUser = (req, res, next) => {
 const requireAuth = (req, res, next) => {
   const tempToken = req.cookies.jwtTemp;
   const validOrigin = req.headers?.referer.startsWith(
-    process.env.CLIENT_URI_DEV
+    process.env.CLIENT_URI_PROD
   );
   if (!validOrigin) {
     res.status(403).json({ err: "invalid origin" });
@@ -55,7 +55,7 @@ const requireAuth = (req, res, next) => {
 const requireResetToken = (req, res, next) => {
   const resetToken = req.cookies.jwtReset;
   const validOrigin = req.headers?.referer.startsWith(
-    process.env.CLIENT_URI_DEV
+    process.env.CLIENT_URI_PROD
   );
   if (!validOrigin) {
     res.status(403).json({ err: "invalid origin" });
@@ -78,7 +78,7 @@ const requireResetToken = (req, res, next) => {
 const requireSellerToken = (req, res, next) => {
   const token = req.cookies.jwtSeller;
   const validOrigin = req.headers?.referer.startsWith(
-    process.env.CLIENT_URI_DEV
+    process.env.CLIENT_URI_PROD
   );
   if (!validOrigin) {
     res.status(403).json({ err: "invalid origin" });

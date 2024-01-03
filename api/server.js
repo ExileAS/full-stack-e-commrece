@@ -41,7 +41,7 @@ app.use(fileUpload());
 mongoose
   .connect(process.env.MONGODB_URI)
   .then((result) => {
-    const PORT = process.env.PORT || 3007;
+    const PORT = process.env.PORT || 443;
     const server = app.listen(PORT);
     console.log(`listening on port ${PORT}`);
     cron.schedule("0 0 */2 * *", cleanupExpiredUsers);

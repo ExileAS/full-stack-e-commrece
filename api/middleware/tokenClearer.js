@@ -1,6 +1,6 @@
 const clearTokens = (req, res, next) => {
   const validOrigin = req.headers?.referer.startsWith(
-    process.env.CLIENT_URI_DEV
+    process.env.CLIENT_URI_PROD
   );
   if (!validOrigin) {
     res.status(403).json({ err: "invalid origin" });
