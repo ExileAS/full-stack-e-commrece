@@ -11,12 +11,16 @@ const initialState = {
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
   async () => {
-    const res = await fetch(GET_PRODUCTS_URL, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
-    const data = await res.json();
-    return data;
+    try {
+      const res = await fetch(GET_PRODUCTS_URL, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      console.log(err);
+    }
   }
 );
 
