@@ -45,7 +45,9 @@ function App() {
 
   return (
     <GoogleOAuthProvider
-      clientId={process.env.REACT_APP_PUBLIC_GOOGLE_API_TOKEN}
+      clientId={
+        "638833864743-4ph4ulasbrnnfq3r6u5l0nq833h6ajqi.apps.googleusercontent.com"
+      }
     >
       <div>
         <Navbar />
