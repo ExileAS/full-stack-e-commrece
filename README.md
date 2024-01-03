@@ -1,4 +1,4 @@
-E-commerce application with MERN-stack (React, node, express and mongodb).
+E-commerce application with MERN-stack (React, node, express and mongodb)
 ```
 How to run:
 1- clone the repository: git clone https://github.com/ExileAS/full-stack-e-commrece.git
