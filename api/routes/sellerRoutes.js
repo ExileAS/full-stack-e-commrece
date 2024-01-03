@@ -8,11 +8,12 @@ const {
 const {
   csrfProtection,
   requireSellerToken,
+  verifyOriginMiddleware,
 } = require("../middleware/authMiddleware");
 
 const router = Router();
 
-router.get("/api/allSellers", get_all_sellers);
+router.get("/api/allSellers", verifyOriginMiddleware, get_all_sellers);
 router.patch(
   "/api/editProduct",
   csrfProtection,

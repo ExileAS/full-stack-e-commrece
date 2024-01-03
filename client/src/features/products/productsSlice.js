@@ -11,6 +11,7 @@ const initialState = {
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
   async () => {
+    console.log(GET_PRODUCTS_URL);
     try {
       const res = await fetch(GET_PRODUCTS_URL, {
         method: "GET",
