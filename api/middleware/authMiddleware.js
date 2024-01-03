@@ -6,6 +6,7 @@ const csrfProtection = csrf({ cookie: true });
 const checkUser = (req, res, next) => {
   const token = req.cookies.jwt;
   const validOrigin = verifyOrigin(req, res);
+  console.log(validOrigin);
   if (!validOrigin) return;
   const checkingUserToken = req.route.path === "/api/checkToken";
 

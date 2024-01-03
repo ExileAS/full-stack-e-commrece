@@ -3,6 +3,7 @@ const clearTokens = (req, res, next) => {
     process.env.CLIENT_URI_PROD
   );
   if (!validOrigin) {
+    console.log("INVALID ORIGIN!!!");
     res.status(403).json({ err: "invalid origin" });
     return;
   }
