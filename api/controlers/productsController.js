@@ -1,7 +1,7 @@
 const { ProductModel } = require("../models/productModel");
 
 module.exports.product_get = async (req, res) => {
-  console.log(req.body);
+  console.log("request recieved");
   try {
     const result = await ProductModel.find().sort({ createdAt: -1 });
     res.status(200).json({ result });
