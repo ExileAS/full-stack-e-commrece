@@ -13,12 +13,16 @@ const initialState = {
 export const fetchReviews = createAsyncThunk(
   "review/fetchReviews",
   async () => {
-    const res = await fetch(GET_REVIEWS_URL, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
-    const data = await res.json();
-    return data;
+    try {
+      const res = await fetch(GET_REVIEWS_URL, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      console.log(err);
+    }
   }
 );
 

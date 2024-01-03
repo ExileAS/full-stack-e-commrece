@@ -5,13 +5,8 @@ const csrfProtection = csrf({ cookie: true });
 
 const checkUser = (req, res, next) => {
   const token = req.cookies.jwt;
-  const validOrigin = req.headers?.referer.startsWith(
-    process.env.CLIENT_URI_PROD
-  );
-  if (!validOrigin) {
-    res.status(403).json({ err: "invalid origin" });
-    return;
-  }
+  const validOrigin = verifyOrigin(req, res);
+  if (!validOrigin) return;
   const checkingUserToken = req.route.path === "/api/checkToken";
 
   if (token) {
@@ -31,14 +26,8 @@ const checkUser = (req, res, next) => {
 
 const requireAuth = (req, res, next) => {
   const tempToken = req.cookies.jwtTemp;
-  const validOrigin = req.headers?.referer.startsWith(
-    process.env.CLIENT_URI_PROD
-  );
-  if (!validOrigin) {
-    res.status(403).json({ err: "invalid origin" });
-    return;
-  }
-
+  const validOrigin = verifyOrigin(req, res);
+  if (!validOrigin) return;
   if (tempToken) {
     jwt.verify(tempToken, process.env.TEMP_KEY, async (err, decodedToken) => {
       if (err) {
@@ -54,14 +43,8 @@ const requireAuth = (req, res, next) => {
 
 const requireResetToken = (req, res, next) => {
   const resetToken = req.cookies.jwtReset;
-  const validOrigin = req.headers?.referer.startsWith(
-    process.env.CLIENT_URI_PROD
-  );
-  if (!validOrigin) {
-    res.status(403).json({ err: "invalid origin" });
-    return;
-  }
-
+  const validOrigin = verifyOrigin(req, res);
+  if (!validOrigin) return;
   if (resetToken) {
     jwt.verify(resetToken, process.env.RESET_KEY, async (err, decodedToken) => {
       if (err) {
@@ -77,14 +60,8 @@ const requireResetToken = (req, res, next) => {
 
 const requireSellerToken = (req, res, next) => {
   const token = req.cookies.jwtSeller;
-  const validOrigin = req.headers?.referer.startsWith(
-    process.env.CLIENT_URI_PROD
-  );
-  if (!validOrigin) {
-    res.status(403).json({ err: "invalid origin" });
-    return;
-  }
-
+  const validOrigin = verifyOrigin(req, res);
+  if (!validOrigin) return;
   if (token) {
     jwt.verify(token, process.env.SELLER_KEY, async (err, decodedToken) => {
       if (err) {
@@ -99,10 +76,27 @@ const requireSellerToken = (req, res, next) => {
   }
 };
 
+const verifyOrigin = (req, res) => {
+  const validOrigin = req.headers?.referer.startsWith(
+    process.env.CLIENT_URI_PROD
+  );
+  if (!validOrigin) {
+    res.status(403).json({ err: "invalid origin" });
+    return false;
+  }
+  return true;
+};
+
+const verifyOriginMiddleware = (req, res, next) => {
+  const validOrigin = verifyOrigin(req, res);
+  if (validOrigin) next();
+};
+
 module.exports = {
   checkUser,
   requireAuth,
   requireResetToken,
   csrfProtection,
   requireSellerToken,
+  verifyOriginMiddleware,
 };
