@@ -60,7 +60,6 @@ app.get("/api/csrf-create-token", csrfProtection, (req, res) => {
   res.json({ csrfToken });
   res.on("finish", () => {
     console.log("Response headers:", res.getHeaders());
-    next();
   });
 });
 app.use(productRouter);
