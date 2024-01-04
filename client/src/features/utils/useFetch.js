@@ -18,6 +18,7 @@ const useFetch = () => {
           ? await fetch(url, {
               method: "POST",
               body: JSON.stringify(body),
+              credentials: "include",
               headers: {
                 "Content-Type": "application/json",
                 "csrf-token": token,
@@ -25,6 +26,7 @@ const useFetch = () => {
             })
           : await fetch(url, {
               method: "GET",
+              credentials: "include",
               headers: {
                 "Content-Type": "application/json",
                 "csrf-token": token,

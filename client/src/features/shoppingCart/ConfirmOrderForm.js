@@ -85,6 +85,7 @@ const ConfirmOrderForm = () => {
       const res = await fetch(CONFIRM_AVAILABLE_URL, {
         method: "POST",
         body: JSON.stringify(orderedInCart),
+        credentials: "include",
         headers: { "Content-Type": "application/json", "csrf-token": token },
       });
       const info = await res.json();

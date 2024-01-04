@@ -111,6 +111,7 @@ const OrderedProductsList = ({ confirmed }) => {
             confirmId: confirmId,
             totalAfterDiscount,
           }),
+          credentials: "include",
           headers: { "Content-Type": "application/json", "csrf-token": token },
         });
         const data = await res.json();
