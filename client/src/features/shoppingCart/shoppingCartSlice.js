@@ -49,13 +49,14 @@ export const postOrdered = createAsyncThunk(
 
 export const retrieveOrderedList = createAsyncThunk(
   "shoppingCart/retrieveOrderedList",
-  async (userEmail) => {
+  async (userEmail, token, _) => {
     const retrieveOrderFn = async () => {
       try {
         const res = await fetch(RETRIVE_ORDERED_URL, {
           method: "POST",
           body: JSON.stringify({ userEmail }),
-          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          headers: { "Content-Type": "application/json", "csrf-token": token },
         });
         const data = await res.json();
         return data;

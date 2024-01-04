@@ -7,9 +7,24 @@ const clearTokens = (req, res, next) => {
     res.status(403).json({ err: "invalid origin" });
     return;
   }
-  res.cookie("jwt", "", { maxAge: 1 });
-  res.cookie("jwtReset", "", { maxAge: 1 });
-  res.cookie("jwtSeller", "", { maxAge: 1 });
+  res.cookie("jwt", "", {
+    maxAge: 1,
+    secure: true,
+    httpOnly: true,
+    sameSite: "None",
+  });
+  res.cookie("jwtReset", "", {
+    maxAge: 1,
+    secure: true,
+    httpOnly: true,
+    sameSite: "None",
+  });
+  res.cookie("jwtSeller", "", {
+    maxAge: 1,
+    secure: true,
+    httpOnly: true,
+    sameSite: "None",
+  });
   next();
 };
 

@@ -27,7 +27,7 @@ const GoogleReg = () => {
         dispatch(googleLogin(response.credential));
         if (data.user) {
           navigate("/products");
-          dispatch(retrieveOrderedList(email));
+          dispatch(retrieveOrderedList(email, token));
         }
         return data;
       } catch (err) {
