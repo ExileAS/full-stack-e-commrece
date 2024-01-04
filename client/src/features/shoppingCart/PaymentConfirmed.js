@@ -13,7 +13,6 @@ import { csrfTokenContext } from "../../contexts/csrfTokenContext";
 
 const PaymentConfirmed = () => {
   const token = useContext(csrfTokenContext);
-  console.log("PAYMENT: ->", token);
   const confirmId = useSelector(
     (state) => state.shoppingCart.payedId || state.shoppingCart.confirmId
   );

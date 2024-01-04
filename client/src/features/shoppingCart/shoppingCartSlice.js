@@ -50,7 +50,6 @@ export const postOrdered = createAsyncThunk(
 export const retrieveOrderedList = createAsyncThunk(
   "shoppingCart/retrieveOrderedList",
   async ({ userEmail, token }) => {
-    console.log(token);
     const retrieveOrderFn = async () => {
       try {
         const res = await fetch(RETRIVE_ORDERED_URL, {
@@ -72,7 +71,6 @@ export const retrieveOrderedList = createAsyncThunk(
 export const updateOrder = createAsyncThunk(
   "shoppingCart/updateOrder",
   async ({ isPaid, token }, { getState }) => {
-    console.log("UPDATING TOKEN: ", token);
     const state = getState();
     const listUpdates = state.shoppingCart.ordered.length
       ? state.shoppingCart.ordered
