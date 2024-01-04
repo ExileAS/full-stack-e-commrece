@@ -29,7 +29,7 @@ const corsOptions = {
   credentials: true,
 };
 
-// app.use(morgan("tiny"));
+app.use(morgan("tiny"));
 app.set("trust proxy", 1);
 
 app.use("/images", express.static("images"));
