@@ -12,8 +12,9 @@ const csrfProtection = csrf({
 const checkUser = (req, res, next) => {
   const token = req.cookies.jwt;
   const validOrigin = verifyOrigin(req, res);
-  console.log(validOrigin);
+  console.log("ORIGIN IS: ->", validOrigin);
   if (!validOrigin) return;
+  console.log("PATH IS: ", req.route.path);
   const checkingUserToken = req.route.path === "/api/checkToken";
 
   if (token) {
@@ -89,9 +90,8 @@ const verifyOrigin = (req, res) => {
   );
   if (!validOrigin) {
     res.status(403).json({ err: "invalid origin" });
-    return false;
   }
-  return true;
+  return validOrigin;
 };
 
 const verifyOriginMiddleware = (req, res, next) => {

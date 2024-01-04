@@ -52,12 +52,12 @@ mongoose
   })
   .catch((err) => console.log(err));
 
-app.get("/api/checkToken", checkUser);
 app.options("/api/csrf-create-token", cors(corsOptions));
 app.get("/api/csrf-create-token", csrfProtection, (req, res) => {
   const csrfToken = req.csrfToken();
   res.json({ csrfToken });
 });
+app.get("/api/checkToken", checkUser);
 app.use(productRouter);
 app.use(orderedProductsRouter);
 app.use(userRouter);
