@@ -29,7 +29,7 @@ const PaymentConfirmed = () => {
   const [confirmErr, setConfirmErr] = useState("");
 
   useEffect(() => {
-    if (orderId === id) {
+    if (orderId === id && token) {
       exponentialBackoff(confirmOrderPayment)
         .then(updateUserOrders)
         .catch(setConfirmErr);
