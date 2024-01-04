@@ -29,6 +29,7 @@ app.use(
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", `${process.env.CLIENT_URI_PROD}`],
+      frameAncestors: ["'none'"],
     },
   })
 );
