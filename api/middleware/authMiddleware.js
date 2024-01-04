@@ -16,6 +16,7 @@ const checkUser = (req, res, next) => {
   if (!validOrigin) return;
   console.log("PATH IS: ", req.route.path);
   const checkingUserToken = req.route.path === "/api/checkToken";
+  if (!checkingUserToken) console.log(token);
 
   if (token) {
     jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
