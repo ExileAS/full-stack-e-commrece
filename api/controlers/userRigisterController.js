@@ -69,6 +69,7 @@ const login_post = async (req, res) => {
 };
 
 const logout_get = (req, res) => {
+  console.log("LOGGING OUT USER");
   res.cookie("jwt", "", { maxAge: 1 });
   res.cookie("jwtSeller", "", { maxAge: 1 });
   res.cookie("jwtReset", "", { maxAge: 1 });
