@@ -54,13 +54,13 @@ const Login = () => {
         if (data.user) {
           dispatch(login(data));
           navigate("/products");
-          dispatch(retrieveOrderedList(data.user));
+          dispatch(retrieveOrderedList({ userEmail: data.user, token }));
         }
         return data;
       } catch (err) {
         console.log(err);
       }
-    });
+    }, "login");
   };
 
   const handleOTP = useCallback(async () => {

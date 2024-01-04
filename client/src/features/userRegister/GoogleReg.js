@@ -20,19 +20,20 @@ const GoogleReg = () => {
         const res = await fetch(SIGNUP_URL, {
           method: "POST",
           body: JSON.stringify({ sub, email_verified, email }),
+          credentials: "include",
           headers: { "Content-Type": "application/json", "csrf-token": token },
         });
         const data = await res.json();
         dispatch(googleLogin(response.credential));
         if (data.user) {
           navigate("/products");
-          dispatch(retrieveOrderedList(email));
+          dispatch(retrieveOrderedList({ userEmail: email, token }));
         }
         return data;
       } catch (err) {
         console.log(err);
       }
-    });
+    }, "google login");
   return (
     <div className="google">
       <GoogleLogin

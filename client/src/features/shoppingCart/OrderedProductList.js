@@ -82,7 +82,7 @@ const OrderedProductsList = ({ confirmed }) => {
               className="button-24"
               onClick={() => {
                 dispatch(decrementInOrdered(product.id));
-                dispatch(updateOrder(false));
+                dispatch(updateOrder({ isPaid: false, token }));
               }}
             >
               -
@@ -91,7 +91,7 @@ const OrderedProductsList = ({ confirmed }) => {
               className="button-24"
               onClick={() => {
                 dispatch(removeOrder(product.id));
-                dispatch(updateOrder(false));
+                dispatch(updateOrder({ isPaid: false, token }));
               }}
             >
               Cancel Order
@@ -111,9 +111,11 @@ const OrderedProductsList = ({ confirmed }) => {
             confirmId: confirmId,
             totalAfterDiscount,
           }),
+          credentials: "include",
           headers: { "Content-Type": "application/json", "csrf-token": token },
         });
         const data = await res.json();
+        console.log(data);
         if (data.url) {
           dispatch(setOrderId(data.id));
           dispatch(setTotalDiscount(discountRatio));
@@ -123,7 +125,7 @@ const OrderedProductsList = ({ confirmed }) => {
       } catch (err) {
         console.log(err);
       }
-    });
+    }, "checkout");
 
   return (
     <div className="ordered-content" transition-style="in:square:center">
@@ -210,7 +212,7 @@ const OrderedProductsList = ({ confirmed }) => {
                   className="button-45"
                   onClick={async () => {
                     dispatch(clearOrdered());
-                    await dispatch(clearInDB(confirmId)).unwrap();
+                    await dispatch(clearInDB({ confirmId, token })).unwrap();
                     navigate("/products");
                   }}
                 >

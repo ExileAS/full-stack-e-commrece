@@ -10,7 +10,10 @@ const CsrfTokenProvider = ({ children }) => {
   useEffect(() => {
     const fetchToken = async () => {
       try {
-        const res = await fetch(CREATE_CSRF_URL);
+        const res = await fetch(CREATE_CSRF_URL, {
+          method: "GET",
+          credentials: "include",
+        });
         const data = await res.json();
         setToken(data.csrfToken);
       } catch (err) {

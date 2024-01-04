@@ -1,12 +1,17 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const csrf = require("csurf");
-const csrfProtection = csrf({ cookie: true });
+const csrfProtection = csrf({
+  cookie: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "None",
+  },
+});
 
 const checkUser = (req, res, next) => {
   const token = req.cookies.jwt;
   const validOrigin = verifyOrigin(req, res);
-  console.log(validOrigin);
   if (!validOrigin) return;
   const checkingUserToken = req.route.path === "/api/checkToken";
 
@@ -83,9 +88,8 @@ const verifyOrigin = (req, res) => {
   );
   if (!validOrigin) {
     res.status(403).json({ err: "invalid origin" });
-    return false;
   }
-  return true;
+  return validOrigin;
 };
 
 const verifyOriginMiddleware = (req, res, next) => {

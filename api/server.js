@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const helmet = require("helmet");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
@@ -23,19 +24,38 @@ const {
 } = require("./utils/cleanup");
 const morgan = require("morgan");
 
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", `${process.env.CLIENT_URI_PROD}`],
+      frameAncestors: ["'none'"],
+    },
+  })
+);
+
+app.use(
+  helmet.hsts({
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true,
+  })
+);
+
 const corsOptions = {
   origin: process.env.CLIENT_URI_PROD,
   methods: ["GET", "PUT", "POST", "PATCH", "DELETE"],
   credentials: true,
 };
 
-// app.use(morgan("tiny"));
+app.use(morgan("tiny"));
 app.set("trust proxy", 1);
 
-app.use("/images", express.static("images"));
 app.use(express.json());
-app.use(cookieParser());
+app.use(express.urlencoded({ extended: false }));
 app.use(cors(corsOptions));
+app.use(cookieParser());
+app.use("/images", express.static("images"));
 app.use(fileUpload());
 
 mongoose
@@ -51,13 +71,12 @@ mongoose
   })
   .catch((err) => console.log(err));
 
-app.use(express.urlencoded({ extended: true }));
-
-app.get("/api/checkToken", checkUser);
 app.options("/api/csrf-create-token", cors(corsOptions));
 app.get("/api/csrf-create-token", csrfProtection, (req, res) => {
-  res.json({ csrfToken: req.csrfToken() });
+  const csrfToken = req.csrfToken();
+  res.json({ csrfToken });
 });
+app.get("/api/checkToken", checkUser);
 app.use(productRouter);
 app.use(orderedProductsRouter);
 app.use(userRouter);

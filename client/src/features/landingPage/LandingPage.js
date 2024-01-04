@@ -25,8 +25,7 @@ const LandingPage = () => {
         } catch (err) {
           console.log(err);
         }
-      });
-      console.log("NAVIGATING!!!");
+      }, "Initial load");
       naviate("/products");
     },
     sessionKey: "1",

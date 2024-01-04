@@ -34,8 +34,12 @@ function App() {
       checkToken();
     }
     async function checkToken() {
-      const res = await fetch(CHECK_TOKEN_URL);
+      const res = await fetch(CHECK_TOKEN_URL, {
+        method: "GET",
+        credentials: "include",
+      });
       const data = await res.json();
+      console.log("RES DATA IS: ", data);
       if (!res.ok) {
         console.log(data.err);
         logoutUser("token expired");

@@ -34,6 +34,7 @@ export const postOrdered = createAsyncThunk(
             customerInfo: state.shoppingCart.customerInfo,
             verifiedUser,
           }),
+          credentials: "include",
           headers: { "Content-Type": "application/json", "csrf-token": token },
         });
         const data = await res.json();
@@ -42,19 +43,20 @@ export const postOrdered = createAsyncThunk(
         console.log(err);
       }
     };
-    return await exponentialBackoff(postOrderedFn);
+    return await exponentialBackoff(postOrderedFn, "post order");
   }
 );
 
 export const retrieveOrderedList = createAsyncThunk(
   "shoppingCart/retrieveOrderedList",
-  async (userEmail) => {
+  async ({ userEmail, token }) => {
     const retrieveOrderFn = async () => {
       try {
         const res = await fetch(RETRIVE_ORDERED_URL, {
           method: "POST",
           body: JSON.stringify({ userEmail }),
-          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          headers: { "Content-Type": "application/json", "csrf-token": token },
         });
         const data = await res.json();
         return data;
@@ -62,13 +64,13 @@ export const retrieveOrderedList = createAsyncThunk(
         console.log(err);
       }
     };
-    return await exponentialBackoff(retrieveOrderFn);
+    return await exponentialBackoff(retrieveOrderFn, "retrieve order");
   }
 );
 
 export const updateOrder = createAsyncThunk(
   "shoppingCart/updateOrder",
-  async (isPaid, { getState }) => {
+  async ({ isPaid, token }, { getState }) => {
     const state = getState();
     const listUpdates = state.shoppingCart.ordered.length
       ? state.shoppingCart.ordered
@@ -84,7 +86,8 @@ export const updateOrder = createAsyncThunk(
             payedOrder: isPaid,
             isSplit: state.shoppingCart.isSplit,
           }),
-          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          headers: { "Content-Type": "application/json", "csrf-token": token },
         });
         const data = res.json();
         return data;
@@ -92,19 +95,20 @@ export const updateOrder = createAsyncThunk(
         console.log(err);
       }
     };
-    return await exponentialBackoff(updateFn);
+    return await exponentialBackoff(updateFn, "update order");
   }
 );
 
 export const clearInDB = createAsyncThunk(
   "shoppingCart/clearInDB",
-  async (confirmId) => {
+  async ({ confirmId, token }) => {
     const clearFn = async () => {
       try {
         const res = await fetch(DELETE_ORDER_URL, {
           method: "DELETE",
           body: JSON.stringify({ confirmId }),
-          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          headers: { "Content-Type": "application/json", "csrf-token": token },
         });
         const data = await res.json();
         return data;
@@ -112,7 +116,7 @@ export const clearInDB = createAsyncThunk(
         console.log(err);
       }
     };
-    return await exponentialBackoff(clearFn);
+    return await exponentialBackoff(clearFn, "delete order");
   }
 );
 

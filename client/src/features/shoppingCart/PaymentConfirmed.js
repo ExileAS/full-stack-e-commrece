@@ -28,8 +28,8 @@ const PaymentConfirmed = () => {
   const [confirmErr, setConfirmErr] = useState("");
 
   useEffect(() => {
-    if (orderId === id) {
-      exponentialBackoff(confirmOrderPayment)
+    if (orderId === id && token) {
+      exponentialBackoff(confirmOrderPayment, "Confirm payment")
         .then(updateUserOrders)
         .catch(setConfirmErr);
     }
@@ -38,10 +38,11 @@ const PaymentConfirmed = () => {
       dispatch(setOrderId(null));
       dispatch(confirmPayment());
       try {
-        await dispatch(updateOrder(true)).unwrap();
+        await dispatch(updateOrder({ isPaid: true, token })).unwrap();
         const res = await fetch(CONFIRM_PAYMENT_URL, {
           method: "POST",
           body: JSON.stringify({ confirmId, currUser }),
+          credentials: "include",
           headers: { "Content-Type": "application/json" },
         });
         const data = await res.json();
@@ -50,7 +51,7 @@ const PaymentConfirmed = () => {
         }
         return data;
       } catch (err) {
-        setConfirmErr(err.message);
+        console.log(err);
       }
     }
 
@@ -65,6 +66,7 @@ const PaymentConfirmed = () => {
             order: confirmResponse.order,
             totalPayment: confirmResponse.totalPayment,
           }),
+          credentials: "include",
           headers: { "Content-Type": "application/json" },
         });
         const data = await res.json();
@@ -77,9 +79,9 @@ const PaymentConfirmed = () => {
 
   return (
     <div>
-      <OrderedProductsList confirmed={true} />
       {!confirmErr && (
         <div className="payment-confirm">
+          <OrderedProductsList confirmed={true} />
           <span>
             <h3>Payment confirmed </h3>
             <h3>total: {totalPayment / 100}$</h3>
