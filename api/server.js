@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const helmet = require("helmet");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
@@ -22,6 +23,23 @@ const {
   cleanupExpiredSellers,
 } = require("./utils/cleanup");
 const morgan = require("morgan");
+
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", `${process.env.CLIENT_URI_PROD}`],
+    },
+  })
+);
+
+app.use(
+  helmet.hsts({
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true,
+  })
+);
 
 const corsOptions = {
   origin: process.env.CLIENT_URI_PROD,
