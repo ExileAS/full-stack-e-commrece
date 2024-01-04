@@ -50,6 +50,7 @@ export const postOrdered = createAsyncThunk(
 export const retrieveOrderedList = createAsyncThunk(
   "shoppingCart/retrieveOrderedList",
   async (userEmail, token, _) => {
+    console.log(token);
     const retrieveOrderFn = async () => {
       try {
         const res = await fetch(RETRIVE_ORDERED_URL, {

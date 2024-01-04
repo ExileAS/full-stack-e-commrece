@@ -32,6 +32,7 @@ module.exports.ordered_post = async (req, res) => {
 
 module.exports.retreive_ordered_post = async (req, res) => {
   const { userEmail } = req.body;
+  console.log("RECEIEVED TOKEN RETRIEVE: ", req.headers);
   console.log(userEmail);
   try {
     const orderedByUser = await OrderedProductModel.findOne({
