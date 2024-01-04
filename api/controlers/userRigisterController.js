@@ -48,7 +48,12 @@ const login_post = async (req, res) => {
     if (user.verified) {
       const { token, name, options } = createToken(user._id);
       res.cookie(name, token, options);
-      res.cookie("jwtTemp", "", { maxAge: 1 });
+      res.cookie("jwtTemp", "", {
+        maxAge: 1,
+        secure: true,
+        httpOnly: true,
+        sameSite: "None",
+      });
       res.status(200).json({
         user: user.email,
         purchaseCount: user.purchaseCount,

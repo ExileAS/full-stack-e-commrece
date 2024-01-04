@@ -31,7 +31,6 @@ function App() {
   useIdleTimeout(() => logoutUser("timeout"));
   useEffect(() => {
     if (currEmail) {
-      console.log("CURR EMAIL IS: ", currEmail);
       checkToken();
     }
     async function checkToken() {
