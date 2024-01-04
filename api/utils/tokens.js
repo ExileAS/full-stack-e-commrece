@@ -10,7 +10,7 @@ const createTempToken = (id) => {
     options: {
       maxAge: 1000 * 60 * 60 * 2,
       httpOnly: true,
-      sameSite: "strict",
+      sameSite: "None",
       secure: true,
     },
   };
@@ -26,7 +26,7 @@ const createToken = (id) => {
     options: {
       maxAge: 1000 * 60 * 60 * 24 * 3,
       httpOnly: true,
-      sameSite: "strict",
+      sameSite: "None",
       secure: true,
     },
   };
@@ -42,7 +42,7 @@ const createResetToken = (id) => {
     options: {
       maxAge: 1000 * 60 * 60,
       httpOnly: true,
-      sameSite: "strict",
+      sameSite: "None",
       secure: true,
     },
   };
@@ -58,7 +58,7 @@ const createSellerToken = (id) => {
     options: {
       maxAge: 1000 * 60 * 60 * 24 * 3,
       httpOnly: true,
-      sameSite: "strict",
+      sameSite: "None",
       secure: true,
     },
   };
