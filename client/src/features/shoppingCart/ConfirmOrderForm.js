@@ -109,7 +109,7 @@ const ConfirmOrderForm = () => {
           );
         }
       } else {
-        dispatch(updateOrder(false));
+        dispatch(updateOrder(false, token));
       }
     } catch (err) {
       console.log(err);

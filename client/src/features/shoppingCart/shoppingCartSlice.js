@@ -70,7 +70,7 @@ export const retrieveOrderedList = createAsyncThunk(
 
 export const updateOrder = createAsyncThunk(
   "shoppingCart/updateOrder",
-  async (isPaid, { getState }) => {
+  async (isPaid, token, { getState }) => {
     const state = getState();
     const listUpdates = state.shoppingCart.ordered.length
       ? state.shoppingCart.ordered
@@ -86,7 +86,8 @@ export const updateOrder = createAsyncThunk(
             payedOrder: isPaid,
             isSplit: state.shoppingCart.isSplit,
           }),
-          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          headers: { "Content-Type": "application/json", "csrf-token": token },
         });
         const data = res.json();
         return data;
@@ -100,13 +101,14 @@ export const updateOrder = createAsyncThunk(
 
 export const clearInDB = createAsyncThunk(
   "shoppingCart/clearInDB",
-  async (confirmId) => {
+  async (confirmId, token, _) => {
     const clearFn = async () => {
       try {
         const res = await fetch(DELETE_ORDER_URL, {
           method: "DELETE",
           body: JSON.stringify({ confirmId }),
-          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          headers: { "Content-Type": "application/json", "csrf-token": token },
         });
         const data = await res.json();
         return data;

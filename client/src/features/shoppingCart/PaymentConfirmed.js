@@ -38,10 +38,11 @@ const PaymentConfirmed = () => {
       dispatch(setOrderId(null));
       dispatch(confirmPayment());
       try {
-        await dispatch(updateOrder(true)).unwrap();
+        await dispatch(updateOrder(true, token)).unwrap();
         const res = await fetch(CONFIRM_PAYMENT_URL, {
           method: "POST",
           body: JSON.stringify({ confirmId, currUser }),
+          credentials: "include",
           headers: { "Content-Type": "application/json" },
         });
         const data = await res.json();
@@ -65,6 +66,7 @@ const PaymentConfirmed = () => {
             order: confirmResponse.order,
             totalPayment: confirmResponse.totalPayment,
           }),
+          credentials: "include",
           headers: { "Content-Type": "application/json" },
         });
         const data = await res.json();

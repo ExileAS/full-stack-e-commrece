@@ -80,6 +80,7 @@ export const AddNewProduct = () => {
           img: img,
         },
         {
+          withCredentials: true,
           headers: {
             "Content-Type": "multipart/form-data",
             "x-rapidapi-host": "file-upload8.p.rapidapi.com",
@@ -121,6 +122,7 @@ export const AddNewProduct = () => {
           img: img,
         },
         {
+          withCredentials: true,
           headers: {
             "Content-Type": "multipart/form-data",
             "x-rapidapi-host": "file-upload8.p.rapidapi.com",
