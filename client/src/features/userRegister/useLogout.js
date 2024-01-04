@@ -12,7 +12,7 @@ const useLogout = () => {
   const navigate = useNavigate();
   const handleLogout = useCallback(
     async (err) => {
-      await fetch(LOGOUT_URL);
+      await fetch(LOGOUT_URL, { method: "GET", credentials: "include" });
       persistor.pause();
       await persistor.flush();
       persistor.purge();
