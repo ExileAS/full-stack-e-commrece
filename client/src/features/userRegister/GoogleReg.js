@@ -33,7 +33,7 @@ const GoogleReg = () => {
       } catch (err) {
         console.log(err);
       }
-    });
+    }, "google login");
   return (
     <div className="google">
       <GoogleLogin

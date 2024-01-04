@@ -60,7 +60,7 @@ const Login = () => {
       } catch (err) {
         console.log(err);
       }
-    });
+    }, "login");
   };
 
   const handleOTP = useCallback(async () => {

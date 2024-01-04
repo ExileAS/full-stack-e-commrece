@@ -92,7 +92,7 @@ const PasswordReset = () => {
       } catch (err) {
         console.log(err);
       }
-    });
+    }, "password reset");
   };
 
   return (

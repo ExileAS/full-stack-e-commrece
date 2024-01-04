@@ -43,7 +43,7 @@ export const postOrdered = createAsyncThunk(
         console.log(err);
       }
     };
-    return await exponentialBackoff(postOrderedFn);
+    return await exponentialBackoff(postOrderedFn, "post order");
   }
 );
 
@@ -64,7 +64,7 @@ export const retrieveOrderedList = createAsyncThunk(
         console.log(err);
       }
     };
-    return await exponentialBackoff(retrieveOrderFn);
+    return await exponentialBackoff(retrieveOrderFn, "retrieve order");
   }
 );
 
@@ -95,7 +95,7 @@ export const updateOrder = createAsyncThunk(
         console.log(err);
       }
     };
-    return await exponentialBackoff(updateFn);
+    return await exponentialBackoff(updateFn, "update order");
   }
 );
 
@@ -116,7 +116,7 @@ export const clearInDB = createAsyncThunk(
         console.log(err);
       }
     };
-    return await exponentialBackoff(clearFn);
+    return await exponentialBackoff(clearFn, "delete order");
   }
 );
 

@@ -29,7 +29,7 @@ const PaymentConfirmed = () => {
 
   useEffect(() => {
     if (orderId === id && token) {
-      exponentialBackoff(confirmOrderPayment)
+      exponentialBackoff(confirmOrderPayment, "Confirm payment")
         .then(updateUserOrders)
         .catch(setConfirmErr);
     }
@@ -79,9 +79,9 @@ const PaymentConfirmed = () => {
 
   return (
     <div>
-      <OrderedProductsList confirmed={true} />
       {!confirmErr && (
         <div className="payment-confirm">
+          <OrderedProductsList confirmed={true} />
           <span>
             <h3>Payment confirmed </h3>
             <h3>total: {totalPayment / 100}$</h3>

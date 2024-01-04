@@ -125,7 +125,7 @@ const OrderedProductsList = ({ confirmed }) => {
       } catch (err) {
         console.log(err);
       }
-    });
+    }, "checkout");
 
   return (
     <div className="ordered-content" transition-style="in:square:center">
