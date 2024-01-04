@@ -32,6 +32,7 @@ const corsOptions = {
 app.use(morgan("tiny"));
 app.set("trust proxy", 1);
 
+app.use(express.urlencoded({ extended: true }));
 app.use("/images", express.static("images"));
 app.use(express.json());
 app.use(cookieParser());
@@ -51,14 +52,11 @@ mongoose
   })
   .catch((err) => console.log(err));
 
-app.use(express.urlencoded({ extended: true }));
-
 app.get("/api/checkToken", checkUser);
 app.options("/api/csrf-create-token", cors(corsOptions));
 app.get("/api/csrf-create-token", csrfProtection, (req, res) => {
   const csrfToken = req.csrfToken();
   console.log("CREATED TOKEN IS: ", csrfToken);
-  res.locals.csrfToken = csrfToken;
   res.json({ csrfToken });
 });
 app.use(productRouter);
