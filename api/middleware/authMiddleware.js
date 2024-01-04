@@ -1,7 +1,13 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const csrf = require("csurf");
-const csrfProtection = csrf({ cookie: true });
+const csrfProtection = csrf({
+  cookie: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "None",
+  },
+});
 
 const checkUser = (req, res, next) => {
   const token = req.cookies.jwt;
