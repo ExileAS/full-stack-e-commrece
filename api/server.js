@@ -58,7 +58,7 @@ app.options("/api/csrf-create-token", cors(corsOptions));
 app.get("/api/csrf-create-token", csrfProtection, (req, res) => {
   const csrfToken = req.csrfToken();
   console.log("CREATED TOKEN IS: ", csrfToken);
-  // res.locals.csrfToken = token;
+  res.locals.csrfToken = token;
   res.json({ csrfToken });
 });
 app.use(productRouter);
