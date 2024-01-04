@@ -54,6 +54,7 @@ mongoose
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/api/checkToken", checkUser);
+app.options("/api/csrf-create-token", cors(corsOptions));
 app.get("/api/csrf-create-token", csrfProtection, (req, res) => {
   res.json({ csrfToken: req.csrfToken() });
 });
