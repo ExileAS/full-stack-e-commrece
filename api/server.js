@@ -32,7 +32,7 @@ const corsOptions = {
 app.use(morgan("tiny"));
 app.set("trust proxy", 1);
 
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use("/images", express.static("images"));
 app.use(express.json());
 app.use(cookieParser());
