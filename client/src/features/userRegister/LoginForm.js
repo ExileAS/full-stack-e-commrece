@@ -54,7 +54,7 @@ const Login = () => {
         if (data.user) {
           dispatch(login(data));
           navigate("/products");
-          dispatch(retrieveOrderedList(data.user, token));
+          dispatch(retrieveOrderedList({ userEmail: data.user, token }));
         }
         return data;
       } catch (err) {

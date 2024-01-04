@@ -38,7 +38,7 @@ const PaymentConfirmed = () => {
       dispatch(setOrderId(null));
       dispatch(confirmPayment());
       try {
-        await dispatch(updateOrder(true, token)).unwrap();
+        await dispatch(updateOrder({ isPaid: true, token })).unwrap();
         const res = await fetch(CONFIRM_PAYMENT_URL, {
           method: "POST",
           body: JSON.stringify({ confirmId, currUser }),

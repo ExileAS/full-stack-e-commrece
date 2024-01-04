@@ -109,7 +109,7 @@ const ConfirmOrderForm = () => {
           );
         }
       } else {
-        dispatch(updateOrder(false, token));
+        dispatch(updateOrder({ isPaid: false, token }));
       }
     } catch (err) {
       console.log(err);

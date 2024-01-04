@@ -49,7 +49,7 @@ export const postOrdered = createAsyncThunk(
 
 export const retrieveOrderedList = createAsyncThunk(
   "shoppingCart/retrieveOrderedList",
-  async (userEmail, token, _) => {
+  async ({ userEmail, token }) => {
     console.log(token);
     const retrieveOrderFn = async () => {
       try {
@@ -71,7 +71,7 @@ export const retrieveOrderedList = createAsyncThunk(
 
 export const updateOrder = createAsyncThunk(
   "shoppingCart/updateOrder",
-  async (isPaid, token, { getState }) => {
+  async ({ isPaid, token }, { getState }) => {
     const state = getState();
     const listUpdates = state.shoppingCart.ordered.length
       ? state.shoppingCart.ordered
@@ -102,7 +102,7 @@ export const updateOrder = createAsyncThunk(
 
 export const clearInDB = createAsyncThunk(
   "shoppingCart/clearInDB",
-  async (confirmId, token, _) => {
+  async ({ confirmId, token }) => {
     const clearFn = async () => {
       try {
         const res = await fetch(DELETE_ORDER_URL, {

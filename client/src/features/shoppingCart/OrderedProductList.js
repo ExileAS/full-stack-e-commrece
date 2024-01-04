@@ -82,7 +82,7 @@ const OrderedProductsList = ({ confirmed }) => {
               className="button-24"
               onClick={() => {
                 dispatch(decrementInOrdered(product.id));
-                dispatch(updateOrder(false, token));
+                dispatch(updateOrder({ isPaid: false, token }));
               }}
             >
               -
@@ -91,7 +91,7 @@ const OrderedProductsList = ({ confirmed }) => {
               className="button-24"
               onClick={() => {
                 dispatch(removeOrder(product.id));
-                dispatch(updateOrder(false, token));
+                dispatch(updateOrder({ isPaid: false, token }));
               }}
             >
               Cancel Order
@@ -211,7 +211,7 @@ const OrderedProductsList = ({ confirmed }) => {
                   className="button-45"
                   onClick={async () => {
                     dispatch(clearOrdered());
-                    await dispatch(clearInDB(confirmId, token)).unwrap();
+                    await dispatch(clearInDB({ confirmId, token })).unwrap();
                     navigate("/products");
                   }}
                 >
