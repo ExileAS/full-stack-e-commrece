@@ -9,7 +9,15 @@ const { limiter } = require("../middleware/rateLimiter");
 const { clearTokens } = require("../middleware/tokenClearer");
 const router = Router();
 
-router.post("/api/signup", csrfProtection, clearTokens, signup_post);
+router.post(
+  "/api/signup",
+  (req, res) => {
+    console.log("TOKEN SENT BACK TO SERVER: ", req.headers["csrf-token"]);
+    csrfProtection();
+  },
+  clearTokens,
+  signup_post
+);
 router.post("/api/login", csrfProtection, limiter, clearTokens, login_post);
 router.get("/api/logout", logout_get);
 

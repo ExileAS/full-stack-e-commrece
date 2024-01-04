@@ -56,7 +56,9 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/api/checkToken", checkUser);
 app.options("/api/csrf-create-token", cors(corsOptions));
 app.get("/api/csrf-create-token", csrfProtection, (req, res) => {
-  res.json({ csrfToken: req.csrfToken() });
+  const csrfToken = req.csrfToken();
+  console.log("CREATED TOKEN IS: ", csrfToken);
+  res.json({ csrfToken });
 });
 app.use(productRouter);
 app.use(orderedProductsRouter);

@@ -24,7 +24,7 @@ import useFetch from "../utils/useFetch";
 const SignUp = ({ err }) => {
   const tokenError = typeof err === "string" ? err : "";
   const token = useContext(csrfTokenContext);
-  console.log(token);
+  console.log("RECEIEVED CSRF TOKEN IS: ", token);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
