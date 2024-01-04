@@ -34,6 +34,7 @@ export const postOrdered = createAsyncThunk(
             customerInfo: state.shoppingCart.customerInfo,
             verifiedUser,
           }),
+          credentials: "include",
           headers: { "Content-Type": "application/json", "csrf-token": token },
         });
         const data = await res.json();
