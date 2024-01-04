@@ -11,7 +11,7 @@ const router = Router();
 
 router.post(
   "/api/signup",
-  (req, res) => {
+  (req, res, next) => {
     console.log("TOKEN SENT BACK TO SERVER: ", req.headers["csrf-token"]);
     csrfProtection(req, res, next);
   },
