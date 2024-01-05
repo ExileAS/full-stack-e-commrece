@@ -2,7 +2,7 @@ const Footer = () => {
   return (
     <footer>
       <a
-        href="https://github.com/ExileAS/full-stack-e-commrece"
+        href="https://github.com/ExileAS/full-stack-e-commrece/tree/production"
         className="github"
       >
         <h2>Project GitHub Repo</h2>
