@@ -33,7 +33,7 @@ const LandingPage = () => {
       setTimeout(() => {
         setLoading(false);
         naviate("/products");
-      }, 1000);
+      }, 1500);
     },
     sessionKey: "1",
   });

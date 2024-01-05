@@ -2165,3 +2165,14 @@ input[type="radio"] {
 .phone {
   color: white;
 }
+
+.github {
+  color: #066fdf;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.github:hover {
+  color: #023e7e;
+}
