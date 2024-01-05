@@ -5,7 +5,7 @@ const Footer = () => {
         href="https://github.com/ExileAS/full-stack-e-commrece/tree/production"
         className="github"
       >
-        <h2>Project GitHub Repo</h2>
+        <h1>Project GitHub Repo</h1>
       </a>
       <br />
       <h2>
