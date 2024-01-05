@@ -30,8 +30,10 @@ const LandingPage = () => {
           console.log(err);
         }
       }, "Initial load");
-      setLoading(false);
-      naviate("/products");
+      setTimeout(() => {
+        setLoading(false);
+        naviate("/products");
+      }, 1500);
     },
     sessionKey: "1",
   });
