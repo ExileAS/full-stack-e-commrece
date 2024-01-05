@@ -2167,13 +2167,14 @@ input[type="radio"] {
 }
 
 .github {
-  color: #044488;
+  color: #04478f;
   text-decoration: none;
   font-weight: bold;
   transition: color 0.3s;
   text-align: center;
+  text-decoration: underline;
 }
 
 .github:hover {
-  color: #011831;
+  color: #022245;
 }
