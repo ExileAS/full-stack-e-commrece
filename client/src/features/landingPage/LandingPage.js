@@ -8,13 +8,16 @@ import { getAllSellers } from "../sellers/sellersSlice";
 import { fetchReviews } from "../reviews/reviewSlice";
 import exponentialBackoff from "../utils/exponentialBackoff";
 import Footer from "../../components/Footer";
+import { useState } from "react";
 
 const LandingPage = () => {
   const naviate = useNavigate();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
 
   useRunOnce({
     fn: async () => {
+      setLoading(true);
       await exponentialBackoff(async () => {
         try {
           const data = await Promise.all([
@@ -27,6 +30,7 @@ const LandingPage = () => {
           console.log(err);
         }
       }, "Initial load");
+      setLoading(false);
       naviate("/products");
     },
     sessionKey: "1",
@@ -39,7 +43,7 @@ const LandingPage = () => {
       </div>
       <div className="content-landing">
         <h1 className="title-landing">Welcome To Shopping Bag</h1>
-        <Loader />
+        {loading && <Loader />}
       </div>
       <br />
       <Footer />
