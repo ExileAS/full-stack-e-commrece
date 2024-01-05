@@ -7,6 +7,7 @@ import Loader from "../../components/Loader";
 import { getAllSellers } from "../sellers/sellersSlice";
 import { fetchReviews } from "../reviews/reviewSlice";
 import exponentialBackoff from "../utils/exponentialBackoff";
+import Footer from "../../components/Footer";
 
 const LandingPage = () => {
   const naviate = useNavigate();
@@ -40,6 +41,8 @@ const LandingPage = () => {
         <h1 className="title-landing">Welcome To Shopping Bag</h1>
         <Loader />
       </div>
+      <br />
+      <Footer />
     </div>
   );
 };
