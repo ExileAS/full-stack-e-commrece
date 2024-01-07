@@ -47,4 +47,7 @@ Create a new file named .env in the /api directory.
 Create a new file named .env in the /client directory.
 Copy the list of environment variables above into the .env files.
 Replace each placeholder value with your actual credentials or keys.
+
 ```
+this project is deployed on render:
+https://e-commerce-react-n436.onrender.com
