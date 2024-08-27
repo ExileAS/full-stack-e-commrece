@@ -13,7 +13,6 @@ const orderedProductsRouter = require("./routes/orderedProductsRoutes");
 const reviewRouter = require("./routes/reviewRoutes");
 const paymentRouter = require("./routes/paymentRoutes");
 const sellersRouter = require("./routes/sellerRoutes");
-const sellerRegisterRouter = require("./routes/sellerRegisterRoutes");
 const { checkUser, csrfProtection } = require("./middleware/authMiddleware");
 const {
   cleanupExpiredUsers,
@@ -60,7 +59,6 @@ app.get("/api/csrf-create-token", csrfProtection, (req, res) => {
 app.use(productRouter);
 app.use(orderedProductsRouter);
 app.use(userRouter);
-app.use(sellerRegisterRouter);
 app.use(sellersRouter);
 app.use(reviewRouter);
 app.use(authRouter);

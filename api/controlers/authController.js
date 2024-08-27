@@ -7,13 +7,12 @@ const { encrypt, decrypt, passowrdHash } = require("../utils/textEncryption");
 const resetingModel = require("../models/resetingUsersModel");
 const { createResetToken } = require("../utils/tokens");
 const { sendToUser, mailOptions } = require("../services/mailer");
-const sellerModel = require("../models/sellerModel");
 const deleteUnwantedFields = require("../helpers/deleteUnwantedFields");
 
 const verify_user_url = async (req, res) => {
   const { verifyId, email } = req.params;
   const url = `${process.env.SERVER_URI}/shoppingBag/verifyUser/${verifyId}&${email}`;
-  const model = verifyId.length === 90 ? sellerModel : userModel;
+  const model = userModel;
   try {
     const user = await model.findOne({ encryptedEmail: email });
     handleVerifyErrors(user, "url");
@@ -42,8 +41,8 @@ const verify_user_url = async (req, res) => {
 };
 
 const verify_user_otp = async (req, res) => {
-  const { otp, email, isSeller } = req.body;
-  const model = isSeller ? sellerModel : userModel;
+  const { otp, email } = req.body;
+  const model = userModel;
   try {
     const user = await model.findOne({ email: email });
     handleVerifyErrors(user, "otp");
@@ -72,12 +71,12 @@ const verify_user_otp = async (req, res) => {
 };
 
 const resend_email_verification = async (req, res) => {
-  const { email, isSeller } = req.body;
-  const model = isSeller ? sellerModel : userModel;
+  const { email } = req.body;
+  const model = userModel;
   try {
     const user = await model.findOne({ email: email });
     handleVerifyErrors(user, "", true);
-    const { info, send } = createSignupInfo(email, isSeller);
+    const { info, send } = createSignupInfo(email);
     const { verifyURL, OTP, encryptedEmail } = info;
     const existingUser = await model.findOneAndUpdate(
       { _id: user._id, email: email },
@@ -105,8 +104,8 @@ const resend_email_verification = async (req, res) => {
 };
 
 const create_reset_info = async (req, res) => {
-  const { email, isSeller } = req.body;
-  const model = isSeller ? sellerModel : userModel;
+  const { email } = req.body;
+  const model = userModel;
   try {
     const user = await model.findOneAndUpdate(
       { email: email, verified: true },
@@ -213,8 +212,8 @@ const verify_reset_otp = async (req, res) => {
 };
 
 const confirm_reset = async (req, res) => {
-  const { email, password, isSeller } = req.body;
-  const model = isSeller ? sellerModel : userModel;
+  const { email, password } = req.body;
+  const model = userModel;
   try {
     const hashedPassword = await passowrdHash(password);
     const user = await model.findOne({ email, reseting: true });

@@ -2,15 +2,14 @@ const { OrderedProductModel } = require("../models/oderedProductsModel");
 const { userModel } = require("../models/userModel");
 const createStripeSession = require("../services/stripe");
 const logger = require("../logs/winstonLogger");
-const sellerModel = require("../models/sellerModel");
 
 module.exports.payment_post = async (req, res) => {
-  const { confirmId, totalAfterDiscount, isSeller } = req.body;
+  const { confirmId, totalAfterDiscount } = req.body;
   try {
     const order = await OrderedProductModel.findOne({ confirmId: confirmId });
     const session = await createStripeSession(order);
 
-    const model = isSeller ? sellerModel : userModel;
+    const model = userModel;
 
     await model.findOneAndUpdate(
       { email: order.customerInfo.userEmail, phoneNumber: { $exists: false } },
@@ -68,8 +67,8 @@ module.exports.confirm_payment = async (req, res) => {
 };
 
 module.exports.update_user_orders = async (req, res) => {
-  const { confirmId, currUser, order, totalPayment, isSeller } = req.body;
-  const model = isSeller ? sellerModel : userModel;
+  const { confirmId, currUser, order, totalPayment } = req.body;
+  const model = userModel;
   try {
     const user = await model.findOne({ email: currUser });
     const existingOrder = user?.orders.find(

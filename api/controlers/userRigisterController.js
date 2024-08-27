@@ -3,14 +3,12 @@ const { createToken, createTempToken } = require("../utils/tokens");
 const { handleErrors } = require("../helpers/userRegisterErrors");
 const { createSignupInfo } = require("../utils/createUserInfo");
 const { passowrdHash } = require("../utils/textEncryption");
-const sellerModel = require("../models/sellerModel");
 const { limiter } = require("../middleware/rateLimiter");
 
 const signup_post = async (req, res) => {
   const { email, password, sub, email_verified } = req.body;
 
   try {
-    await sellerModel.checkDup(email);
     if (email && password) {
       const { info, send } = createSignupInfo(email);
       const hashedPassword = await passowrdHash(password);

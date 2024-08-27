@@ -21,7 +21,6 @@ export const AddNewProduct = () => {
   );
   const id = useSelector((state) => generateId(state));
   const currUser = useSelector((state) => state.user.userEmail);
-  const currIsSeller = useSelector((state) => state.user.currIsSeller);
   const userName = currUser?.substring(0, currUser.indexOf("@"));
 
   const [img, setImage] = useState(null);
@@ -45,7 +44,6 @@ export const AddNewProduct = () => {
   }
   const canAdd = [
     currUser,
-    currIsSeller,
     formState.productName,
     formState.description,
     formState.price,
