@@ -4,7 +4,6 @@ import { attatchReviews, selectAllProducts } from "./productsSlice";
 import SearchBar from "../search/SearchBar";
 import { fetchProducts } from "./productsSlice";
 import React, { useContext, useEffect, useRef } from "react";
-import { getAllSellers } from "../sellers/sellersSlice";
 import "transition-style";
 import bagSrc from "../../components/images/shoppingBag.jpg";
 import { CategoriesContext } from "../../contexts/categoriesContext";
@@ -18,13 +17,11 @@ const ProductsList = () => {
   const status = useSelector((state) => state.products.status);
   const logged = useSelector((state) => state.user.loggedIn);
   const reviewStatus = useSelector((state) => state.review.status);
-  const currIsSeller = useSelector((state) => state.user.currIsSeller);
   const reviews = useSelector(getAllReviews);
   const loadedRef = useRef(false);
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchProducts());
-      dispatch(getAllSellers());
     }
     if (reviewStatus === "idle") {
       dispatch(fetchReviews());
@@ -69,7 +66,7 @@ const ProductsList = () => {
       <img src={bagSrc} alt="store-logo" className="main-logo" />
       <br />
 
-      {logged && currIsSeller && (
+      {logged && (
         <button className="button-63">
           <Link to="/products/addProduct" className="inner-link">
             Add Product

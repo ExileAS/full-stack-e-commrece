@@ -1,6 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
 import productsReducer from "../features/products/productsSlice";
-import sellersReducer from "../features/sellers/sellersSlice";
 import shoppingCartReducer from "../features/shoppingCart/shoppingCartSlice";
 import userReducer from "../features/userRegister/userSlice";
 import reviewReducer from "../features/reviews/reviewSlice";
@@ -28,7 +27,6 @@ const persistedReducerUser = persistReducer(userPersistConfig, userReducer);
 const store = configureStore({
   reducer: {
     products: productsReducer,
-    sellers: sellersReducer,
     shoppingCart: persistedReducerCart,
     user: persistedReducerUser,
     review: reviewReducer,

@@ -1,5 +1,4 @@
 import { ReviewStars } from "../reviews/ReviewStars";
-import { getIdByName, selectSellerById } from "../sellers/sellersSlice";
 
 import {
   checkSelected,
@@ -19,11 +18,7 @@ const ProductExcerpt = React.memo(
     const logged = useSelector((state) => state.user.userEmail);
     const dispatch = useDispatch();
     const product = useSelector((state) => selectProductById(state, productId));
-    let sellerId = useSelector((state) => getIdByName(state, product?.seller));
-    if (sellerId) localStorage.setItem(productId, sellerId);
-    else sellerId = localStorage.getItem(productId);
     const selected = useSelector((state) => checkSelected(state, productId));
-    const seller = useSelector((state) => selectSellerById(state, sellerId));
     const [select, setSelect] = useState(selected);
     const productInCart = useSelector(selectAllInCart).find(
       (product) => productId === product.id
@@ -36,12 +31,7 @@ const ProductExcerpt = React.memo(
       productInCart === undefined ||
       productInCart.onhand > 0 ||
       availableInMain;
-    const selectButton =
-      logged &&
-      !productInCart &&
-      !orderedList &&
-      !mainPage &&
-      seller?.name !== product.seller;
+    const selectButton = logged && !productInCart && !orderedList && !mainPage;
     return (
       available &&
       product && (
@@ -70,15 +60,7 @@ const ProductExcerpt = React.memo(
           </p>
           <b className="description">{product.price / 100} $</b>
           <br />
-          <div>
-            {" "}
-            {confirmed && (
-              <div>
-                others by{" "}
-                <Link to={"/sellers/" + sellerId}>{product.seller}</Link>
-              </div>
-            )}
-          </div>
+          <div></div>
           {selectButton && (
             <div>
               {!select && product.onhand > 0 && (

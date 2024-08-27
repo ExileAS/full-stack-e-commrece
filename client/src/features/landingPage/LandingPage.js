@@ -4,7 +4,6 @@ import { fetchProducts } from "../products/productsSlice";
 import { useDispatch } from "react-redux";
 import logo from "../../components/images/shoppingBag.jpg";
 import Loader from "../../components/Loader";
-import { getAllSellers } from "../sellers/sellersSlice";
 import { fetchReviews } from "../reviews/reviewSlice";
 import exponentialBackoff from "../utils/exponentialBackoff";
 
@@ -18,7 +17,6 @@ const LandingPage = () => {
         try {
           const data = await Promise.all([
             dispatch(fetchProducts()).unwrap(),
-            dispatch(getAllSellers()).unwrap(),
             dispatch(fetchReviews()).unwrap(),
           ]);
           return data;

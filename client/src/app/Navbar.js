@@ -18,7 +18,6 @@ const Navbar = () => {
           <div className="navContent">
             <div className="navLinks">
               <Link to="/products">products</Link>
-              <Link to="/sellers">sellers</Link>
               <Link to="/shoppingCart">shopping cart</Link>
               {selected.length > 0 && (
                 <Link to={"/products/selected"} className="Selected-Nav">
@@ -36,12 +35,6 @@ const Navbar = () => {
                   </Link>
                   <Link to={"/login"}>
                     <button className="button-33">Login</button>
-                  </Link>
-                  <Link to={"/signupSeller"}>
-                    <button className="button-33">Seller Signup</button>
-                  </Link>
-                  <Link to={"/loginSeller"}>
-                    <button className="button-33">Seller Login</button>
                   </Link>
                 </>
               ) : (

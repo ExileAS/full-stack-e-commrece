@@ -14,7 +14,6 @@ import {
 } from "../shoppingCart/shoppingCartSlice";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getIdByName, getAllSellers } from "../sellers/sellersSlice";
 import { ReviewStars } from "../reviews/ReviewStars";
 
 export const ProductDetails = React.memo(
@@ -28,7 +27,6 @@ export const ProductDetails = React.memo(
     const added = useSelector((state) => checkAdded(state, productId));
     const logged = useSelector((state) => state.user.loggedIn);
     const productStatus = useSelector((state) => state.products.status);
-    const sellerStatus = useSelector((state) => state.sellers.status);
     const currUser = useSelector((state) => state.user.userName);
     let product = useSelector((state) => selectProductById(state, productId));
     if (!product) product = localStorage.getItem(productId);
@@ -36,8 +34,6 @@ export const ProductDetails = React.memo(
     const productInCart = productsInCart.find(
       (product) => product.id === productId
     );
-
-    const sellerId = useSelector((state) => getIdByName(state, product.seller));
 
     const count = productInCart === undefined ? 1 : productInCart.count;
 
@@ -49,10 +45,7 @@ export const ProductDetails = React.memo(
       if (productStatus === "idle") {
         dispatch(fetchProducts());
       }
-      if (sellerStatus === "idle") {
-        dispatch(getAllSellers());
-      }
-    }, [dispatch, productStatus, sellerStatus]);
+    }, [dispatch, productStatus]);
 
     useEffect(() => {
       if (count > 1) setAmount(count);
@@ -81,17 +74,6 @@ export const ProductDetails = React.memo(
           <br />
           <b className="price">{product.price / 100} $</b>
           <p className="description">{product.description}</p>
-
-          <span className="addedby">
-            added by{" "}
-            {product.seller ? (
-              <Link to={"/sellers/" + sellerId} className="seller-title">
-                {product.seller}
-              </Link>
-            ) : (
-              "unknown"
-            )}
-          </span>
 
           <br />
           <TimeAgo timestamp={product.date} />

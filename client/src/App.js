@@ -3,8 +3,6 @@ import Navbar from "./app/Navbar";
 import ProductsList from "./features/products/ProductList";
 import { ProductDetails } from "./features/products/ProductDetails";
 import { AddNewProduct } from "./features/products/AddNewProduct";
-import { SellerList } from "./features/sellers/SellerList";
-import { SingleSellerPage } from "./features/sellers/SingleSellerPage";
 import ShoppingCartPage from "./features/shoppingCart/ShoppingCartPage";
 import MoreLikeThis from "./features/products/MoreLikeThis";
 import ConfirmOrderForm from "./features/shoppingCart/ConfirmOrderForm";
@@ -67,12 +65,6 @@ function App() {
             path="/products/:productId"
             element={<ProductDetails />}
           />
-          <Route exact path="/sellers" element={<SellerList />} />
-          <Route
-            exact
-            path="/sellers/:sellerId"
-            element={<SingleSellerPage />}
-          />
           <Route exact path="/shoppingCart" element={<ShoppingCartPage />} />
           <Route
             exact
@@ -112,8 +104,6 @@ function App() {
               element={<PaymentConfirmed />}
             />
             <Route exact path="/signup" element={<SignUp />} />
-            <Route exact path="/signupSeller" element={<SignUp />} />
-            <Route exact path="/loginSeller" element={<Login />} />
             <Route exact path="/login" element={<Login />} />
             <Route exact path="/login/:err" element={<Login />} />
           </Route>
